@@ -4,10 +4,10 @@
 #include <errno.h>
 #include <math.h>
 
+#include "tools.h"
 #include "map.h"
 
 int main() {
-	srand((unsigned int)time(NULL));
 	char tilemap[H_MAP_T][W_MAP_T];
 
 	initMapRandom(tilemap);

@@ -18,13 +18,13 @@
     <ClCompile Include="main.c">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
-    <ClCompile Include="map.c">
+    <ClCompile Include="tools.c">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="map.h">
-      <Filter>Fichiers sources</Filter>
+    <ClInclude Include="tools.h">
+      <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -134,10 +134,10 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="main.c" />
-    <ClCompile Include="map.c" />
+    <ClCompile Include="tools.c" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="map.h" />
+    <ClInclude Include="tools.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
