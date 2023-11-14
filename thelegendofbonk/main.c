@@ -3,7 +3,9 @@
 #include <time.h>
 #include <errno.h>
 #include <math.h>
+#include "tools.h"
 
-int main() {
-	return 1;
+void main() 
+{
+
 }
