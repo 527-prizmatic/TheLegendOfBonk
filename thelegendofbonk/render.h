@@ -4,8 +4,11 @@
 #include <time.h>
 #include <errno.h>
 #include <math.h>
+
 #include "SFML/Graphics.h"
+#include "map.h"
 
-void render_init();
 
+sfRenderWindow* render_init();
 
+void render_map(char _map[H_MAP_T][W_MAP_T]);

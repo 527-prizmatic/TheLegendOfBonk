@@ -6,7 +6,7 @@ sfClock* sf_clock;
 void initTools()
 {
 	sf_clock = sfClock_create();
-	srand(time(NULL));
+	srand((unsigned int)time(NULL));
 }
 
 void restartClock()

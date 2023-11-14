@@ -134,12 +134,24 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="main.c" />
+<<<<<<< HEAD
     <ClCompile Include="player.c" />
+=======
+    <ClCompile Include="map.c" />
+>>>>>>> nucleus
     <ClCompile Include="render.c" />
+    <ClCompile Include="textures.c" />
+    <ClCompile Include="tools.c" />
   </ItemGroup>
   <ItemGroup>
+<<<<<<< HEAD
     <ClInclude Include="player.h" />
+=======
+    <ClInclude Include="map.h" />
+>>>>>>> nucleus
     <ClInclude Include="render.h" />
+    <ClInclude Include="textures.h" />
+    <ClInclude Include="tools.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

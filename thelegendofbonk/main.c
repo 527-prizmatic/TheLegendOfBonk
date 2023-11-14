@@ -7,13 +7,14 @@
 
 #include "tools.h"
 #include "map.h"
+#include "render.h"
+#include "textures.h"
 
 int main() {
 	char tilemap[H_MAP_T][W_MAP_T];
-	
-	render_init();
-
 	initMapRandom(tilemap);
+	sfRenderWindow* window = render_init();
+
 
 	for (int i = 0; i < H_MAP_T; i++) {
 		for (int j = 0; j < W_MAP_T; j++) {
@@ -21,6 +22,20 @@ int main() {
 		}
 		printf("\n");
 	}
+
+	sfEvent event;
+	while (sfRenderWindow_isOpen(window))
+	{
+		while (sfRenderWindow_pollEvent(window, &event))
+		{
+			if (event.type == sfEvtClosed)
+				sfRenderWindow_close(window);
+		}
+
+		sfRenderWindow_clear(window, sfBlack);
+		sfRenderWindow_display(window);
+	}
+
 
 	return 1;
 }
