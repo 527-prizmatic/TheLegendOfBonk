@@ -1,0 +1,7 @@
+Structure:
+	- Core file for the game loop
+	- Map file for display functions
+	- Audio file for playback
+	- Texture file to hash spritesheets into textures
+	- Editor file for... well... the spiders
+	- 
