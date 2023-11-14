@@ -24,6 +24,7 @@ int main() {
 		printf("\n");
 	}
 
+	//INIT
 	initPlayer();
 
 	sfEvent event;
@@ -35,10 +36,12 @@ int main() {
 			if (event.type == sfEvtClosed)
 				sfRenderWindow_close(window);
 		}
+
+		//UPDATE
 		updatePlayer();
 
+		//DRAW
 		sfRenderWindow_clear(window, sfBlack);
-		
 		displayPlayer(window); 
 		sfRenderWindow_display(window);
 	}
