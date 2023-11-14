@@ -6,6 +6,8 @@ void render_init()
     sfRenderWindow* window = sfRenderWindow_create(mode, "TheLegendOfBonk", sfResize | sfClose, NULL);
     sfEvent event;
 
+	initPlayer();  
+
 	while (sfRenderWindow_isOpen(window))
 	{
 		while (sfRenderWindow_pollEvent(window, &event))
@@ -15,7 +17,11 @@ void render_init()
 		}
 
       sfRenderWindow_clear(window, sfBlack);
+	  displayPlayer(window);  
+	  
       sfRenderWindow_display(window);
+	  
 	}
 }
+
 
