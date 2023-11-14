@@ -9,6 +9,7 @@
 #include "map.h"
 #include "render.h"
 #include "textures.h"
+#include "player.h"
 
 int main() {
 	char tilemap[H_MAP_T][W_MAP_T];
@@ -33,6 +34,8 @@ int main() {
 		}
 
 		sfRenderWindow_clear(window, sfBlack);
+		uptdatePlayer();
+		displayPlayer(window); 
 		sfRenderWindow_display(window);
 	}
 
