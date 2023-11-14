@@ -3,12 +3,15 @@
 #include <time.h>
 #include <errno.h>
 #include <math.h>
+#include "SFML/Graphics.h"
 
 #include "tools.h"
 #include "map.h"
 
 int main() {
 	char tilemap[H_MAP_T][W_MAP_T];
+	
+	render_init();
 
 	initMapRandom(tilemap);
 
