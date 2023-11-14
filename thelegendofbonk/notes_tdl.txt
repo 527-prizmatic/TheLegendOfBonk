@@ -5,3 +5,11 @@ Structure:
 	- Texture file to hash spritesheets into textures
 	- Editor file for... well... the spiders
 	- 
+
+
+
+
+The Legend of Bonk
+Lore:
+	Some guy got sent to horny jail
+	Have to find the shards of the key to unlock the doors of the horny jail and rescue the guy
