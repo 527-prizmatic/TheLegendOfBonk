@@ -13,8 +13,7 @@
 int main() {
 	char tilemap[H_MAP_T][W_MAP_T];
 	initMapRandom(tilemap);
-	sfRenderWindow* window = render_init();
-
+	sfRenderWindow* window = window_init();
 
 	for (int i = 0; i < H_MAP_T; i++) {
 		for (int j = 0; j < W_MAP_T; j++) {
@@ -24,18 +23,15 @@ int main() {
 	}
 
 	sfEvent event;
-	while (sfRenderWindow_isOpen(window))
-	{
-		while (sfRenderWindow_pollEvent(window, &event))
-		{
-			if (event.type == sfEvtClosed)
-				sfRenderWindow_close(window);
+	while (sfRenderWindow_isOpen(window)) {
+		while (sfRenderWindow_pollEvent(window, &event)) {
+			if (event.type == sfEvtClosed) sfRenderWindow_close(window);
 		}
 
 		sfRenderWindow_clear(window, sfBlack);
+		render_map(tilemap, window);
 		sfRenderWindow_display(window);
 	}
-
 
 	return 1;
 }

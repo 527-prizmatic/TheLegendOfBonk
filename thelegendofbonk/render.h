@@ -9,6 +9,6 @@
 #include "map.h"
 
 
-sfRenderWindow* render_init();
+sfRenderWindow* window_init();
 
-void render_map(char _map[H_MAP_T][W_MAP_T]);
+void render_map(char _map[H_MAP_T][W_MAP_T], sfRenderWindow* _w);
