@@ -5,9 +5,22 @@
 #include <math.h>
 #include "SFML/Graphics.h"
 
-int main() {
+#include "tools.h"
+#include "map.h"
 
+int main() {
+	char tilemap[H_MAP_T][W_MAP_T];
+	
 	render_init();
+
+	initMapRandom(tilemap);
+
+	for (int i = 0; i < H_MAP_T; i++) {
+		for (int j = 0; j < W_MAP_T; j++) {
+			printf("%d ", tilemap[i][j]);
+		}
+		printf("\n");
+	}
 
 	return 1;
 }
