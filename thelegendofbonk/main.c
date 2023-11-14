@@ -24,17 +24,21 @@ int main() {
 		printf("\n");
 	}
 
+	initPlayer();
+
 	sfEvent event;
 	while (sfRenderWindow_isOpen(window))
 	{
+		
 		while (sfRenderWindow_pollEvent(window, &event))
 		{
 			if (event.type == sfEvtClosed)
 				sfRenderWindow_close(window);
 		}
+		updatePlayer();
 
 		sfRenderWindow_clear(window, sfBlack);
-		uptdatePlayer();
+		
 		displayPlayer(window); 
 		sfRenderWindow_display(window);
 	}

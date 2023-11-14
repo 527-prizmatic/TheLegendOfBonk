@@ -3,7 +3,8 @@
 #include "SFML/Graphics.h"
 
 sfRectangleShape* player;
-sfVector2f playerPos; 
+sfVector2f playerPos = { 20.0f, 20.0f };;
+float playerSpeed = 0.10f;
 
 sfVector2f vector2f(float _x, float _y)
 {
@@ -12,32 +13,46 @@ sfVector2f vector2f(float _x, float _y)
 
 void initPlayer()
 {
+
 player = sfRectangleShape_create();  
 sfRectangleShape_setSize(player, (sfVector2f){50, 60});  
 sfRectangleShape_setFillColor(player, sfWhite);	  
-playerPos = vector2f(50.0f, 50.0f);
-sfRectangleShape_setPosition(player, playerPos); 
-
+sfSprite_setPosition(player, playerPos); 
 }
 
-void uptdatePlayer()
+void updatePlayer()
 {
-  if (sfKeyboard_isKeyPressed(sfKeyZ))
-	playerPos.y -= 5;
+    if (sfKeyboard_isKeyPressed(sfKeyZ))
+    {
+        printf("Z pressed\n");
+        playerPos.y -= playerSpeed * getDeltaTime();
+        sfSprite_setPosition(player, playerPos);
+    }
+    if (sfKeyboard_isKeyPressed(sfKeyS))
+    {
+        playerPos.y += playerSpeed * getDeltaTime();
+        sfSprite_setPosition(player, playerPos);
+    }
 
-  if (sfKeyboard_isKeyPressed(sfKeyS))
-    playerPos.y += 5;
-	
-  if (sfKeyboard_isKeyPressed(sfKeyQ))
-	playerPos.x -= 5;
+    if (sfKeyboard_isKeyPressed(sfKeyQ))
+    {
+        playerPos.x -= playerSpeed * getDeltaTime();
+        sfSprite_setPosition(player, playerPos);
+    }
 
-  if (sfKeyboard_isKeyPressed(sfKeyD))
-	playerPos.x += 5;
-
+    if (sfKeyboard_isKeyPressed(sfKeyD))
+    {
+        playerPos.x += playerSpeed * getDeltaTime();
+        sfSprite_setPosition(player, playerPos);
+    }
 }
 
 void displayPlayer(sfRenderWindow* _window)
 {
-  sfRenderWindow_drawRectangleShape(_window, player, NULL);  
+	if (player != NULL)
+	{
+		sfRenderWindow_drawRectangleShape(_window, player, NULL);
+        sfSprite_setPosition(player, playerPos); 
+	}
 }
 
