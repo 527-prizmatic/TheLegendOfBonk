@@ -7,21 +7,24 @@
 #include "dialogBox.h"
 
 void main() 
-{
-	sfVector2f textPos = { 140.0f , 15.0f };
-	sfFont* font = initFont();
-	sfText* txt = initText();
-	sfVector2f dialogBoxSize = { 300.0f , 50.0f };
-	sfVector2f dialogBoxPos = { 100.0f , 10.0f };
-	sfRectangleShape* dialogBox = initRectangle();
+{	
+	// Declaration variable
+	char str[] = "Lukas\nTymrakiewicz";
+
 	// INIT
+	// Variable DIALOG BOX
+	sfFont* font = initFont();
+	sfText* sfTxt = initText();
+	sfRectangleShape* dialogBox = initRectangle();
+
+	// Variable FENETRE
 	sfVideoMode mode = { 800, 600, 32 };
 	sfRenderWindow* window;
 	window = sfRenderWindow_create(mode, "Fenetre", sfDefaultStyle, NULL);
 	sfEvent event;
 
-	initDialogBox(txt, font, textPos, dialogBox, dialogBoxPos, dialogBoxSize);
-
+	// Init dialogBox
+	initDialogBox(sfTxt, font, dialogBox);
 	while (sfRenderWindow_isOpen(window))
 	{
 		// Gestion des evenements
@@ -32,11 +35,13 @@ void main()
 				sfRenderWindow_close(window);
 			}
 		}
-		// Update
-		
-		// Display 
+
+		// UPDATE
+		updateDialogBox(str, sizeof(str), sfTxt, dialogBox);
+
+		// DISPLAY
 		sfRenderWindow_clear(window, sfCyan);
-		displayDialogBox(window, txt, dialogBox);
+		displayDialogBox(window, sfTxt, dialogBox);
 		sfRenderWindow_display(window);
 	}
 }
