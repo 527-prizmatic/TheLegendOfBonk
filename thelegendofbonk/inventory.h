@@ -1,6 +1,8 @@
 #pragma once
 #include "tools.h"
 
-void initInventory();
-void udpateInventory();
-void displayInventory();
+
+sfSprite* initSprite();
+void initInventory(sfSprite* _tile);
+void updateInventory(int* _inventory);
+void displayInventory(sfRenderWindow* _window, sfSprite* _sprite);

@@ -11,6 +11,7 @@
 #include "player.h"
 #include "dialogBox.h"
 #include "tools.h"
+#include "inventory.h"
 
 #define TICKSPEED 30
 
@@ -27,6 +28,10 @@ int main() {
 	initDialogBox(sfTxt, font, dialogBox);
 	char str[] = "Hugo Micelli\nEvan Valette";
 
+	//Variable INVENTORY
+	sfSprite* inventorySprite = initSprite();
+	initInventory(inventorySprite);
+
 	for (int i = 0; i < H_MAP_T; i++) {
 		for (int j = 0; j < W_MAP_T; j++) {
 			printf("%d ", tilemap[i][j]);
@@ -35,8 +40,8 @@ int main() {
 	}
 
 	//INIT
+	int inventory[4] = { 0, 0, 0, 0 };
 	initPlayer();
-
 	sfEvent event;
 	float tick = 0.0f;
 
@@ -53,7 +58,7 @@ int main() {
 
 			// Updates
 			updatePlayer();
-			updateInventory();
+			updateInventory(inventory);
 			updateDialogBox(str, sizeof(str), sfTxt, dialogBox);
 
 			// Rendering
@@ -61,6 +66,7 @@ int main() {
 			renderMap(tilemap, window);
 			displayPlayer(window);
 			displayDialogBox(window, sfTxt, dialogBox);
+			displayInventory(window, inventorySprite);
 			sfRenderWindow_display(window);
 		}
 	}
