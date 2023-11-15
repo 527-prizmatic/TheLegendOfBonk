@@ -16,5 +16,7 @@ sfRectangleShape* initRectangle();
 *  \param font - A font object
 *  \param dialogBox - A display area object */
 void initDialogBox(sfText* txt, sfFont* font, sfRectangleShape* dialogBox);
-void updateDialogBox(char* _str, int _sizeStr, sfText* _txt, sfRectangleShape* _dialogBox);
+void updateDialogBox(char* _str, int _sizeStr, sfText* _txt, sfRectangleShape* _dialogBox, sfVector2f _pos);
 void displayDialogBox(sfRenderWindow* _window, sfText* txt, sfRectangleShape* dialogBox);
+
+sfBool isClicked(sfRenderWindow* _w, sfRectangleShape* _dialogBox);
