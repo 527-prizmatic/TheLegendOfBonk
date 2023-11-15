@@ -9,6 +9,7 @@
 #include "map.h"
 #include "render.h"
 #include "textures.h"
+#include "player.h"
 
 int main() {
 	initTools();
@@ -23,14 +24,22 @@ int main() {
 		printf("\n");
 	}
 
+	//INIT
+	initPlayer();
+
 	sfEvent event;
 	while (sfRenderWindow_isOpen(window)) {
 		while (sfRenderWindow_pollEvent(window, &event)) {
 			if (event.type == sfEvtClosed) sfRenderWindow_close(window);
 		}
 
+		//UPDATE
+		updatePlayer();
+
+		//DRAW
 		sfRenderWindow_clear(window, sfBlack);
 		render_map(tilemap, window);
+		displayPlayer(window); 
 		sfRenderWindow_display(window);
 	}
 
