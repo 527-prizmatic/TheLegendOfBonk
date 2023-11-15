@@ -7,6 +7,7 @@
 sfText* initText();
 sfFont* initFont();
 sfRectangleShape* initRectangle();
+
 void initDialogBox(sfText* txt, sfFont* font, sfRectangleShape* dialogBox);
 void updateDialogBox(char* _str, int _sizeStr, sfText* _txt, sfRectangleShape* _dialogBox);
 void displayDialogBox(sfRenderWindow* _window, sfText* txt, sfRectangleShape* dialogBox);
