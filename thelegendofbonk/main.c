@@ -32,8 +32,8 @@ int main() {
 
 	//Variable INVENTORY
 	int inventory[4] = { 0, 0, 0, 0 };
-	sfSprite* inventorySprite = initSprite();
-	sfSprite* keySprite = initSprite();
+	sfSprite* inventorySprite = sfSprite_create();
+	sfSprite* keySprite = sfSprite_create();
 	initInventory(inventorySprite, keySprite);
 	char str[] = "The\nLegend\nof\nBonk";
 
