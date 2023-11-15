@@ -12,6 +12,8 @@ sfRectangleShape* player;
 sfVector2f playerPos = { 20.0f, 20.0f };;
 const float playerSpeed = 3.5f;
 
+int inventory[4] = {0, 0, 0, 0};   
+
 sfVector2f vector2f(float _x, float _y)
 {
 	return (sfVector2f) { _x, _y };
@@ -23,6 +25,7 @@ void initPlayer() {
     sfRectangleShape_setFillColor(player, sfWhite);	  
     sfSprite_setPosition(player, playerPos); 
 }
+
 
 void updatePlayer() {
     // Diagonal movement
@@ -51,6 +54,23 @@ void updatePlayer() {
     else return;
 
     sfSprite_setPosition(player, playerPos);
+}
+
+void updateInventory()
+{
+    if (sfKeyboard_isKeyPressed(sfKeyI)) { inventory[0] = 1; } 
+    if (sfKeyboard_isKeyPressed(sfKeyO)) { inventory[1] = 1; } 
+    if (sfKeyboard_isKeyPressed(sfKeyP)) { inventory[2] = 1; } 
+    if (sfKeyboard_isKeyPressed(sfKeyM)) { inventory[3] = 1; } 
+
+    printf("inventory : %d %d %d %d\n", inventory[0], inventory[1], inventory[2], inventory[3]);
+
+    if (inventory[0] == 1 && inventory[1] == 1 && inventory[2] == 1 && inventory[3] == 1)
+    {
+        printf("WIN !\n");
+        system("pause");
+        return 1;
+    }
 }
 
 void displayPlayer(sfRenderWindow* _window) {
