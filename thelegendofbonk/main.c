@@ -20,17 +20,18 @@ int main() {
 	char tilemap[H_MAP_T][W_MAP_T];
 	initMapRandom(tilemap);
 	sfRenderWindow* window = initRender();
+
 	
 	// Variable DIALOG BOX
 	sfFont* font = initFont();
 	sfText* sfTxt = initText();
 	sfRectangleShape* dialogBox = initRectangle();
 	initDialogBox(sfTxt, font, dialogBox);
-	char str[] = "Hugo Micelli\nEvan Valette";
 
 	//Variable INVENTORY
 	sfSprite* inventorySprite = initSprite();
 	initInventory(inventorySprite);
+	char str[] = "The\nLegend\nof\nBonk";
 
 	for (int i = 0; i < H_MAP_T; i++) {
 		for (int j = 0; j < W_MAP_T; j++) {
@@ -42,6 +43,7 @@ int main() {
 	//INIT
 	int inventory[4] = { 0, 0, 0, 0 };
 	initPlayer();
+	initView(window);
 	sfEvent event;
 	float tick = 0.0f;
 
@@ -57,8 +59,9 @@ int main() {
 			}
 
 			// Updates
-			updatePlayer();
-			updateInventory(inventory);
+			updatePlayer(tilemap);
+			if (updateInventory()) break;
+			updateView(window, playerPos);
 			updateDialogBox(str, sizeof(str), sfTxt, dialogBox);
 
 			// Rendering
@@ -71,5 +74,6 @@ int main() {
 		}
 	}
 
+	sfRenderWindow_close(window);
 	return 1;
 }
