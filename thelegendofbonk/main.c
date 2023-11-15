@@ -11,11 +11,13 @@
 #include "textures.h"
 #include "player.h"
 
+#define TICKSPEED 30
+
 int main() {
 	initTools();
 	char tilemap[H_MAP_T][W_MAP_T];
 	initMapRandom(tilemap);
-	sfRenderWindow* window = window_init();
+	sfRenderWindow* window = initRender();
 
 	for (int i = 0; i < H_MAP_T; i++) {
 		for (int j = 0; j < W_MAP_T; j++) {
@@ -28,19 +30,28 @@ int main() {
 	initPlayer();
 
 	sfEvent event;
+	float tick = 0.0f;
+
+	// Game loop
 	while (sfRenderWindow_isOpen(window)) {
-		while (sfRenderWindow_pollEvent(window, &event)) {
-			if (event.type == sfEvtClosed) sfRenderWindow_close(window);
+		restartClock();
+
+		tick += getDeltaTime();
+		if (tick >= 1.0f / TICKSPEED) {
+			tick = 0.0f;
+			while (sfRenderWindow_pollEvent(window, &event)) {
+				if (event.type == sfEvtClosed) sfRenderWindow_close(window);
+			}
+
+			// Player updates
+			updatePlayer();
+
+			// Rendering
+			sfRenderWindow_clear(window, sfBlack);
+			renderMap(tilemap, window);
+			displayPlayer(window);
+			sfRenderWindow_display(window);
 		}
-
-		//UPDATE
-		updatePlayer();
-
-		//DRAW
-		sfRenderWindow_clear(window, sfBlack);
-		render_map(tilemap, window);
-		displayPlayer(window); 
-		sfRenderWindow_display(window);
 	}
 
 	return 1;
