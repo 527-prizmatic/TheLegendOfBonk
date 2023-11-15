@@ -45,6 +45,7 @@ int main() {
 
 			// Player updates
 			updatePlayer();
+			updateInventory();
 
 			// Rendering
 			sfRenderWindow_clear(window, sfBlack);
