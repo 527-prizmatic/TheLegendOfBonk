@@ -16,14 +16,13 @@ sfVector2f playerPos = { 20.0f, 20.0f };
 const float playerSpeed = 3.5f;
 sfRectangleShape* playerHitbox;
 
-int inventory[4] = {0, 0, 0, 0};   
-
 sfVector2f vector2f(float _x, float _y)
 {
 	return (sfVector2f) { _x, _y };
 }
 
-void initPlayer() {
+void initPlayer() 
+{
     player = sfRectangleShape_create();  
     sfRectangleShape_setSize(player, (sfVector2f){48, 48});
     sfRectangleShape_setFillColor(player, sfWhite);	  

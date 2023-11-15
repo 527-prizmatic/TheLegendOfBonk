@@ -11,6 +11,7 @@
 #include "player.h"
 #include "dialogBox.h"
 #include "tools.h"
+#include "inventory.h"
 
 #define TICKSPEED 30
 
@@ -26,6 +27,10 @@ int main() {
 	sfText* sfTxt = initText();
 	sfRectangleShape* dialogBox = initRectangle();
 	initDialogBox(sfTxt, font, dialogBox);
+
+	//Variable INVENTORY
+	sfSprite* inventorySprite = initSprite();
+	initInventory(inventorySprite);
 	char str[] = "The\nLegend\nof\nBonk";
 
 	for (int i = 0; i < H_MAP_T; i++) {
@@ -36,8 +41,9 @@ int main() {
 	}
 
 	//INIT
+	int inventory[4] = { 0, 0, 0, 0 };
 	initPlayer();
-
+	initView(window);
 	sfEvent event;
 	float tick = 0.0f;
 
@@ -64,6 +70,7 @@ int main() {
 			renderMap(tilemap, window);
 			displayPlayer(window);
 			displayDialogBox(window, sfTxt, dialogBox);
+			displayInventory(window, inventorySprite);
 			sfRenderWindow_display(window);
 		}
 	}
