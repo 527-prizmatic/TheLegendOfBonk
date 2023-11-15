@@ -45,12 +45,10 @@ void updateView(sfRenderWindow* _w, sfVector2f _pos) {
 
 void renderMap(char _map[H_MAP_T][W_MAP_T], sfRenderWindow* _w) {
 	sfSprite_setTexture(tile, tilesheet, sfFalse);
-	for (int i = 0; i < H_MAP_T; i++) {
-		for (int j = 0; j < W_MAP_T; j++) {
+	for (int i = 0; i < W_MAP_T; i++) {
+		for (int j = 0; j < H_MAP_T; j++) {
 			sfSprite_setPosition(tile, (sfVector2f) { i * TILE_PX, j * TILE_PX});
-			char zz = _map[i][j];
-			sfIntRect zzz = textureFromId(zz);
-			sfSprite_setTextureRect(tile, zzz);
+			sfSprite_setTextureRect(tile, textureFromId(_map[j][i]));
 			sfRenderWindow_drawSprite(_w, tile, NULL);
 		}
 	}

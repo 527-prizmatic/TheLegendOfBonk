@@ -71,7 +71,7 @@ void updateDialogBox(char* _str,int _sizeStr, sfText* _txt, sfRectangleShape* _d
 		}
 	}
 	// Calcul de la taille en x de la boite de dialogue
-	newSize.x = 19 * dialogBoxWidthMax;
+	newSize.x = 19 * (dialogBoxWidthMax + 1);
 
 	// Change le texte
 	sfText_setString(_txt, _str);
