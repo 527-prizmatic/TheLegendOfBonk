@@ -3,9 +3,9 @@
 const sfIntRect t_none = { 0, 0, 0, 0 };
 
 const sfIntRect t_green = { 0, 0, 32, 32 };
-const sfIntRect t_blue = { 0, 32, 32, 32 };
-const sfIntRect t_yellow = { 0, 64, 32, 32 };
-const sfIntRect t_gray = { 0, 96, 32, 32 };
+const sfIntRect t_blue = { 32, 0, 32, 32 };
+const sfIntRect t_yellow = { 64, 0, 32, 32 };
+const sfIntRect t_gray = { 96, 0, 32, 32 };
 
 sfIntRect textureFromId(int _id) {
 	switch (_id) {
