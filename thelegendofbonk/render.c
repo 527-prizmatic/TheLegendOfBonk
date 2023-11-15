@@ -3,6 +3,7 @@
 
 sfRenderWindow* render_init() {
 	sfVideoMode mode = { 800, 600, 32 };
+
     sfRenderWindow* _w = sfRenderWindow_create(mode, "TheLegendOfBonk", sfResize | sfClose, NULL);
 	return _w;
 }
@@ -17,3 +18,4 @@ void render_map(char _map[H_MAP_T][W_MAP_T]) {
 		}
 	}
 }
+
