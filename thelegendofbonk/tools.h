@@ -7,8 +7,12 @@
 #define TEXTURE_PATH "..\\assets\\textures\\"
 #define AUDIO_PATH "..\\assets\\audio\\"
 
-// GESTION TIME
-
+typedef enum GameState {
+	MENU,
+	GAME,
+	EDITOR,
+	QUIT
+} GameState;
 
 /* Initializes misc tools for handling time. */
 void initTools();
