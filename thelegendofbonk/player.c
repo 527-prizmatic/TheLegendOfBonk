@@ -25,7 +25,7 @@ sfVector2f vector2f(float _x, float _y)
 
 void initPlayer() {
     player = sfRectangleShape_create();  
-    sfRectangleShape_setSize(player, (sfVector2f){50, 60});
+    sfRectangleShape_setSize(player, (sfVector2f){48, 48});
     sfRectangleShape_setFillColor(player, sfWhite);	  
     sfSprite_setPosition(player, playerPos);
 

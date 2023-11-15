@@ -11,9 +11,9 @@
 /* Initializes the rendering engine by creating windows, views, texture sheets and the like.
 *  \return A pointed to a newly created sfRenderWindow */
 sfRenderWindow* initRender();
-void initView(sfRenderWindow* _w);
+sfView* initView();
 
-void updateView(sfRenderWindow* _w, sfVector2f _pos);
+void updateView(sfRenderWindow* _w, sfView* _v, sfVector2f _pos);
 
 /* Displays the map.
 *  \param _map[][] - An initialized tilemap to be displayed
