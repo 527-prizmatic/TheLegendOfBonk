@@ -3,45 +3,65 @@
 #include <time.h>
 #include <errno.h>
 #include <math.h>
-#include "tools.h"
+#include "SFML/Graphics.h"
+
+#include "map.h"
+#include "render.h"
+#include "textures.h"
+#include "player.h"
 #include "dialogBox.h"
+#include "tools.h"
 
-void main() 
-{	
-	// Declaration variable
-	char str[] = "Lukas\nTymrakiewicz";
+#define TICKSPEED 30
 
-	// INIT
+int main() {
+	initTools();
+	char tilemap[H_MAP_T][W_MAP_T];
+	initMapRandom(tilemap);
+	sfRenderWindow* window = initRender();
+	
 	// Variable DIALOG BOX
 	sfFont* font = initFont();
 	sfText* sfTxt = initText();
-	sfRectangleShape* dialogBox = initRectangle();
-
-	// Variable FENETRE
-	sfVideoMode mode = { 800, 600, 32 };
-	sfRenderWindow* window;
-	window = sfRenderWindow_create(mode, "Fenetre", sfDefaultStyle, NULL);
-	sfEvent event;
-
-	// Init dialogBox
 	initDialogBox(sfTxt, font, dialogBox);
-	while (sfRenderWindow_isOpen(window))
-	{
-		// Gestion des evenements
-		while (sfRenderWindow_pollEvent(window, &event))
-		{
-			if (event.type == sfEvtClosed)
-			{
-				sfRenderWindow_close(window);
-			}
+	char str[] = "Lukas\nTymrakiewicz";
+
+	for (int i = 0; i < H_MAP_T; i++) {
+		for (int j = 0; j < W_MAP_T; j++) {
+			printf("%d ", tilemap[i][j]);
 		}
-
-		// UPDATE
-		updateDialogBox(str, sizeof(str), sfTxt, dialogBox);
-
-		// DISPLAY
-		sfRenderWindow_clear(window, sfCyan);
-		displayDialogBox(window, sfTxt, dialogBox);
-		sfRenderWindow_display(window);
+		printf("\n");
 	}
+
+	//INIT
+	initPlayer();
+
+	sfEvent event;
+	float tick = 0.0f;
+
+	// Game loop
+	while (sfRenderWindow_isOpen(window)) {
+		restartClock();
+
+		tick += getDeltaTime();
+		if (tick >= 1.0f / TICKSPEED) {
+			tick = 0.0f;
+			while (sfRenderWindow_pollEvent(window, &event)) {
+				if (event.type == sfEvtClosed) sfRenderWindow_close(window);
+			}
+
+			// Updates
+			updatePlayer();
+			updateDialogBox(str, sizeof(str), sfTxt, dialogBox);
+
+			// Rendering
+			sfRenderWindow_clear(window, sfBlack);
+			renderMap(tilemap, window);
+			displayPlayer(window);
+			displayDialogBox(window, sfTxt, dialogBox);
+			sfRenderWindow_display(window);
+		}
+	}
+
+	return 1;
 }
