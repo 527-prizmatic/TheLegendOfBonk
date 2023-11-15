@@ -3,6 +3,6 @@
 
 
 sfSprite* initSprite();
-void initInventory(sfSprite* _inventorySprite, sfSprite* _keySprite);
+void initInventory(sfSprite* _inventorySprite);
 void updateInventory(int* _inventory);
 void displayInventory(sfRenderWindow* _window, sfSprite* _sprite);

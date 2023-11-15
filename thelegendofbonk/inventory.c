@@ -6,7 +6,7 @@ sfSprite* initSprite()
     return _sprite;
 }
 
-void initInventory(sfSprite* _inventorySprite, sfSprite* _keySprite)
+void initInventory(sfSprite* _inventorySprite)
 {
     sfTexture* inventoryTexture;
 

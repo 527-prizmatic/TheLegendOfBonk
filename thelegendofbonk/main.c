@@ -12,6 +12,7 @@
 #include "dialogBox.h"
 #include "tools.h"
 #include "inventory.h"
+#include "save.h"
 
 #define TICKSPEED 30
 
@@ -19,6 +20,7 @@ int main() {
 	initTools();
 	char tilemap[H_MAP_T][W_MAP_T];
 	initMapRandom(tilemap);
+
 	sfRenderWindow* window = initRender();
 	sfView* view = initView();
 	
