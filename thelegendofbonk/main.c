@@ -11,6 +11,7 @@
 #include "textures.h"
 
 int main() {
+	initTools();
 	char tilemap[H_MAP_T][W_MAP_T];
 	initMapRandom(tilemap);
 	sfRenderWindow* window = window_init();
