@@ -49,29 +49,29 @@ void initDialogBox(sfText* _txt, sfFont* _font, sfRectangleShape* _dialogBox)
 void updateDialogBox(char* _str,int _sizeStr, sfText* _txt, sfRectangleShape* _dialogBox)
 {
 	sfVector2f newSize = DEFAULT_DIALOG_SIZE;
-	int size_x_dialog = 0;
-	int max_size_x_dialog = 0;
+	int dialogBoxWidth = 0;
+	int dialogBoxWidthMax = 0;
 	
 	// Changer texte
 	for (int i = 0; i < _sizeStr; i++)
 	{
-		size_x_dialog++;
+		dialogBoxWidth++;
 		// Si saut de ligne
 		if (_str[i] == 10)
 		{
 			// Calcul de la taille en y de la boite de dialogue
 			newSize.y += 30;
-			size_x_dialog = 0;
+			dialogBoxWidth = 0;
 		}
 
 		// Si nouvelle taille max
-		if (max_size_x_dialog < size_x_dialog)
+		if (dialogBoxWidthMax < dialogBoxWidth)
 		{
-			max_size_x_dialog = size_x_dialog;
+			dialogBoxWidthMax = dialogBoxWidth;
 		}
 	}
 	// Calcul de la taille en x de la boite de dialogue
-	newSize.x = 19 * max_size_x_dialog;
+	newSize.x = 19 * dialogBoxWidthMax;
 
 	// Change le texte
 	sfText_setString(_txt, _str);
