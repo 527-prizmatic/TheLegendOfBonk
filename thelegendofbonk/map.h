@@ -5,6 +5,9 @@
 
 #define H_MAP_T 40 // Map height in tiles
 #define W_MAP_T 80 // Map width in tiles
+#define TILE_PX 64 // Tile size in pixels
+#define H_MAP_PX H_MAP_T * TILE_PX // Map height in pixels
+#define W_MAP_PX W_MAP_T * TILE_PX // Map height in pixels
 
 /* Initializes the tilemap passed in argument and fills it with zeros.
 *  \param _map[][] - A non-initialized tilemap */
