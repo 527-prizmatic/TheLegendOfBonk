@@ -17,8 +17,6 @@ void initPlayer();
 *  \param _map[][] - An initialized tilemap */
 void updatePlayer(char _map[H_MAP_T][W_MAP_T]);
 
-int updateInventory();
-
 /* Checks the player's surroundings for a potential collision with a solid block.
 *  \param _map[][] - An initialized tilemap
 *  \param _dir - Direction towards which to check for a collision */
