@@ -1,6 +1,8 @@
 #pragma once
 #include "render.h"
 
+sfVector2f playerPos ;
+
 /* Initializes the player character's sprite, stats and inventory. */
 void initPlayer();
 

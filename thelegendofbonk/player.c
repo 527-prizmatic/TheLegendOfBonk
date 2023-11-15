@@ -9,8 +9,8 @@
 #define KEY_RIGHT sfKeyD
 
 sfRectangleShape* player;
-sfVector2f playerPos = { 20.0f, 20.0f };;
-const float playerSpeed = 3.5f;
+sfVector2f playerPos = { 20.0f, 20.0f }; 
+const float playerSpeed = 5.5f;
 
 int inventory[4] = {0, 0, 0, 0};   
 
@@ -21,7 +21,7 @@ sfVector2f vector2f(float _x, float _y)
 
 void initPlayer() {
     player = sfRectangleShape_create();  
-    sfRectangleShape_setSize(player, (sfVector2f){50, 60});  
+    sfRectangleShape_setSize(player, (sfVector2f){40, 50});  
     sfRectangleShape_setFillColor(player, sfWhite);	  
     sfSprite_setPosition(player, playerPos); 
 }
@@ -47,7 +47,7 @@ void updatePlayer() {
     }
 
     // Orthonormal movement
-    else if (sfKeyboard_isKeyPressed(KEY_UP)) playerPos.y -= playerSpeed * getDeltaTime();
+    else if (sfKeyboard_isKeyPressed(KEY_UP)) playerPos.y -= playerSpeed * getDeltaTime(); 
     else if (sfKeyboard_isKeyPressed(KEY_DOWN)) playerPos.y += playerSpeed * getDeltaTime();
     else if (sfKeyboard_isKeyPressed(KEY_LEFT)) playerPos.x -= playerSpeed * getDeltaTime();
     else if (sfKeyboard_isKeyPressed(KEY_RIGHT)) playerPos.x += playerSpeed * getDeltaTime();

@@ -19,6 +19,7 @@ int main() {
 	char tilemap[H_MAP_T][W_MAP_T];
 	initMapRandom(tilemap);
 	sfRenderWindow* window = initRender();
+
 	
 	// Variable DIALOG BOX
 	sfFont* font = initFont();
@@ -36,6 +37,7 @@ int main() {
 
 	//INIT
 	initPlayer();
+	initView(window);
 
 	sfEvent event;
 	float tick = 0.0f;
@@ -54,6 +56,7 @@ int main() {
 			// Updates
 			updatePlayer();
 			updateInventory();
+			updateView(window, playerPos);
 			updateDialogBox(str, sizeof(str), sfTxt, dialogBox);
 
 			// Rendering
