@@ -1,6 +1,8 @@
 #pragma once
 #include "render.h"
 
+sfVector2f playerPos ;
+
 typedef enum moveDir {
 	UP,
 	LEFT,
