@@ -73,6 +73,9 @@ int main() {
 			displayDialogBox(window, sfTxt, dialogBox);
 			displayInventory(window, inventorySprite, keySprite);
 			sfRenderWindow_display(window);
+
+			if (sfKeyboard_isKeyPressed(sfKeyK) && sfKeyboard_isKeyPressed(sfKeyLControl)) save_map(tilemap, playerPos, inventory);
+			if (sfKeyboard_isKeyPressed(sfKeyL) && sfKeyboard_isKeyPressed(sfKeyLControl)) load_map(tilemap, &playerPos, inventory);
 		}
 	}
 

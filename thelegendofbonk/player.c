@@ -87,28 +87,24 @@ sfBool checkForCollisions(char _map[H_MAP_T][W_MAP_T], moveDir _dir) {
         int blockAbove = trunc((hitbox.top - playerSpeed * 1.1) / TILE_PX);
         int cornerTL = trunc(hitbox.left / TILE_PX);
         int cornerTR = trunc((hitbox.left + hitbox.width) / TILE_PX);
-        printf("%d %d %d\n", blockAbove, cornerTL, cornerTR);
         if (isSolidBlock(_map[blockAbove][cornerTL]) || isSolidBlock(_map[blockAbove][cornerTR])) return sfTrue;
     }
     else if (_dir == DOWN) {
         int blockBelow = trunc((hitbox.top + hitbox.height + playerSpeed * 1.1) / TILE_PX);
         int cornerBL = trunc(hitbox.left / TILE_PX);
         int cornerBR = trunc((hitbox.left + hitbox.width) / TILE_PX);
-        printf("%d %d %d\n", blockBelow, cornerBL, cornerBR);
         if (isSolidBlock(_map[blockBelow][cornerBL]) || isSolidBlock(_map[blockBelow][cornerBR])) return sfTrue;
     }
     else if (_dir == LEFT) {
         int blockLeft = trunc((hitbox.left - playerSpeed * 1.1) / TILE_PX);
         int cornerTL = trunc(hitbox.top / TILE_PX);
         int cornerBL = trunc((hitbox.top + hitbox.height) / TILE_PX);
-        printf("%d %d %d\n", blockLeft, cornerTL, cornerBL);
         if (isSolidBlock(_map[cornerTL][blockLeft]) || isSolidBlock(_map[cornerBL][blockLeft])) return sfTrue;
     }
     else if (_dir == RIGHT) {
         int blockRight = trunc((hitbox.left + hitbox.width + playerSpeed * 1.1) / TILE_PX);
         int cornerTR = trunc(hitbox.top / TILE_PX);
         int cornerBR = trunc((hitbox.top + hitbox.height) / TILE_PX);
-        printf("%d %d %d\n", blockRight, cornerTR, cornerBR);
         if (isSolidBlock(_map[cornerTR][blockRight]) || isSolidBlock(_map[cornerBR][blockRight])) return sfTrue;
     }
 
