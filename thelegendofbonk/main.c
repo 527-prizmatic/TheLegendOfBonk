@@ -25,7 +25,7 @@ int main() {
 	sfText* sfTxt = initText();
 	sfRectangleShape* dialogBox = initRectangle();
 	initDialogBox(sfTxt, font, dialogBox);
-	char str[] = "Lukas\nTymrakiewicz";
+	char str[] = "The\nLegend\nof\nBonk";
 
 	for (int i = 0; i < H_MAP_T; i++) {
 		for (int j = 0; j < W_MAP_T; j++) {
@@ -52,7 +52,7 @@ int main() {
 			}
 
 			// Updates
-			updatePlayer();
+			updatePlayer(tilemap);
 			if (updateInventory()) break;
 			updateDialogBox(str, sizeof(str), sfTxt, dialogBox);
 
