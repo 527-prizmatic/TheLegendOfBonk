@@ -56,7 +56,7 @@ void updatePlayer() {
     sfSprite_setPosition(player, playerPos);
 }
 
-void updateInventory()
+int updateInventory()
 {
     if (sfKeyboard_isKeyPressed(sfKeyI)) { inventory[0] = 1; } 
     if (sfKeyboard_isKeyPressed(sfKeyO)) { inventory[1] = 1; } 
@@ -65,12 +65,11 @@ void updateInventory()
 
     printf("inventory : %d %d %d %d\n", inventory[0], inventory[1], inventory[2], inventory[3]);
 
-    if (inventory[0] == 1 && inventory[1] == 1 && inventory[2] == 1 && inventory[3] == 1)
-    {
+    if (inventory[0] == 1 && inventory[1] == 1 && inventory[2] == 1 && inventory[3] == 1) {
         printf("WIN !\n");
-        system("pause");
         return 1;
     }
+    else return 0;
 }
 
 void displayPlayer(sfRenderWindow* _window) {

@@ -53,7 +53,7 @@ int main() {
 
 			// Updates
 			updatePlayer();
-			updateInventory();
+			if (updateInventory()) break;
 			updateDialogBox(str, sizeof(str), sfTxt, dialogBox);
 
 			// Rendering
@@ -65,5 +65,6 @@ int main() {
 		}
 	}
 
+	sfRenderWindow_close(window);
 	return 1;
 }
