@@ -12,6 +12,7 @@
 #include "dialogBox.h"
 #include "tools.h"
 #include "inventory.h"
+#include "save.h"
 
 #define TICKSPEED 30
 
@@ -19,6 +20,7 @@ int main() {
 	initTools();
 	char tilemap[H_MAP_T][W_MAP_T];
 	initMapRandom(tilemap);
+
 	sfRenderWindow* window = initRender();
 	sfView* view = initView();
 	
@@ -30,8 +32,8 @@ int main() {
 
 	//Variable INVENTORY
 	int inventory[4] = { 0, 0, 0, 0 };
-	sfSprite* inventorySprite = initSprite();
-	sfSprite* keySprite = initSprite();
+	sfSprite* inventorySprite = sfSprite_create();
+	sfSprite* keySprite = sfSprite_create();
 	initInventory(inventorySprite, keySprite);
 	char str[] = "The\nLegend\nof\nBonk";
 
