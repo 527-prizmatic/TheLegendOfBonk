@@ -13,6 +13,7 @@ sfRenderWindow* initRender() {
     sfRenderWindow* _w = sfRenderWindow_create(mode, "TheLegendOfBonk", sfResize | sfClose, NULL);
 	tilesheet = sfTexture_createFromFile(TEXTURE_PATH"tilemap_poc.png", NULL);
 	tile = sfSprite_create();
+	sfSprite_setScale(tile, (sfVector2f){ TILE_PX / 32, TILE_PX / 32 });
 	return _w;
 }
 
@@ -20,7 +21,7 @@ void renderMap(char _map[H_MAP_T][W_MAP_T], sfRenderWindow* _w) {
 	sfSprite_setTexture(tile, tilesheet, sfFalse);
 	for (int i = 0; i < H_MAP_T; i++) {
 		for (int j = 0; j < W_MAP_T; j++) {
-			sfSprite_setPosition(tile, (sfVector2f) { i * 32, j * 32 });
+			sfSprite_setPosition(tile, (sfVector2f) { i * TILE_PX, j * TILE_PX});
 			char zz = _map[i][j];
 			sfIntRect zzz = textureFromId(zz);
 			sfSprite_setTextureRect(tile, zzz);
