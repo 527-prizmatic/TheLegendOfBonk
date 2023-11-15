@@ -15,3 +15,4 @@ void restartClock() {
 float getDeltaTime() {
 	return sfTime_asSeconds(sf_time);
 }
+

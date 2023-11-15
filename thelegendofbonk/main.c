@@ -11,6 +11,8 @@
 #include "player.h"
 #include "dialogBox.h"
 #include "tools.h"
+#include "inventory.h"
+#include "save.h"
 
 #define TICKSPEED 30
 
@@ -18,14 +20,21 @@ int main() {
 	initTools();
 	char tilemap[H_MAP_T][W_MAP_T];
 	initMapRandom(tilemap);
-	sfRenderWindow* window = initRender();
 
+	sfRenderWindow* window = initRender();
+	sfView* view = initView();
 	
 	// Variable DIALOG BOX
 	sfFont* font = initFont();
 	sfText* sfTxt = initText();
 	sfRectangleShape* dialogBox = initRectangle();
 	initDialogBox(sfTxt, font, dialogBox);
+
+	//Variable INVENTORY
+	int inventory[4] = { 0, 0, 0, 0 };
+	sfSprite* inventorySprite = sfSprite_create();
+	sfSprite* keySprite = sfSprite_create();
+	initInventory(inventorySprite, keySprite);
 	char str[] = "The\nLegend\nof\nBonk";
 
 	for (int i = 0; i < H_MAP_T; i++) {
@@ -38,7 +47,6 @@ int main() {
 	//INIT
 	initPlayer();
 	initView(window);
-
 	sfEvent event;
 	float tick = 0.0f;
 
@@ -55,15 +63,21 @@ int main() {
 
 			// Updates
 			updatePlayer(tilemap);
-			updateView(window, playerPos);
+			updateView(window, view, playerPos);
 			updateDialogBox(str, sizeof(str), sfTxt, dialogBox);
+			updateInventory(inventory, keySprite);
 
 			// Rendering
 			sfRenderWindow_clear(window, sfBlack);
+			sfRenderWindow_setView(window, view);
 			renderMap(tilemap, window);
 			displayPlayer(window);
 			displayDialogBox(window, sfTxt, dialogBox);
+			displayInventory(window, inventorySprite, keySprite);
 			sfRenderWindow_display(window);
+
+			if (sfKeyboard_isKeyPressed(sfKeyK) && sfKeyboard_isKeyPressed(sfKeyLControl)) save_map(tilemap, playerPos, inventory);
+			if (sfKeyboard_isKeyPressed(sfKeyL) && sfKeyboard_isKeyPressed(sfKeyLControl)) load_map(tilemap, &playerPos, inventory);
 		}
 	}
 
