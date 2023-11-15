@@ -36,7 +36,7 @@ void updateInventory(int* _inventory)
     }
 }
 
-void displayInventory(sfRenderWindow* _window, sfSprite* _sprite)
-{
+void displayInventory(sfRenderWindow* _window, sfSprite* _sprite) {
+    sfRenderWindow_setView(_window, sfRenderWindow_getDefaultView(_window));
     sfRenderWindow_drawSprite(_window, _sprite, NULL);
 }

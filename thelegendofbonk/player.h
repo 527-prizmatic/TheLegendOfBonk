@@ -1,7 +1,7 @@
 #pragma once
 #include "render.h"
 
-sfVector2f playerPos ;
+sfVector2f playerPos;
 
 typedef enum moveDir {
 	UP,
@@ -16,8 +16,6 @@ void initPlayer();
 /* Input tracking and movement functions
 *  \param _map[][] - An initialized tilemap */
 void updatePlayer(char _map[H_MAP_T][W_MAP_T]);
-
-int updateInventory();
 
 /* Checks the player's surroundings for a potential collision with a solid block.
 *  \param _map[][] - An initialized tilemap

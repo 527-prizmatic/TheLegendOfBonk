@@ -139,6 +139,7 @@
     <ClCompile Include="player.c" />
     <ClCompile Include="map.c" />
     <ClCompile Include="render.c" />
+    <ClCompile Include="save.c" />
     <ClCompile Include="textures.c" />
     <ClCompile Include="tools.c" />
   </ItemGroup>
@@ -148,6 +149,7 @@
     <ClInclude Include="player.h" />
     <ClInclude Include="map.h" />
     <ClInclude Include="render.h" />
+    <ClInclude Include="save.h" />
     <ClInclude Include="textures.h" />
     <ClInclude Include="tools.h" />
   </ItemGroup>
