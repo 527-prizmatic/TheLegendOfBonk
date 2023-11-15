@@ -53,6 +53,7 @@ int main() {
 
 			// Updates
 			updatePlayer();
+			updateInventory();
 			updateDialogBox(str, sizeof(str), sfTxt, dialogBox);
 
 			// Rendering
