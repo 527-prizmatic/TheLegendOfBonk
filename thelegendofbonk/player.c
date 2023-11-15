@@ -11,10 +11,19 @@
 
 #define DISPLAY_HITBOX sfFalse
 
-sfRectangleShape* player;
+sfSprite* player;
+sfTexture* spriteSheet;
+sfIntRect irect = { 0, 0, 32, 32 };
+
+float animTime;
+int frameX;
+int frameY;
+sfBool isMoving; 
+
 sfVector2f playerPos = { 20.0f, 20.0f };
 const float playerSpeed = 3.5f;
 sfRectangleShape* playerHitbox;
+
 
 int inventory[4] = {0, 0, 0, 0};   
 
@@ -24,10 +33,17 @@ sfVector2f vector2f(float _x, float _y)
 }
 
 void initPlayer() {
-    player = sfRectangleShape_create();  
-    sfRectangleShape_setSize(player, (sfVector2f){50, 60});
-    sfRectangleShape_setFillColor(player, sfWhite);	  
+    player = sfSprite_create();
+    spriteSheet = sfTexture_createFromFile("..\\assets\\textures\\spriteSheet.png", NULL);
+    sfSprite_setTexture(player, spriteSheet, sfTrue);
+    sfSprite_setTextureRect(player, irect);
+    sfSprite_setScale(player, vector2f(2.0f, 2.0f));
     sfSprite_setPosition(player, playerPos);
+
+    animTime = 0.0f;
+    frameX = 0;
+    frameY = 0; 
+    isMoving = sfFalse;
 
         playerHitbox = sfRectangleShape_create();
     if (DISPLAY_HITBOX) {
@@ -38,6 +54,10 @@ void initPlayer() {
 }
 
 void updatePlayer(char _map[H_MAP_T][W_MAP_T]) {
+
+    //animation
+    isMoving = sfFalse;
+    
     // Diagonal movement
     if (sfKeyboard_isKeyPressed(KEY_UP) && sfKeyboard_isKeyPressed(KEY_LEFT)) {
         if (!checkForCollisions(_map, UP)) movePlayer(UP, sfTrue);
@@ -61,7 +81,32 @@ void updatePlayer(char _map[H_MAP_T][W_MAP_T]) {
     else if (sfKeyboard_isKeyPressed(KEY_DOWN)) { if (!checkForCollisions(_map, DOWN)) movePlayer(DOWN, sfFalse); }
     else if (sfKeyboard_isKeyPressed(KEY_LEFT)) { if (!checkForCollisions(_map, LEFT)) movePlayer(LEFT, sfFalse); }
     else if (sfKeyboard_isKeyPressed(KEY_RIGHT)) { if (!checkForCollisions(_map, RIGHT)) movePlayer(RIGHT, sfFalse); }
-    else return;
+    
+
+    if (isMoving)
+    {
+        if (animTime > 1.5)
+        {
+            frameX = (frameX + 1) % 4;
+            irect.left = frameX * irect.width;
+            irect.top = frameY * irect.height;
+            sfSprite_setTextureRect(player, irect);
+            animTime = 0.0f;
+        }
+    }
+    else
+    {
+        frameX = 0;
+        irect.left = 0;
+        irect.top = frameY * irect.height;
+        sfSprite_setTextureRect(player, irect);
+    }
+    sfSprite_setPosition(player, playerPos);
+
+
+    //animation
+
+    
 
     sfSprite_setPosition(player, playerPos);
 }
@@ -120,11 +165,12 @@ void movePlayer(moveDir _dir, sfBool _isDiag) {
     float move = playerSpeed * getDeltaTime();
     if (_isDiag) move /= sqrt(2);
     switch (_dir) {
-        case UP: playerPos.y -= move; break;
-        case DOWN: playerPos.y += move; break;
-        case LEFT: playerPos.x -= move; break;
-        case RIGHT: playerPos.x += move; break;
+    case UP: frameY = DOWN; playerPos.y -= move; animTime += getDeltaTime(); isMoving = sfTrue; break;
+        case RIGHT:frameY = LEFT; playerPos.x += move; animTime += getDeltaTime(); isMoving = sfTrue; break; 
+        case DOWN: frameY = UP; playerPos.y += move; animTime += getDeltaTime(); isMoving = sfTrue; break;
+        case LEFT: frameY = RIGHT;playerPos.x -= move; animTime += getDeltaTime(); isMoving = sfTrue; break; 
     }
+
 }
 
 int updateInventory()
@@ -146,7 +192,7 @@ int updateInventory()
 void displayPlayer(sfRenderWindow* _window) {
 	if (player != NULL) {
         sfSprite_setPosition(player, playerPos);
-		sfRenderWindow_drawRectangleShape(_window, player, NULL);
+		sfRenderWindow_drawSprite(_window, player, NULL);
         if (DISPLAY_HITBOX) sfRenderWindow_drawRectangleShape(_window, playerHitbox, NULL);
 	}
 }

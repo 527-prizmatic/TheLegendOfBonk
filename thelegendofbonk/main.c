@@ -55,7 +55,6 @@ int main() {
 
 			// Updates
 			updatePlayer(tilemap);
-			if (updateInventory()) break;
 			updateView(window, playerPos);
 			updateDialogBox(str, sizeof(str), sfTxt, dialogBox);
 
