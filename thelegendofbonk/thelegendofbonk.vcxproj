@@ -133,6 +133,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="dialogBox.c" />
     <ClCompile Include="main.c" />
     <ClCompile Include="player.c" />
     <ClCompile Include="map.c" />
@@ -141,6 +142,7 @@
     <ClCompile Include="tools.c" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="dialogBox.h" />
     <ClInclude Include="player.h" />
     <ClInclude Include="map.h" />
     <ClInclude Include="render.h" />

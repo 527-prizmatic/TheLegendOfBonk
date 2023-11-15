@@ -23,6 +23,7 @@ int main() {
 	// Variable DIALOG BOX
 	sfFont* font = initFont();
 	sfText* sfTxt = initText();
+	sfRectangleShape* dialogBox = initRectangle();
 	initDialogBox(sfTxt, font, dialogBox);
 	char str[] = "Lukas\nTymrakiewicz";
 
