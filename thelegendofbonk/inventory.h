@@ -3,6 +3,5 @@
 
 
 sfSprite* initSprite();
-void initInventory(sfSprite* _inventorySprite, sfSprite* _keySprite);
-void updateInventory(int* _inventory, sfSprite* _keySprite);
-void displayInventory(sfRenderWindow* _window, sfSprite* _inventorySprite, sfSprite* _keySprite);
+void initInventory(sfSprite* _inventorySprite, sfSprite* _keySprite, sfRectangleShape* _craftButton, sfText* _craftText);
+void displayInventory(sfRenderWindow* _window, int* _inventory, sfSprite* _inventorySprite, sfSprite* _keySprite, sfRectangleShape* _craftButton, sfText* _craftText);

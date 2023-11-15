@@ -23,16 +23,17 @@ int main() {
 	sfView* view = initView();
 	
 	// Variable DIALOG BOX
-	sfFont* font = initFont();
 	sfText* sfTxt = initText();
 	sfRectangleShape* dialogBox = initRectangle();
-	initDialogBox(sfTxt, font, dialogBox);
+	initDialogBox(sfTxt, dialogBox);
 
 	//Variable INVENTORY
 	int inventory[4] = { 0, 0, 0, 0 };
 	sfSprite* inventorySprite = initSprite();
-	sfSprite* keySprite = initSprite();
-	initInventory(inventorySprite, keySprite);
+	sfSprite* keySprite = initSprite(); 
+	sfText* craftText = initText();
+	sfRectangleShape* craftButton = initRectangle();
+	initInventory(inventorySprite, keySprite, craftButton, craftText);
 	char str[] = "The\nLegend\nof\nBonk";
 
 	for (int i = 0; i < H_MAP_T; i++) {
@@ -63,7 +64,6 @@ int main() {
 			updatePlayer(tilemap);
 			updateView(window, view, playerPos);
 			updateDialogBox(str, sizeof(str), sfTxt, dialogBox);
-			updateInventory(inventory, keySprite);
 
 			// Rendering
 			sfRenderWindow_clear(window, sfBlack);
@@ -71,7 +71,7 @@ int main() {
 			renderMap(tilemap, window);
 			displayPlayer(window);
 			displayDialogBox(window, sfTxt, dialogBox);
-			displayInventory(window, inventorySprite, keySprite);
+			displayInventory(window, inventory, inventorySprite, keySprite, craftButton, craftText);
 			sfRenderWindow_display(window);
 
 			if (sfKeyboard_isKeyPressed(sfKeyK) && sfKeyboard_isKeyPressed(sfKeyLControl)) save_map(tilemap, playerPos, inventory);

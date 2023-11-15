@@ -7,12 +7,6 @@ sfText* initText()
 	return _txt;
 }
 
-sfFont* initFont()
-{
-	sfFont* _font = sfFont_createFromFile(TEXTURE_PATH"3Dventure.ttf");
-	return _font;
-}
-
 sfRectangleShape* initRectangle()
 {
 	sfRectangleShape* _rec = sfRectangleShape_create();
@@ -24,11 +18,12 @@ sfRectangleShape* initRectangle()
 * PARAM : sfText*, sfFont*, sfRectangleShape*
 * Initialise la boite de dialogue
 */
-void initDialogBox(sfText* _txt, sfFont* _font, sfRectangleShape* _dialogBox)
+void initDialogBox(sfText* _txt, sfRectangleShape* _dialogBox)
 {
 	sfVector2f dialogBoxPos = { 100.0f , 10.0f };
 	// OFFSET Y 10.0f, OFFSET X 5.f
 	sfVector2f textPos = { 110.0f , 15.0f };
+	sfFont* _font = sfFont_createFromFile(TEXTURE_PATH"3Dventure.ttf");
 
 	sfText_setFont(_txt, _font);
 	sfText_setCharacterSize(_txt, 30);
