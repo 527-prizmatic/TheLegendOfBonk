@@ -3,18 +3,15 @@
 sfTime sf_time;
 sfClock* sf_clock;
 
-void initTools()
-{
+void initTools() {
 	sf_clock = sfClock_create();
 	srand((unsigned int)time(NULL));
 }
 
-void restartClock()
-{
+void restartClock() {
 	sf_time = sfClock_restart(sf_clock);
 }
 
-float getDeltaTime()
-{
+float getDeltaTime() {
 	return sfTime_asSeconds(sf_time);
 }
