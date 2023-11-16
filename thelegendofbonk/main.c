@@ -27,7 +27,7 @@ int main() {
 	sfView* viewGame = initGameView();
 	sfView* viewEditor = initEditorView();
 	
-	// Variable DIALOG BOX
+	// ---MENU PRINCIPAL---
 	sfFont* font = sfFont_createFromFile(TEXTURE_PATH"3Dventure.ttf");
 	sfText* sfTxt_db = sfText_create();
 	sfText* sfTxt_g = sfText_create();
@@ -42,6 +42,7 @@ int main() {
 	sfRectangleShape* buttonQuit = sfRectangleShape_create();
 	initDialogBox(sfTxt_q, font, 30, buttonQuit);
 
+	// Visuel -MENU PRINCIPAL-
 	sfSprite* spritePlay = sfSprite_create();
 	sfSprite* spriteQuit = sfSprite_create();
 	sfSprite* spriteEdit = sfSprite_create();
@@ -52,14 +53,42 @@ int main() {
 	sfSprite_setTexture(spritePlay, buttonTexture, sfFalse); 
 	sfSprite_setScale(spritePlay, (sfVector2f) { 3.5f, 3.5f }); 
 	sfSprite_setPosition(spritePlay, (sfVector2f) { 200.0f, 350.0f });
-
 	sfSprite_setTexture(spriteQuit, buttonTexture2, sfFalse);
 	sfSprite_setScale(spriteQuit, (sfVector2f) { 3.5f, 3.5f });
 	sfSprite_setPosition(spriteQuit, (sfVector2f) { 400.0f, 350.0f });
-
 	sfSprite_setTexture(spriteEdit, buttonTexture3, sfFalse);
 	sfSprite_setScale(spriteEdit, (sfVector2f) { 3.5f, 3.5f });
 	sfSprite_setPosition(spriteEdit, (sfVector2f) { 330.0f, 450.0f });
+
+	sfText* sfTxt_menuButton = sfText_create();
+	sfText* sfTxt_optionButton = sfText_create();
+	sfText* sfTxt_quitButton = sfText_create();
+
+	sfRectangleShape* pauseMenuButton = sfRectangleShape_create();
+	initDialogBox(sfTxt_menuButton, font, 30, pauseMenuButton);
+	sfRectangleShape* pauseOptionButton = sfRectangleShape_create();
+	initDialogBox(sfTxt_optionButton, font, 30, pauseOptionButton);
+	sfRectangleShape* pauseQuitButton = sfRectangleShape_create();
+	initDialogBox(sfTxt_quitButton, font, 30, pauseQuitButton);
+
+	/* VISUEL BOUTON MENU OPTION
+	sfSprite* spriteMenuButtonPlay = sfSprite_create();
+	sfSprite* spriteMenuButtonOption = sfSprite_create();
+	sfSprite* spriteMenuButtonQuit= sfSprite_create();
+	sfTexture* menuButtonPlayTexture = sfTexture_createFromFile(TEXTURE_PATH"play.png", NULL);
+	sfTexture* menuButtonOptionTexture = sfTexture_createFromFile(TEXTURE_PATH"quit.png", NULL);
+	sfTexture* menuButtonQuitTexture = sfTexture_createFromFile(TEXTURE_PATH"edit.png", NULL);
+
+	sfSprite_setTexture(spriteMenuButtonPlay, menuButtonPlayTexture, sfFalse);
+	sfSprite_setScale(spriteMenuButtonPlay, (sfVector2f) { 3.5f, 3.5f });
+	sfSprite_setPosition(spriteMenuButtonPlay, (sfVector2f) { 200.0f, 350.0f });
+	sfSprite_setTexture(spriteMenuButtonOption, menuButtonOptionTexture, sfFalse);
+	sfSprite_setScale(spriteMenuButtonOption, (sfVector2f) { 3.5f, 3.5f });
+	sfSprite_setPosition(spriteMenuButtonOption, (sfVector2f) { 400.0f, 350.0f });
+	sfSprite_setTexture(menuButtonQuitTexture, menuButtonQuitTexture, sfFalse);
+	sfSprite_setScale(menuButtonQuitTexture, (sfVector2f) { 3.5f, 3.5f });
+	sfSprite_setPosition(menuButtonQuitTexture, (sfVector2f) { 330.0f, 450.0f });
+	*/
 
 	//Background
 	sfTexture* backgroundTexture = sfTexture_createFromFile(TEXTURE_PATH"background.png", NULL);
@@ -79,7 +108,7 @@ int main() {
 	sfText* sfTxt_c = sfText_create();
 	sfRectangleShape* buttonCraft = sfRectangleShape_create();
 	initDialogBox(sfTxt_c, font, 20, buttonCraft);
-
+	  
 	char str[] = "The\nLegend\nof\nBonk";
 	char game[] = "GAME";
 	char quit[] = "QUIT";
@@ -89,6 +118,7 @@ int main() {
 	char tileSelection = 0;
 
 	char flagEditorSel = 0;
+	char flagCraft = 0;
 
 	initPlayer();
 	sfEvent event;
