@@ -85,6 +85,24 @@ int main() {
 	while (sfRenderWindow_isOpen(window)) {
 		while (sfRenderWindow_pollEvent(window, &event)) {
 			if (event.type == sfEvtClosed) sfRenderWindow_close(window);
+			else if (event.type == sfEvtMouseButtonPressed && event.mouseButton.button == sfMouseLeft) {
+				if (gameState == MENU) {
+					if (isClicked(window, buttonPlay)) {
+						gameState = GAME;
+						load_map(tilemap, &playerPos, inventory);
+					}
+					else if (isClicked(window, buttonQuit)) gameState = QUIT;
+				}
+
+				else if (gameState == GAME) {
+					if (isClicked(window, buttonCraft)) {
+						if (inventory[0] && inventory[1] && inventory[2] && inventory[3]) {
+							flagCraft = 1;
+							printf("z");
+						}
+					}
+				}
+			}
 		}
 		restartClock();
 		sfRenderWindow_clear(window, sfBlack);
@@ -101,16 +119,6 @@ int main() {
             sfRenderWindow_drawSprite(window, spriteEdit, NULL);
 			
 			sfRenderWindow_display(window);
-
-			while (sfRenderWindow_pollEvent(window, &event)) {
-				if (event.type == sfEvtMouseButtonPressed && event.mouseButton.button == sfMouseLeft) {
-					if (isClicked(window, buttonPlay)) {
-						gameState = GAME;
-						load_map(tilemap, &playerPos, inventory);
-					}
-					else if (isClicked(window, buttonQuit)) gameState = QUIT;
-				}
-			}
 		}
 		else if (gameState == GAME) {
 			tick += getDeltaTime();
@@ -130,7 +138,7 @@ int main() {
 				updateView(window, view, playerPos);
 				updateDialogBox(craft, sizeof(craft), sfTxt_c, buttonCraft, (sfVector2f) { 430.0f, 480.0f }, (sfVector2f) { 0.0f, 30.0f });
 
-				
+
 				sfRenderWindow_setView(window, view);
 				renderMap(tilemap, window, sfView_getCenter(view));
 				displayPlayer(window);
@@ -148,16 +156,6 @@ int main() {
 				if (sfKeyboard_isKeyPressed(sfKeyEscape)) {
 					save_map(tilemap, playerPos, inventory);
 					gameState = MENU;
-				}
-			}
-
-			while (sfRenderWindow_pollEvent(window, &event)) {
-				if (event.type == sfEvtMouseButtonPressed && event.mouseButton.button == sfMouseLeft) {
-					if (isClicked(window, buttonCraft)) {
-						if (inventory[0] && inventory[1] && inventory[2] && inventory[3]) {
-							flagCraft = 1;
-						}
-					}
 				}
 			}
 		}
