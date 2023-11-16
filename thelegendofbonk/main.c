@@ -32,22 +32,12 @@ int main() {
 
 	sfRectangleShape* dialogBox = sfRectangleShape_create();
 	initDialogBox(sfTxt_db, font, 30, dialogBox);
-	sfRectangleShape* buttonGame = sfRectangleShape_create();
-	initDialogBox(sfTxt_g, font, 30, buttonGame);
+	sfRectangleShape* buttonPlay = sfRectangleShape_create();
+	initDialogBox(sfTxt_g, font, 30, buttonPlay);
+	sfRectangleShape* buttonEdit = sfRectangleShape_create();
+	initDialogBox(sfTxt_g, font, 30, buttonEdit);
 	sfRectangleShape* buttonQuit = sfRectangleShape_create();
 	initDialogBox(sfTxt_q, font, 30, buttonQuit);
-
-	sfRectangleShape* buttonPlay = sfRectangleShape_create();
-	initDialogBox(sfTxt_g, font, buttonPlay);
-
-    sfRectangleShape* buttonQuit = sfRectangleShape_create();
-	initDialogBox(sfTxt_q, font, buttonQuit); 
-
-	sfRectangleShape* buttonEdit = sfRectangleShape_create();
-	initDialogBox(sfTxt_q, font, buttonEdit);
-
-
-
 
 	sfSprite* spritePlay = sfSprite_create();
 	sfSprite* spriteQuit = sfSprite_create();
@@ -89,6 +79,8 @@ int main() {
 	float tick = 0.0f;
 	GameState gameState = MENU;
 
+	char flagCraft = 0;
+
 	// Game loop
 	while (sfRenderWindow_isOpen(window)) {
 		while (sfRenderWindow_pollEvent(window, &event)) {
@@ -99,14 +91,14 @@ int main() {
 
 		if (gameState == MENU) {			
 			updateDialogBox(str, sizeof(str), sfTxt_db, dialogBox, (sfVector2f) { 50.0f, 50.0f }, DEFAULT_DIALOG_SIZE);
-			updateDialogBox(game, sizeof(game), sfTxt_g, buttonGame, (sfVector2f) { 500.0f, 500.0f }, DEFAULT_DIALOG_SIZE);
+			updateDialogBox(game, sizeof(game), sfTxt_g, buttonPlay, (sfVector2f) { 500.0f, 500.0f }, DEFAULT_DIALOG_SIZE);
 			updateDialogBox(quit, sizeof(quit), sfTxt_q, buttonQuit, (sfVector2f) { 600.0f, 500.0f }, DEFAULT_DIALOG_SIZE);
-			updateDialogBox(quit, sizeof(edit), sfTxt_q, buttonEdit, (sfVector2f) { 330.0f, 450.0f });
+			updateDialogBox(quit, sizeof(edit), sfTxt_q, buttonEdit, (sfVector2f) { 330.0f, 450.0f }, DEFAULT_DIALOG_SIZE);
 			displayDialogBox(window, sfTxt_db, dialogBox, sfFalse);
-			displayDialogBox(window, sfTxt_g, buttonGame, sfFalse);
+			displayDialogBox(window, sfTxt_g, buttonPlay, sfFalse);
 			displayDialogBox(window, sfTxt_q, buttonQuit, sfFalse);
-			sfRenderWindow_drawSprite(window, buttonPlay, NULL);
-			sfRenderWindow_drawSprite(window, buttonQuiT, NULL);
+			sfRenderWindow_drawSprite(window, spritePlay, NULL);
+			sfRenderWindow_drawSprite(window, spriteQuit, NULL);
             sfRenderWindow_drawSprite(window, spriteEdit, NULL);
 			
 			sfRenderWindow_display(window);
@@ -125,20 +117,31 @@ int main() {
 			tick += getDeltaTime();
 			if (tick >= TICK_TIME) {
 				tick = 0.0f;
+
+				if (flagCraft == 1) {
+					for (int i = 0; i < 4; i++) {
+						inventory[i] = 0;
+					}
+					inventory[0] = 2;
+					flagCraft = 0;
+				}
+
 				// Updates
 				updatePlayer(tilemap);
 				updateView(window, view, playerPos);
 				updateDialogBox(craft, sizeof(craft), sfTxt_c, buttonCraft, (sfVector2f) { 430.0f, 480.0f }, (sfVector2f) { 0.0f, 30.0f });
+
+				
+				sfRenderWindow_setView(window, view);
+				renderMap(tilemap, window, sfView_getCenter(view));
+				displayPlayer(window);
 
 				// Rendering
 				displayInventory(window, inventory, inventorySprite, keySprite);
 				if (inventory[0] && inventory[1] && inventory[2] && inventory[3]) {
 					displayDialogBox(window, sfTxt_c, buttonCraft, sfTrue);
 				}
-				
-				sfRenderWindow_setView(window, view);
-				renderMap(tilemap, window, sfView_getCenter(view));
-				displayPlayer(window);
+
 				sfRenderWindow_display(window);
 
 				if (sfKeyboard_isKeyPressed(sfKeyK) && sfKeyboard_isKeyPressed(sfKeyLControl)) save_map(tilemap, playerPos, inventory);
@@ -153,10 +156,7 @@ int main() {
 				if (event.type == sfEvtMouseButtonPressed && event.mouseButton.button == sfMouseLeft) {
 					if (isClicked(window, buttonCraft)) {
 						if (inventory[0] && inventory[1] && inventory[2] && inventory[3]) {
-							for (int i = 0; i < 4; i++) {
-								inventory[i] = 0;
-							}
-							inventory[0] = 2;
+							flagCraft = 1;
 						}
 					}
 				}
