@@ -39,6 +39,7 @@ void initDialogBox(sfText* _txt, sfFont* _font, sfRectangleShape* _dialogBox)
 	sfRectangleShape_setOutlineThickness(_dialogBox, 2);
 }
 
+
 void updateDialogBox(char* _str, int _sizeStr, sfText* _txt, sfRectangleShape* _dialogBox, sfVector2f _pos)
 {
 	sfVector2f newSize = DEFAULT_DIALOG_SIZE;
@@ -88,8 +89,8 @@ void displayDialogBox(sfRenderWindow* _window, sfText* _txt, sfRectangleShape* _
 }
 
 sfBool isClicked(sfRenderWindow* _w, sfRectangleShape* _dialogBox) {
-	sfFloatRect hitbox = sfRectangleShape_getGlobalBounds(_dialogBox);
-	sfVector2i mousePos = sfMouse_getPositionRenderWindow(_w);
+	sfFloatRect hitbox = sfRectangleShape_getGlobalBounds(_dialogBox);  
+	sfVector2i mousePos = sfMouse_getPositionRenderWindow(_w); 
 	if (mousePos.x > hitbox.left && mousePos.x < hitbox.left + hitbox.width && mousePos.y > hitbox.top && mousePos.y < hitbox.top + hitbox.height) return sfTrue;
 	else return sfFalse;
 }
