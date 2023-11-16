@@ -10,12 +10,19 @@
 #define TICKSPEED 60
 #define TICK_TIME 1 / (float)TICKSPEED
 
+#define KEY_UP sfKeyZ
+#define KEY_DOWN sfKeyS
+#define KEY_LEFT sfKeyQ
+#define KEY_RIGHT sfKeyD
+
 typedef enum GameState {
 	MENU,
 	GAME,
 	EDITOR,
 	QUIT
 } GameState;
+
+GameState gameState;
 
 /* Initializes misc tools for handling time. */
 void initTools();
@@ -27,3 +34,5 @@ void restartClock();
 float getDeltaTime();
 
 sfVector2f vector2f(float _x, float _y);
+
+sfBool isMouseWithinWindow(sfRenderWindow* _w);

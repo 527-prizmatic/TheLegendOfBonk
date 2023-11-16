@@ -5,11 +5,6 @@
 #include "map.h"
 #include "tools.h"
 
-#define KEY_UP sfKeyZ
-#define KEY_DOWN sfKeyS
-#define KEY_LEFT sfKeyQ
-#define KEY_RIGHT sfKeyD
-
 #define DISPLAY_HITBOX sfTrue
 
 sfSprite* player;

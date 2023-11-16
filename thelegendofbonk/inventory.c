@@ -73,3 +73,8 @@ void displayInventory(sfRenderWindow* _window, int* _inventory, sfSprite* _inven
         sfRenderWindow_drawSprite(_window, _keySprite, NULL);
     }
 }
+
+sfBool hasAllKeyPieces(int _inv[4]) {
+    if (_inv[0] == 1 && _inv[1] == 1 && _inv[2] == 1 && _inv[3] == 1) return sfTrue;
+    else return sfFalse;
+}
