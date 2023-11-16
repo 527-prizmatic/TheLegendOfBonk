@@ -145,6 +145,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="dialogBox.h" />
+    <ClInclude Include="editor.h" />
     <ClInclude Include="inventory.h" />
     <ClInclude Include="player.h" />
     <ClInclude Include="map.h" />
