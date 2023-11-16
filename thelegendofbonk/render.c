@@ -38,7 +38,6 @@ void updateView(sfRenderWindow* _w, sfView* _v, sfVector2f _pos) {
 
 	sfView_setCenter(_v, _pos);
 	sfRenderWindow_setView(_w, _v);
-    
 }
 
 void renderMap(char _map[H_MAP_T][W_MAP_T], sfRenderWindow* _w, sfVector2f _pos) {
