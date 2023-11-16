@@ -12,9 +12,9 @@ sfSprite* tile;
 sfRenderWindow* initRender() {
 	sfVideoMode mode = { 800, 600, 32 };
     sfRenderWindow* _w = sfRenderWindow_create(mode, "TheLegendOfBonk", sfResize | sfClose, NULL);
-	tilesheet = sfTexture_createFromFile(TEXTURE_PATH"tilemap_poc.png", NULL);
+	tilesheet = sfTexture_createFromFile(TEXTURE_PATH"tilesheet.png", NULL);
 	tile = sfSprite_create();
-	sfSprite_setScale(tile, (sfVector2f){ TILE_PX / 32, TILE_PX / 32 });
+	sfSprite_setScale(tile, (sfVector2f){ SCALE, SCALE });
 	return _w;
 }
 
