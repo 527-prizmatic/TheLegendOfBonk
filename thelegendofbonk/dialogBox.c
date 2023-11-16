@@ -1,22 +1,5 @@
 #include "dialogBox.h"
 
-
-sfText* initText()
-{
-	sfText* _txt = sfText_create();
-	return _txt;
-}
-
-sfRectangleShape* initRectangle()
-{
-	sfRectangleShape* _rec = sfRectangleShape_create();
-	return _rec;
-}
-
-sfFont* initFont() {
-	return sfFont_createFromFile(TEXTURE_PATH"3Dventure.ttf");
-}
-
 /*
 * FONCTION : initDialogBox
 * PARAM : sfText*, sfFont*, sfRectangleShape*

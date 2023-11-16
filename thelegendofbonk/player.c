@@ -3,6 +3,7 @@
 #include "player.h"
 #include "SFML/Graphics.h"
 #include "map.h"
+#include "tools.h"
 
 #define KEY_UP sfKeyZ
 #define KEY_DOWN sfKeyS
@@ -21,13 +22,8 @@ int frameY;
 sfBool isMoving; 
 
 sfVector2f playerPos = { 20.0f, 20.0f };
-const float playerSpeed = 3.5f;
+const float playerSpeed = 100.0f;
 sfRectangleShape* playerHitbox;
-
-sfVector2f vector2f(float _x, float _y)
-{
-	return (sfVector2f) { _x, _y };
-}
 
 void initPlayer() 
 {
@@ -54,58 +50,48 @@ void initPlayer()
 void updatePlayer(char _map[H_MAP_T][W_MAP_T]) {
 
     //animation
-    isMoving = sfFalse;
+    animTime += TICK_TIME;
     
     // Diagonal movement
     if (sfKeyboard_isKeyPressed(KEY_UP) && sfKeyboard_isKeyPressed(KEY_LEFT)) {
-        if (!checkForCollisions(_map, UP)) movePlayer(UP, sfTrue);
-        if (!checkForCollisions(_map, LEFT)) movePlayer(LEFT, sfTrue);
+        if (!checkForCollisions(_map, UP)) movePlayer(UP, sfTrue, _map);
+        if (!checkForCollisions(_map, LEFT)) movePlayer(LEFT, sfTrue, _map);
     }
     else if (sfKeyboard_isKeyPressed(KEY_DOWN) && sfKeyboard_isKeyPressed(KEY_LEFT)) {
-        if (!checkForCollisions(_map, DOWN)) movePlayer(DOWN, sfTrue);
-        if (!checkForCollisions(_map, LEFT)) movePlayer(LEFT, sfTrue);
+        if (!checkForCollisions(_map, DOWN)) movePlayer(DOWN, sfTrue, _map);
+        if (!checkForCollisions(_map, LEFT)) movePlayer(LEFT, sfTrue, _map);
     }
     else if (sfKeyboard_isKeyPressed(KEY_DOWN) && sfKeyboard_isKeyPressed(KEY_RIGHT)) {
-        if (!checkForCollisions(_map, DOWN)) movePlayer(DOWN, sfTrue);
-        if (!checkForCollisions(_map, RIGHT)) movePlayer(RIGHT, sfTrue);
+        if (!checkForCollisions(_map, DOWN)) movePlayer(DOWN, sfTrue, _map);
+        if (!checkForCollisions(_map, RIGHT)) movePlayer(RIGHT, sfTrue, _map);
     }
     else if (sfKeyboard_isKeyPressed(KEY_UP) && sfKeyboard_isKeyPressed(KEY_RIGHT)) {
-        if (!checkForCollisions(_map, UP)) movePlayer(UP, sfTrue);
-        if (!checkForCollisions(_map, RIGHT)) movePlayer(RIGHT, sfTrue);
+        if (!checkForCollisions(_map, UP)) movePlayer(UP, sfTrue, _map);
+        if (!checkForCollisions(_map, RIGHT)) movePlayer(RIGHT, sfTrue, _map);
     }
 
     // Orthonormal movement
-    else if (sfKeyboard_isKeyPressed(KEY_UP)) { if (!checkForCollisions(_map, UP)) movePlayer(UP, sfFalse); }
-    else if (sfKeyboard_isKeyPressed(KEY_DOWN)) { if (!checkForCollisions(_map, DOWN)) movePlayer(DOWN, sfFalse); }
-    else if (sfKeyboard_isKeyPressed(KEY_LEFT)) { if (!checkForCollisions(_map, LEFT)) movePlayer(LEFT, sfFalse); }
-    else if (sfKeyboard_isKeyPressed(KEY_RIGHT)) { if (!checkForCollisions(_map, RIGHT)) movePlayer(RIGHT, sfFalse); }
-    
+    else if (sfKeyboard_isKeyPressed(KEY_UP)) { if (!checkForCollisions(_map, UP)) movePlayer(UP, sfFalse, _map); }
+    else if (sfKeyboard_isKeyPressed(KEY_DOWN)) { if (!checkForCollisions(_map, DOWN)) movePlayer(DOWN, sfFalse, _map); }
+    else if (sfKeyboard_isKeyPressed(KEY_LEFT)) { if (!checkForCollisions(_map, LEFT)) movePlayer(LEFT, sfFalse, _map); }
+    else if (sfKeyboard_isKeyPressed(KEY_RIGHT)) { if (!checkForCollisions(_map, RIGHT)) movePlayer(RIGHT, sfFalse, _map); }
 
-    if (isMoving)
-    {
-        if (animTime > 1.5)
-        {
+    else isMoving = sfFalse;
+    
+    if (isMoving) {
+        if (animTime > 0.1f) {
             frameX = (frameX + 1) % 4;
             irect.left = frameX * irect.width;
             irect.top = frameY * irect.height;
-            sfSprite_setTextureRect(player, irect);
             animTime = 0.0f;
         }
     }
-    else
-    {
+    else {
         frameX = 0;
         irect.left = 0;
         irect.top = frameY * irect.height;
-        sfSprite_setTextureRect(player, irect);
     }
-    sfSprite_setPosition(player, playerPos);
-
-
-    //animation
-
-    
-
+    sfSprite_setTextureRect(player, irect);
     sfSprite_setPosition(player, playerPos);
 }
 
@@ -116,53 +102,86 @@ sfBool isSolidBlock(char _id) {
     }
 }
 
-sfBool checkForCollisions(char _map[H_MAP_T][W_MAP_T], moveDir _dir) {
-    sfFloatRect hitbox = sfRectangleShape_getGlobalBounds(player);
-    hitbox.left += hitbox.width * 0.1;
-    hitbox.top += hitbox.height * 0.1;
-    hitbox.width *= 0.8;
-    hitbox.height *= 0.8;
-    sfRectangleShape_setSize(playerHitbox, (sfVector2f) { hitbox.width, hitbox.height });
-    sfRectangleShape_setPosition(playerHitbox, (sfVector2f) { hitbox.left, hitbox.top });
+sfBool isWater(char _id) {
+    switch (_id) {
+    case 1: return sfTrue;
+    default: return sfFalse;
+    }
+}
 
-    // printf("{ %.2f %.2f %.2f %.2f }\n", hitbox.left, hitbox.top, hitbox.height, hitbox.width);
+sfBool checkForCollisions(char _map[H_MAP_T][W_MAP_T], moveDir _dir) {
+    sfFloatRect hitbox = sfSprite_getGlobalBounds(player);
+    hitbox.left += hitbox.width * 0.2;
+    hitbox.top += hitbox.height * 0.5;
+    hitbox.width *= 0.6;
+    hitbox.height *= 0.4;
+    sfRectangleShape_setSize(playerHitbox, vector2f(hitbox.width, hitbox.height));
+    sfRectangleShape_setPosition(playerHitbox, vector2f(hitbox.left, hitbox.top));
 
     if (_dir == UP) {
-        int blockAbove = trunc((hitbox.top - playerSpeed * 1.1) / TILE_PX);
+        int blockAbove = trunc((hitbox.top - playerSpeed * 1.1 * TICK_TIME) / TILE_PX);
         int cornerTL = trunc(hitbox.left / TILE_PX);
         int cornerTR = trunc((hitbox.left + hitbox.width) / TILE_PX);
-        if (isSolidBlock(_map[blockAbove][cornerTL]) || isSolidBlock(_map[blockAbove][cornerTR])) return sfTrue;
+        if (isSolidBlock(_map[blockAbove][cornerTL]) || isSolidBlock(_map[blockAbove][cornerTR])) {
+            isMoving = sfFalse;
+            return sfTrue;
+        }
     }
     else if (_dir == DOWN) {
-        int blockBelow = trunc((hitbox.top + hitbox.height + playerSpeed * 1.1) / TILE_PX);
+        int blockBelow = trunc((hitbox.top + hitbox.height + playerSpeed * 1.1 * TICK_TIME) / TILE_PX);
         int cornerBL = trunc(hitbox.left / TILE_PX);
         int cornerBR = trunc((hitbox.left + hitbox.width) / TILE_PX);
-        if (isSolidBlock(_map[blockBelow][cornerBL]) || isSolidBlock(_map[blockBelow][cornerBR])) return sfTrue;
+        if (isSolidBlock(_map[blockBelow][cornerBL]) || isSolidBlock(_map[blockBelow][cornerBR])) {
+            isMoving = sfFalse;
+            return sfTrue;
+        }
     }
     else if (_dir == LEFT) {
-        int blockLeft = trunc((hitbox.left - playerSpeed * 1.1) / TILE_PX);
+        int blockLeft = trunc((hitbox.left - playerSpeed * 1.1 * TICK_TIME) / TILE_PX);
         int cornerTL = trunc(hitbox.top / TILE_PX);
         int cornerBL = trunc((hitbox.top + hitbox.height) / TILE_PX);
-        if (isSolidBlock(_map[cornerTL][blockLeft]) || isSolidBlock(_map[cornerBL][blockLeft])) return sfTrue;
+        if (isSolidBlock(_map[cornerTL][blockLeft]) || isSolidBlock(_map[cornerBL][blockLeft])) {
+            isMoving = sfFalse;
+            return sfTrue;
+        }
     }
     else if (_dir == RIGHT) {
-        int blockRight = trunc((hitbox.left + hitbox.width + playerSpeed * 1.1) / TILE_PX);
+        int blockRight = trunc((hitbox.left + hitbox.width + playerSpeed * 1.1 * TICK_TIME) / TILE_PX);
         int cornerTR = trunc(hitbox.top / TILE_PX);
         int cornerBR = trunc((hitbox.top + hitbox.height) / TILE_PX);
-        if (isSolidBlock(_map[cornerTR][blockRight]) || isSolidBlock(_map[cornerBR][blockRight])) return sfTrue;
+        if (isSolidBlock(_map[cornerTR][blockRight]) || isSolidBlock(_map[cornerBR][blockRight])) {
+            isMoving = sfFalse;
+            return sfTrue;
+        }
     }
 
     return sfFalse;
 }
 
-void movePlayer(moveDir _dir, sfBool _isDiag) {
-    float move = playerSpeed * getDeltaTime();
+sfBool isInWater(char _map[H_MAP_T][W_MAP_T]) {
+    sfFloatRect hitbox = sfSprite_getGlobalBounds(player);
+    hitbox.left += hitbox.width * 0.2;
+    hitbox.top += hitbox.height * 0.5;
+    hitbox.width *= 0.6;
+    hitbox.height *= 0.4;
+
+    int x = trunc((hitbox.top + hitbox.height / 2) / TILE_PX);
+    int y = trunc((hitbox.left + hitbox.width / 2) / TILE_PX);
+
+    if (isWater(_map[x][y])) return sfTrue;
+    else return sfFalse;
+}
+
+void movePlayer(moveDir _dir, sfBool _isDiag, char _map[H_MAP_T][W_MAP_T]) {
+    float move = playerSpeed * TICK_TIME;
     if (_isDiag) move /= sqrt(2);
+    if (isInWater(_map)) move *= 0.25;
+    isMoving = sfTrue;
     switch (_dir) {
-        case UP: frameY = DOWN; playerPos.y -= move; animTime += getDeltaTime(); isMoving = sfTrue; break;
-        case RIGHT:frameY = LEFT; playerPos.x += move; animTime += getDeltaTime(); isMoving = sfTrue; break; 
-        case DOWN: frameY = UP; playerPos.y += move; animTime += getDeltaTime(); isMoving = sfTrue; break;
-        case LEFT: frameY = RIGHT;playerPos.x -= move; animTime += getDeltaTime(); isMoving = sfTrue; break; 
+        case UP: frameY = DOWN; playerPos.y -= move; break;
+        case RIGHT:frameY = LEFT; playerPos.x += move; break; 
+        case DOWN: frameY = UP; playerPos.y += move; break;
+        case LEFT: frameY = RIGHT; playerPos.x -= move;  break; 
     }
 }
 

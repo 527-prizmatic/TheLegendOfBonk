@@ -1,8 +1,6 @@
 #pragma once
 #include "tools.h"
 
-sfSprite* initSprite();
-
 /* Initializes the inventory HUD's textures.
 *  \param _inventorySprite - A sprite object for use as the inventory slots' backdrop
 *  \param _keySprite - A sprite object for use as item icons */

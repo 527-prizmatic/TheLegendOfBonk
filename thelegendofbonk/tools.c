@@ -16,3 +16,6 @@ float getDeltaTime() {
 	return sfTime_asSeconds(sf_time);
 }
 
+sfVector2f vector2f(float _x, float _y) {
+	return (sfVector2f) { _x, _y };
+}
