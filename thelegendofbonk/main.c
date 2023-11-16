@@ -39,11 +39,14 @@ int main() {
 	sfRectangleShape* buttonQuit = initRectangle();
 	initDialogBox(sfTxt_q, font, buttonQuit);
 
-	//Variable INVENTORY
+	// Variable INVENTORY
 	int inventory[4] = { 0, 0, 0, 0 };
-	sfSprite* inventorySprite = sfSprite_create();
-	sfSprite* keySprite = sfSprite_create();
-	initInventory(inventorySprite, keySprite);
+	sfSprite* inventorySprite = initSprite();
+	sfSprite* keySprite = initSprite(); 
+	sfText* craftText = initText();
+	sfRectangleShape* craftButton = initRectangle();
+	initInventory(inventorySprite, keySprite, craftButton, craftText);
+
 	char str[] = "The\nLegend\nof\nBonk";
 	char game[] = "GAME";
 	char quit[] = "QUIT";
@@ -70,6 +73,13 @@ int main() {
 		}
 		restartClock();
 		sfRenderWindow_clear(window, sfBlack);
+
+		tick += getDeltaTime();
+		if (tick >= 1.0f / TICKSPEED) {
+			tick = 0.0f;
+			while (sfRenderWindow_pollEvent(window, &event)) {
+				if (event.type == sfEvtClosed) sfRenderWindow_close(window);
+			}
 
 		if (gameState == MENU) {
 			sfRenderWindow_clear(window, sfBlack);
@@ -104,7 +114,7 @@ int main() {
 				sfRenderWindow_setView(window, view);
 				renderMap(tilemap, window);
 				displayPlayer(window);
-				displayInventory(window, inventorySprite, keySprite);
+				displayInventory(window, inventory, inventorySprite, keySprite, craftButton, craftText);
 				sfRenderWindow_display(window);
 
 				if (sfKeyboard_isKeyPressed(sfKeyK) && sfKeyboard_isKeyPressed(sfKeyLControl)) save_map(tilemap, playerPos, inventory);
