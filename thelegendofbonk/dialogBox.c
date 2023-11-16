@@ -13,6 +13,10 @@ sfRectangleShape* initRectangle()
 	return _rec;
 }
 
+sfFont* initFont() {
+	return sfFont_createFromFile(TEXTURE_PATH"3Dventure.ttf");
+}
+
 /*
 * FONCTION : initDialogBox
 * PARAM : sfText*, sfFont*, sfRectangleShape*
@@ -23,7 +27,6 @@ void initDialogBox(sfText* _txt, sfFont* _font, sfRectangleShape* _dialogBox)
 	sfVector2f dialogBoxPos = { 100.0f , 10.0f };
 	// OFFSET Y 10.0f, OFFSET X 5.f
 	sfVector2f textPos = { 110.0f , 15.0f };
-	sfFont* _font = sfFont_createFromFile(TEXTURE_PATH"3Dventure.ttf");
 
 	sfText_setFont(_txt, _font);
 	sfText_setCharacterSize(_txt, 30);
@@ -61,7 +64,7 @@ void updateDialogBox(char* _str, int _sizeStr, sfText* _txt, sfRectangleShape* _
 		}
 	}
 	// Calcul de la taille en x de la boite de dialogue
-	newSize.x = 19 * (dialogBoxWidthMax + 1);
+	newSize.x = 19.0f * (dialogBoxWidthMax + 1.0f);
 
 	// Change le texte
 	sfText_setString(_txt, _str);

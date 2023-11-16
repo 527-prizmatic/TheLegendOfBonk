@@ -9,7 +9,7 @@
 #define KEY_LEFT sfKeyQ
 #define KEY_RIGHT sfKeyD
 
-#define DISPLAY_HITBOX sfFalse
+#define DISPLAY_HITBOX sfTrue
 
 sfSprite* player;
 sfTexture* spriteSheet;

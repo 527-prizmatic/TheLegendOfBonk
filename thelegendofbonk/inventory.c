@@ -86,6 +86,5 @@ void displayInventory(sfRenderWindow* _window, int* _inventory, sfSprite* _inven
     {
         sfRenderWindow_drawRectangleShape(_window, _craftButton, sfFalse);
         sfRenderWindow_drawText(_window, _craftText, sfFalse);
-        printf("WIN !\n");
     }
 }

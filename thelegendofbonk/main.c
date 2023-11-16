@@ -74,13 +74,6 @@ int main() {
 		restartClock();
 		sfRenderWindow_clear(window, sfBlack);
 
-		tick += getDeltaTime();
-		if (tick >= 1.0f / TICKSPEED) {
-			tick = 0.0f;
-			while (sfRenderWindow_pollEvent(window, &event)) {
-				if (event.type == sfEvtClosed) sfRenderWindow_close(window);
-			}
-
 		if (gameState == MENU) {
 			sfRenderWindow_clear(window, sfBlack);
 			updateDialogBox(str, sizeof(str), sfTxt_db, dialogBox, (sfVector2f) { 50.0f, 50.0f });
@@ -108,7 +101,6 @@ int main() {
 				// Updates
 				updatePlayer(tilemap);
 				updateView(window, view, playerPos);
-				updateInventory(inventory, keySprite);
 
 				// Rendering
 				sfRenderWindow_setView(window, view);
