@@ -13,6 +13,7 @@
 #include "tools.h"
 #include "inventory.h"
 #include "save.h"
+#include "editor.h"
 
 // TODO MUSIC BONEY M RASPUTIN
 
@@ -109,12 +110,11 @@ int main() {
 
 		if (gameState == MENU) {			
 			updateDialogBox(str, sizeof(str), sfTxt_db, dialogBox, (sfVector2f) { 50.0f, 50.0f }, DEFAULT_DIALOG_SIZE);
-			updateDialogBox(game, sizeof(game), sfTxt_g, buttonPlay, (sfVector2f) { 500.0f, 500.0f }, DEFAULT_DIALOG_SIZE);
-			updateDialogBox(quit, sizeof(quit), sfTxt_q, buttonQuit, (sfVector2f) { 600.0f, 500.0f }, DEFAULT_DIALOG_SIZE);
-			updateDialogBox(quit, sizeof(edit), sfTxt_q, buttonEdit, (sfVector2f) { 330.0f, 450.0f }, DEFAULT_DIALOG_SIZE);
+			updateDialogBox(game, sizeof(game), sfTxt_g, buttonPlay, (sfVector2f) { 225.0f, 350.0f }, DEFAULT_DIALOG_SIZE);
+			updateDialogBox(quit, sizeof(quit), sfTxt_q, buttonQuit, (sfVector2f) { 425.0f, 350.0f }, DEFAULT_DIALOG_SIZE);
+			updateDialogBox(quit, sizeof(edit), sfTxt_q, buttonEdit, (sfVector2f) { 370.0f, 450.0f }, DEFAULT_DIALOG_SIZE);
 			displayDialogBox(window, sfTxt_db, dialogBox, sfFalse);
-			displayDialogBox(window, sfTxt_g, buttonPlay, sfFalse);
-			displayDialogBox(window, sfTxt_q, buttonQuit, sfFalse);
+			
 			sfRenderWindow_drawSprite(window, spritePlay, NULL);
 			sfRenderWindow_drawSprite(window, spriteQuit, NULL);
             sfRenderWindow_drawSprite(window, spriteEdit, NULL);
