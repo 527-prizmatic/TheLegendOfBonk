@@ -25,10 +25,10 @@ void displayInventory(sfRenderWindow* _window, int* _inventory, sfSprite* _inven
 
     sfRenderWindow_setView(_window, sfRenderWindow_getDefaultView(_window));
     sfRenderWindow_drawSprite(_window, _inventorySprite, NULL);
-    if (sfKeyboard_isKeyPressed(sfKeyI)) _inventory[0] = 1;
-    if (sfKeyboard_isKeyPressed(sfKeyO)) _inventory[1] = 1;
-    if (sfKeyboard_isKeyPressed(sfKeyP)) _inventory[2] = 1;
-    if (sfKeyboard_isKeyPressed(sfKeyM)) _inventory[3] = 1;
+    if (sfKeyboard_isKeyPressed(sfKeyU)) _inventory[0] = 1;
+    if (sfKeyboard_isKeyPressed(sfKeyI)) _inventory[1] = 1;
+    if (sfKeyboard_isKeyPressed(sfKeyO)) _inventory[2] = 1;
+    if (sfKeyboard_isKeyPressed(sfKeyP)) _inventory[3] = 1;
     if (sfKeyboard_isKeyPressed(sfKeyN))
     {
         for (int i = 0; i < 4; i++)
