@@ -117,7 +117,7 @@ sfBool isSolidBlock(char _id) {
 }
 
 sfBool checkForCollisions(char _map[H_MAP_T][W_MAP_T], moveDir _dir) {
-    sfFloatRect hitbox = sfRectangleShape_getGlobalBounds(player);
+    sfFloatRect hitbox = sfSprite_getGlobalBounds(player);
     hitbox.left += hitbox.width * 0.1;
     hitbox.top += hitbox.height * 0.1;
     hitbox.width *= 0.8;
