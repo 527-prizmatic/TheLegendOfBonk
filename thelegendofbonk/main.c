@@ -31,7 +31,11 @@ int main() {
 	sfText* sfTxt_q = sfText_create();
 
 	sfRectangleShape* dialogBox = sfRectangleShape_create();
-	initDialogBox(sfTxt_db, font, dialogBox);
+	initDialogBox(sfTxt_db, font, 30, dialogBox);
+	sfRectangleShape* buttonGame = sfRectangleShape_create();
+	initDialogBox(sfTxt_g, font, 30, buttonGame);
+	sfRectangleShape* buttonQuit = sfRectangleShape_create();
+	initDialogBox(sfTxt_q, font, 30, buttonQuit);
 
 	sfRectangleShape* buttonPlay = sfRectangleShape_create();
 	initDialogBox(sfTxt_g, font, buttonPlay);
@@ -51,6 +55,7 @@ int main() {
 	sfTexture* buttonTexture = sfTexture_createFromFile(TEXTURE_PATH"play.png", NULL);
 	sfTexture* buttonTexture2 = sfTexture_createFromFile(TEXTURE_PATH"quit.png", NULL);
 	sfTexture* buttonTexture3 = sfTexture_createFromFile(TEXTURE_PATH"edit.png", NULL);
+	
 	sfSprite_setTexture(spritePlay, buttonTexture, sfFalse); 
 	sfSprite_setScale(spritePlay, (sfVector2f) { 3.5f, 3.5f }); 
 	sfSprite_setPosition(spritePlay, (sfVector2f) { 200.0f, 350.0f });
@@ -67,14 +72,17 @@ int main() {
 	int inventory[4] = { 0, 0, 0, 0 };
 	sfSprite* inventorySprite = sfSprite_create();
 	sfSprite* keySprite = sfSprite_create();
-	sfText* craftText = sfText_create();
-	sfRectangleShape* craftButton = sfRectangleShape_create();
-	initInventory(inventorySprite, keySprite, craftButton, craftText);
+	initInventory(inventorySprite, keySprite);
+
+	sfText* sfTxt_c = sfText_create();
+	sfRectangleShape* buttonCraft = sfRectangleShape_create();
+	initDialogBox(sfTxt_c, font, 20, buttonCraft);
 
 	char str[] = "The\nLegend\nof\nBonk";
 	char game[] = "GAME";
 	char quit[] = "QUIT";
 	char edit[] = "EDIT";
+	char craft[] = "CRAFT !";
 
 	initPlayer();
 	sfEvent event;
@@ -89,15 +97,18 @@ int main() {
 		restartClock();
 		sfRenderWindow_clear(window, sfBlack);
 
-		if (gameState == MENU) {
-			sfRenderWindow_clear(window, sfBlack);
-			updateDialogBox(str, sizeof(str), sfTxt_db, dialogBox, (sfVector2f) { 320.0f, 150.0f });
-			updateDialogBox(game, sizeof(game), sfTxt_g, buttonPlay, (sfVector2f) { 225.0f, 350.0f });
-			updateDialogBox(quit, sizeof(quit), sfTxt_q, buttonQuit, (sfVector2f) { 430.0f, 350.0f });
+		if (gameState == MENU) {			
+			updateDialogBox(str, sizeof(str), sfTxt_db, dialogBox, (sfVector2f) { 50.0f, 50.0f }, DEFAULT_DIALOG_SIZE);
+			updateDialogBox(game, sizeof(game), sfTxt_g, buttonGame, (sfVector2f) { 500.0f, 500.0f }, DEFAULT_DIALOG_SIZE);
+			updateDialogBox(quit, sizeof(quit), sfTxt_q, buttonQuit, (sfVector2f) { 600.0f, 500.0f }, DEFAULT_DIALOG_SIZE);
 			updateDialogBox(quit, sizeof(edit), sfTxt_q, buttonEdit, (sfVector2f) { 330.0f, 450.0f });
-			sfRenderWindow_drawSprite(window, spritePlay, NULL);
-			sfRenderWindow_drawSprite(window, spriteQuit, NULL);
+			displayDialogBox(window, sfTxt_db, dialogBox, sfFalse);
+			displayDialogBox(window, sfTxt_g, buttonGame, sfFalse);
+			displayDialogBox(window, sfTxt_q, buttonQuit, sfFalse);
+			sfRenderWindow_drawSprite(window, buttonPlay, NULL);
+			sfRenderWindow_drawSprite(window, buttonQuiT, NULL);
             sfRenderWindow_drawSprite(window, spriteEdit, NULL);
+			
 			sfRenderWindow_display(window);
 
 			while (sfRenderWindow_pollEvent(window, &event)) {
@@ -117,12 +128,17 @@ int main() {
 				// Updates
 				updatePlayer(tilemap);
 				updateView(window, view, playerPos);
+				updateDialogBox(craft, sizeof(craft), sfTxt_c, buttonCraft, (sfVector2f) { 430.0f, 480.0f }, (sfVector2f) { 0.0f, 30.0f });
 
 				// Rendering
+				displayInventory(window, inventory, inventorySprite, keySprite);
+				if (inventory[0] && inventory[1] && inventory[2] && inventory[3]) {
+					displayDialogBox(window, sfTxt_c, buttonCraft, sfTrue);
+				}
+				
 				sfRenderWindow_setView(window, view);
 				renderMap(tilemap, window, sfView_getCenter(view));
 				displayPlayer(window);
-				displayInventory(window, inventory, inventorySprite, keySprite, craftButton, craftText);
 				sfRenderWindow_display(window);
 
 				if (sfKeyboard_isKeyPressed(sfKeyK) && sfKeyboard_isKeyPressed(sfKeyLControl)) save_map(tilemap, playerPos, inventory);
@@ -132,9 +148,21 @@ int main() {
 					gameState = MENU;
 				}
 			}
+
+			while (sfRenderWindow_pollEvent(window, &event)) {
+				if (event.type == sfEvtMouseButtonPressed && event.mouseButton.button == sfMouseLeft) {
+					if (isClicked(window, buttonCraft)) {
+						if (inventory[0] && inventory[1] && inventory[2] && inventory[3]) {
+							for (int i = 0; i < 4; i++) {
+								inventory[i] = 0;
+							}
+							inventory[0] = 2;
+						}
+					}
+				}
+			}
 		}
 		else if (gameState == QUIT) break;
-		
 	}
 
 	sfRenderWindow_close(window);
