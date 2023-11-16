@@ -22,6 +22,8 @@ typedef enum GameState {
 	QUIT
 } GameState;
 
+GameState gameState;
+
 /* Initializes misc tools for handling time. */
 void initTools();
 
@@ -32,3 +34,5 @@ void restartClock();
 float getDeltaTime();
 
 sfVector2f vector2f(float _x, float _y);
+
+sfBool isMouseWithinWindow(sfRenderWindow* _w);
