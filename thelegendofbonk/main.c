@@ -59,6 +59,15 @@ int main() {
 	sfSprite_setTexture(spriteEdit, buttonTexture3, sfFalse);
 	sfSprite_setScale(spriteEdit, (sfVector2f) { 3.5f, 3.5f });
 	sfSprite_setPosition(spriteEdit, (sfVector2f) { 330.0f, 450.0f });
+
+	//Background
+	sfTexture* backgroundTexture = sfTexture_createFromFile(TEXTURE_PATH"background.png", NULL);
+	sfSprite* backgroundSprite = sfSprite_create();
+	sfSprite_setTexture(backgroundSprite, backgroundTexture, sfFalse);
+	sfSprite_setScale(backgroundSprite, (sfVector2f) { 1.0f, 1.0f });
+	sfSprite_setPosition(backgroundSprite, (sfVector2f) { 0.0f, 0.0f });
+
+
 	
 	// Inventory handling
 	int inventory[4] = { 0, 0, 0, 0 };
@@ -95,18 +104,18 @@ int main() {
 		sfRenderWindow_clear(window, sfBlack);
 
 		if (gameState == MENU) {
-			sfRenderWindow_setView(window, sfRenderWindow_getDefaultView(window));
+			sfRenderWindow_setView(window, sfRenderWindow_getDefaultView(window));		
+			sfRenderWindow_drawSprite(window, backgroundSprite, NULL);
 
 			updateDialogBox(str, sizeof(str), sfTxt_db, dialogBox, (sfVector2f) { 50.0f, 50.0f }, DEFAULT_DIALOG_SIZE);
 			updateDialogBox(game, sizeof(game), sfTxt_g, buttonPlay, (sfVector2f) { 225.0f, 350.0f }, DEFAULT_DIALOG_SIZE);
 			updateDialogBox(quit, sizeof(quit), sfTxt_q, buttonQuit, (sfVector2f) { 425.0f, 350.0f }, DEFAULT_DIALOG_SIZE);
 			updateDialogBox(quit, sizeof(edit), sfTxt_q, buttonEdit, (sfVector2f) { 370.0f, 450.0f }, DEFAULT_DIALOG_SIZE);
+
 			displayDialogBox(window, sfTxt_db, dialogBox, sfFalse);
-			
 			sfRenderWindow_drawSprite(window, spritePlay, NULL);
 			sfRenderWindow_drawSprite(window, spriteQuit, NULL);
             sfRenderWindow_drawSprite(window, spriteEdit, NULL);
-			
 			sfRenderWindow_display(window);
 
 			if (isClicked(window, buttonPlay)) gameState = GAME;
