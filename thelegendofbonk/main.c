@@ -159,6 +159,20 @@ int main() {
 					save_map(tilemap, playerPos, inventory);
 					gameState = MENU;
 				}
+				if (sfKeyboard_isKeyPressed(sfKeyLControl) && sfKeyboard_isKeyPressed(sfKeyE)) {
+					gameState = EDITOR;
+				}
+			}
+		}
+		else if (gameState == EDITOR) {
+			tick += getDeltaTime();
+			if (tick >= TICK_TIME) {
+				tick = 0.0f;
+
+				sfRenderWindow_setView(window, view);
+				updateEditorView(window, view);
+				renderMap(tilemap, window, sfView_getCenter(view));
+				sfRenderWindow_display(window);
 			}
 		}
 		else if (gameState == QUIT) break;

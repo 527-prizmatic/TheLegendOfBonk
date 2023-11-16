@@ -28,8 +28,8 @@ sfView* initView() {
 }
 
 void updateView(sfRenderWindow* _w, sfView* _v, sfVector2f _pos) {
-	_pos.x += 24;
-	_pos.y += 24;
+	_pos.x += 32;
+	_pos.y += 40;
 
 	if(_pos.x < 400) _pos.x = 400;
     if(_pos.y < 300) _pos.y = 300;
