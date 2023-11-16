@@ -7,7 +7,7 @@
 #define TEXTURE_PATH "..\\assets\\textures\\"
 #define AUDIO_PATH "..\\assets\\audio\\"
 
-#define TICKSPEED 20
+#define TICKSPEED 60
 #define TICK_TIME 1 / (float)TICKSPEED
 
 typedef enum GameState {

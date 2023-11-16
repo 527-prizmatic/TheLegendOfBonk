@@ -92,7 +92,7 @@ int main() {
 
 				// Rendering
 				sfRenderWindow_setView(window, view);
-				renderMap(tilemap, window);
+				renderMap(tilemap, window, sfView_getCenter(view));
 				displayPlayer(window);
 				displayInventory(window, inventory, inventorySprite, keySprite, craftButton, craftText);
 				sfRenderWindow_display(window);
