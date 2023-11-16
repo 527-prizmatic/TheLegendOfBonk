@@ -34,6 +34,18 @@ int main() {
 	initDialogBox(sfTxt_db, font, dialogBox);
 	sfRectangleShape* buttonGame = sfRectangleShape_create();
 	initDialogBox(sfTxt_g, font, buttonGame);
+
+	sfSprite* buttonPlay = sfSprite_create();
+	sfSprite* buttonQuiT = sfSprite_create();
+	sfTexture* buttonTexture = sfTexture_createFromFile(TEXTURE_PATH"play.png", NULL);
+	sfTexture* buttonTexture2 = sfTexture_createFromFile(TEXTURE_PATH"quit.png", NULL);
+	sfSprite_setTexture(buttonPlay, buttonTexture, sfFalse); 
+	sfSprite_setScale(buttonPlay, (sfVector2f) { 3.5f, 3.5f }); 
+	sfSprite_setPosition(buttonPlay, (sfVector2f) { 200.0f, 350.0f });
+	sfSprite_setTexture(buttonQuiT, buttonTexture2, sfFalse);
+	sfSprite_setScale(buttonQuiT, (sfVector2f) { 3.5f, 3.5f });
+	sfSprite_setPosition(buttonQuiT, (sfVector2f) { 400.0f, 350.0f });
+	
 	sfRectangleShape* buttonQuit = sfRectangleShape_create();
 	initDialogBox(sfTxt_q, font, buttonQuit);
 
@@ -64,12 +76,14 @@ int main() {
 
 		if (gameState == MENU) {
 			sfRenderWindow_clear(window, sfBlack);
-			updateDialogBox(str, sizeof(str), sfTxt_db, dialogBox, (sfVector2f) { 50.0f, 50.0f });
-			updateDialogBox(game, sizeof(game), sfTxt_g, buttonGame, (sfVector2f) { 500.0f, 500.0f });
-			updateDialogBox(quit, sizeof(quit), sfTxt_q, buttonQuit, (sfVector2f) { 600.0f, 500.0f });
+			updateDialogBox(str, sizeof(str), sfTxt_db, dialogBox, (sfVector2f) { 320.0f, 150.0f });
+			updateDialogBox(game, sizeof(game), sfTxt_g, buttonGame, (sfVector2f) { 225.0f, 350.0f });
+			updateDialogBox(quit, sizeof(quit), sfTxt_q, buttonQuit, (sfVector2f) { 430.0f, 350.0f });
 			displayDialogBox(window, sfTxt_db, dialogBox);
 			displayDialogBox(window, sfTxt_g, buttonGame);
 			displayDialogBox(window, sfTxt_q, buttonQuit);
+			sfRenderWindow_drawSprite(window, buttonPlay, NULL);
+			sfRenderWindow_drawSprite(window, buttonQuiT, NULL);
 			sfRenderWindow_display(window);
 
 			while (sfRenderWindow_pollEvent(window, &event)) {
