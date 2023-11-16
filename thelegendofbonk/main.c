@@ -14,8 +14,6 @@
 #include "inventory.h"
 #include "save.h"
 
-#define TICKSPEED 30
-
 // TODO MUSIC BONEY M RASPUTIN
 
 int main() {
@@ -39,7 +37,18 @@ int main() {
 	sfRectangleShape* buttonQuit = sfRectangleShape_create();
 	initDialogBox(sfTxt_q, font, 30, buttonQuit);
 
-	// Variable INVENTORY
+	sfSprite* buttonPlay = sfSprite_create();
+	sfSprite* buttonQuiT = sfSprite_create();
+	sfTexture* buttonTexture = sfTexture_createFromFile(TEXTURE_PATH"play.png", NULL);
+	sfTexture* buttonTexture2 = sfTexture_createFromFile(TEXTURE_PATH"quit.png", NULL);
+	sfSprite_setTexture(buttonPlay, buttonTexture, sfFalse); 
+	sfSprite_setScale(buttonPlay, (sfVector2f) { 3.5f, 3.5f }); 
+	sfSprite_setPosition(buttonPlay, (sfVector2f) { 200.0f, 350.0f });
+	sfSprite_setTexture(buttonQuiT, buttonTexture2, sfFalse);
+	sfSprite_setScale(buttonQuiT, (sfVector2f) { 3.5f, 3.5f });
+	sfSprite_setPosition(buttonQuiT, (sfVector2f) { 400.0f, 350.0f });
+	
+	// Inventory handling
 	int inventory[4] = { 0, 0, 0, 0 };
 	sfSprite* inventorySprite = sfSprite_create();
 	sfSprite* keySprite = sfSprite_create();
@@ -54,19 +63,9 @@ int main() {
 	char quit[] = "QUIT";
 	char craft[] = "CRAFT !";
 
-	/*for (int i = 0; i < H_MAP_T; i++) {
-		for (int j = 0; j < W_MAP_T; j++) {
-			printf("%d ", tilemap[i][j]);
-		}
-		printf("\n");
-	}*/
-
-	//INIT
 	initPlayer();
-	initView(window);
 	sfEvent event;
 	float tick = 0.0f;
-
 	GameState gameState = MENU;
 
 	// Game loop
@@ -77,15 +76,16 @@ int main() {
 		restartClock();
 		sfRenderWindow_clear(window, sfBlack);
 
-		if (gameState == MENU) {
-			sfRenderWindow_clear(window, sfBlack);
+		if (gameState == MENU) {			
 			updateDialogBox(str, sizeof(str), sfTxt_db, dialogBox, (sfVector2f) { 50.0f, 50.0f }, DEFAULT_DIALOG_SIZE);
 			updateDialogBox(game, sizeof(game), sfTxt_g, buttonGame, (sfVector2f) { 500.0f, 500.0f }, DEFAULT_DIALOG_SIZE);
 			updateDialogBox(quit, sizeof(quit), sfTxt_q, buttonQuit, (sfVector2f) { 600.0f, 500.0f }, DEFAULT_DIALOG_SIZE);
-
 			displayDialogBox(window, sfTxt_db, dialogBox, sfFalse);
 			displayDialogBox(window, sfTxt_g, buttonGame, sfFalse);
 			displayDialogBox(window, sfTxt_q, buttonQuit, sfFalse);
+			sfRenderWindow_drawSprite(window, buttonPlay, NULL);
+			sfRenderWindow_drawSprite(window, buttonQuiT, NULL);
+			
 			sfRenderWindow_display(window);
 
 			while (sfRenderWindow_pollEvent(window, &event)) {
@@ -100,8 +100,7 @@ int main() {
 		}
 		else if (gameState == GAME) {
 			tick += getDeltaTime();
-			if (tick >= 1.0f / TICKSPEED) 
-			{
+			if (tick >= TICK_TIME) {
 				tick = 0.0f;
 				// Updates
 				updatePlayer(tilemap);
@@ -109,13 +108,14 @@ int main() {
 				updateDialogBox(craft, sizeof(craft), sfTxt_c, buttonCraft, (sfVector2f) { 430.0f, 480.0f }, (sfVector2f) { 0.0f, 30.0f });
 
 				// Rendering
-				renderMap(tilemap, window);
 				displayInventory(window, inventory, inventorySprite, keySprite);
 				if (inventory[0] && inventory[1] && inventory[2] && inventory[3])
 				{
 					displayDialogBox(window, sfTxt_c, buttonCraft, sfTrue);
 				}
+				
 				sfRenderWindow_setView(window, view);
+				renderMap(tilemap, window, sfView_getCenter(view));
 				displayPlayer(window);
 				sfRenderWindow_display(window);
 
@@ -132,16 +132,19 @@ int main() {
 				if (event.type == sfEvtMouseButtonPressed && event.mouseButton.button == sfMouseLeft) {
 					if (isClicked(window, buttonCraft))
 					{
-						for (int i = 0; i < 4; i++)
-						{
-							inventory[i] = 0;
+						if (inventory[0] && inventory[1] && inventory[2] && inventory[3]) {
+							for (int i = 0; i < 4; i++)
+							{
+								inventory[i] = 0;
+							}
+							inventory[0] = 2;
 						}
-						inventory[0] = 2;
 					}
 				}
 			}
 		}
 		else if (gameState == QUIT) break;
+		
 	}
 
 	sfRenderWindow_close(window);

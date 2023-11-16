@@ -1,6 +1,6 @@
 #include "inventory.h"
 
-void initInventory(sfSprite* _inventorySprite, sfSprite* _keySprite) {
+void initInventory(sfSprite* _inventorySprite, sfSprite* _keySprite){
     // TEXTURE INVENTAIRE
     sfTexture* inventoryTexture;
 
