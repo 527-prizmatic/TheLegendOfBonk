@@ -27,27 +27,27 @@ int main() {
 	sfView* view = initView();
 	
 	// Variable DIALOG BOX
-	sfFont* font = initFont();
-	sfText* sfTxt_db = initText();
-	sfText* sfTxt_g = initText();
-	sfText* sfTxt_q = initText();
+	sfFont* font = sfFont_createFromFile(TEXTURE_PATH"3Dventure.ttf");
+	sfText* sfTxt_db = sfText_create();
+	sfText* sfTxt_g = sfText_create();
+	sfText* sfTxt_q = sfText_create();
 
-	sfRectangleShape* dialogBox = initRectangle();
-	initDialogBox(sfTxt_db, font, dialogBox);
-	sfRectangleShape* buttonGame = initRectangle();
-	initDialogBox(sfTxt_g, font, buttonGame);
-	sfRectangleShape* buttonQuit = initRectangle();
-	initDialogBox(sfTxt_q, font, buttonQuit);
+	sfRectangleShape* dialogBox = sfRectangleShape_create();
+	initDialogBox(sfTxt_db, font, 30, dialogBox);
+	sfRectangleShape* buttonGame = sfRectangleShape_create();
+	initDialogBox(sfTxt_g, font, 30, buttonGame);
+	sfRectangleShape* buttonQuit = sfRectangleShape_create();
+	initDialogBox(sfTxt_q, font, 30, buttonQuit);
 
 	// Variable INVENTORY
 	int inventory[4] = { 0, 0, 0, 0 };
-	sfSprite* inventorySprite = initSprite();
-	sfSprite* keySprite = initSprite(); 
+	sfSprite* inventorySprite = sfSprite_create();
+	sfSprite* keySprite = sfSprite_create();
 	initInventory(inventorySprite, keySprite);
 
-	sfText* sfTxt_c = initText();
-	sfRectangleShape* buttonCraft = initRectangle();
-	initDialogBox(sfTxt_c, font, buttonCraft);
+	sfText* sfTxt_c = sfText_create();
+	sfRectangleShape* buttonCraft = sfRectangleShape_create();
+	initDialogBox(sfTxt_c, font, 20, buttonCraft);
 
 	char str[] = "The\nLegend\nof\nBonk";
 	char game[] = "GAME";
@@ -100,12 +100,13 @@ int main() {
 		}
 		else if (gameState == GAME) {
 			tick += getDeltaTime();
-			if (tick >= 1.0f / TICKSPEED) {
+			if (tick >= 1.0f / TICKSPEED) 
+			{
 				tick = 0.0f;
 				// Updates
 				updatePlayer(tilemap);
 				updateView(window, view, playerPos);
-				updateDialogBox(craft, sizeof(craft), sfTxt_c, buttonCraft, (sfVector2f) { 430.0f, 470.0f }, (sfVector2f) { 0.0f, 40.0f });
+				updateDialogBox(craft, sizeof(craft), sfTxt_c, buttonCraft, (sfVector2f) { 430.0f, 480.0f }, (sfVector2f) { 0.0f, 30.0f });
 
 				// Rendering
 				renderMap(tilemap, window);
@@ -123,6 +124,20 @@ int main() {
 				if (sfKeyboard_isKeyPressed(sfKeyEscape)) {
 					save_map(tilemap, playerPos, inventory);
 					gameState = MENU;
+				}
+			}
+
+			while (sfRenderWindow_pollEvent(window, &event))
+			{
+				if (event.type == sfEvtMouseButtonPressed && event.mouseButton.button == sfMouseLeft) {
+					if (isClicked(window, buttonCraft))
+					{
+						for (int i = 0; i < 4; i++)
+						{
+							inventory[i] = 0;
+						}
+						inventory[0] = 2;
+					}
 				}
 			}
 		}

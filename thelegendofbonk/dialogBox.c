@@ -1,30 +1,14 @@
 #include "dialogBox.h"
 
-
-sfText* initText()
-{
-	return sfText_create();
-}
-
-sfRectangleShape* initRectangle()
-{
-	return sfRectangleShape_create();;
-}
-
-sfFont* initFont() 
-{
-	return sfFont_createFromFile(TEXTURE_PATH"3Dventure.ttf");
-}
-
 /*
 * FONCTION : initDialogBox
 * PARAM : sfText*, sfFont*, sfRectangleShape*
 * Initialise la boite de dialogue
 */
-void initDialogBox(sfText* _txt, sfFont* _font, sfRectangleShape* _dialogBox)
+void initDialogBox(sfText* _txt, sfFont* _font, int _police, sfRectangleShape* _dialogBox)
 {
 	sfText_setFont(_txt, _font);
-	sfText_setCharacterSize(_txt, 30);
+	sfText_setCharacterSize(_txt, _police);
 	sfText_setFillColor(_txt, sfBlack);
 
 	sfRectangleShape_setFillColor(_dialogBox, sfWhite);
@@ -57,7 +41,14 @@ void updateDialogBox(char* _str, int _sizeStr, sfText* _txt, sfRectangleShape* _
 		}
 	}
 	// Calcul de la taille en x de la boite de dialogue
-	newSize.x = 19.0f * (dialogBoxWidthMax + 1.0f);
+	if (strcmp(_str, "CRAFT !") == 0)
+	{
+		newSize.x = 12.0f * (float)dialogBoxWidthMax;
+	}
+	else
+	{
+		newSize.x = 19.0f * (dialogBoxWidthMax + 1.0f);
+	}
 
 	// Change le texte
 	sfText_setString(_txt, _str);
