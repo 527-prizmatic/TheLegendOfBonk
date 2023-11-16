@@ -120,7 +120,6 @@ int main() {
 			}
 		}
 		else if (gameState == QUIT) break;
-		
 	}
 
 	sfRenderWindow_close(window);
