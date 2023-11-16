@@ -13,6 +13,7 @@
 #include "tools.h"
 #include "inventory.h"
 #include "save.h"
+#include "editor.h"
 
 // TODO MUSIC BONEY M RASPUTIN
 
