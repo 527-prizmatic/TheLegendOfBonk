@@ -21,6 +21,7 @@
 int main() {
 	initTools();
 	char tilemap[H_MAP_T][W_MAP_T];
+	char flagCraft = 0;
 	initMapNull(tilemap);
 
 	sfRenderWindow* window = initRender();
