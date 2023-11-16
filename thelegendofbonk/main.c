@@ -4,6 +4,7 @@
 #include <errno.h>
 #include <math.h>
 #include "SFML/Graphics.h"
+#include "SFML/Audio.h"
 
 #include "map.h"
 #include "render.h"
@@ -82,6 +83,16 @@ int main() {
 
 	char flagCraft = 0;
 
+	//Musique 
+	float volume = 0.0f;
+	char flagMusic = 0;
+
+	sfMusic* music = sfMusic_createFromFile(AUDIO_PATH"01_main_screen_trailer.wav");
+	sfSoundStatus audioStatus;
+	sfMusic_play(music);
+	volume = sfMusic_getVolume(music);
+	sfMusic_setLoop(music, sfTrue);
+
 	// Game loop
 	while (sfRenderWindow_isOpen(window)) {
 		while (sfRenderWindow_pollEvent(window, &event)) {
@@ -99,7 +110,6 @@ int main() {
 					if (isClicked(window, buttonCraft)) {
 						if (inventory[0] && inventory[1] && inventory[2] && inventory[3]) {
 							flagCraft = 1;
-							printf("z");
 						}
 					}
 				}
@@ -107,6 +117,7 @@ int main() {
 		}
 		restartClock();
 		sfRenderWindow_clear(window, sfBlack);
+
 
 		if (gameState == MENU) {			
 			updateDialogBox(str, sizeof(str), sfTxt_db, dialogBox, (sfVector2f) { 50.0f, 50.0f }, DEFAULT_DIALOG_SIZE);
@@ -133,12 +144,27 @@ int main() {
 					inventory[0] = 2;
 					flagCraft = 0;
 				}
+				audioStatus = sfMusic_getStatus(music);
+				if (audioStatus == sfPlaying)
+				{
+					if (sfKeyboard_isKeyPressed(sfKeyRight) && volume < 100) volume += 1;
+					if (sfKeyboard_isKeyPressed(sfKeyLeft) && volume > 0) volume -= 1;
+					if (volume != sfMusic_getVolume(music)) sfMusic_setVolume(music, volume);
+				}
+
+				if (sfKeyboard_isKeyPressed(sfKeyM)) {
+					if (!flagMusic) {
+						if (audioStatus == sfPlaying) sfMusic_pause(music);
+						else if (audioStatus == sfPaused) sfMusic_play(music);
+					}
+					flagMusic = 1;
+				}
+				else flagMusic = 0;
 
 				// Updates
 				updatePlayer(tilemap);
 				updateView(window, view, playerPos);
 				updateDialogBox(craft, sizeof(craft), sfTxt_c, buttonCraft, (sfVector2f) { 430.0f, 480.0f }, (sfVector2f) { 0.0f, 30.0f });
-
 
 				sfRenderWindow_setView(window, view);
 				renderMap(tilemap, window, sfView_getCenter(view));
