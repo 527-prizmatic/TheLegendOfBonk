@@ -18,7 +18,7 @@ sfRectangleShape* initRectangle()
 * PARAM : sfText*, sfFont*, sfRectangleShape*
 * Initialise la boite de dialogue
 */
-void initDialogBox(sfText* _txt, sfRectangleShape* _dialogBox)
+void initDialogBox(sfText* _txt, sfFont* _font, sfRectangleShape* _dialogBox)
 {
 	sfVector2f dialogBoxPos = { 100.0f , 10.0f };
 	// OFFSET Y 10.0f, OFFSET X 5.f
@@ -36,12 +36,7 @@ void initDialogBox(sfText* _txt, sfRectangleShape* _dialogBox)
 	sfRectangleShape_setOutlineThickness(_dialogBox, 2);
 }
 
-/*
-* FONCTION : updateDialogBox
-* PARAM : char*, int, sfText*, sfRectangleShape*
-* Calcul la taille max de la boite de dialogue par rapport au texte
-*/
-void updateDialogBox(char* _str,int _sizeStr, sfText* _txt, sfRectangleShape* _dialogBox)
+void updateDialogBox(char* _str, int _sizeStr, sfText* _txt, sfRectangleShape* _dialogBox, sfVector2f _pos)
 {
 	sfVector2f newSize = DEFAULT_DIALOG_SIZE;
 	int dialogBoxWidth = 0;
@@ -73,6 +68,8 @@ void updateDialogBox(char* _str,int _sizeStr, sfText* _txt, sfRectangleShape* _d
 
 	// Adapter taille dialogBox 
 	sfRectangleShape_setSize(_dialogBox, newSize);
+	sfRectangleShape_setPosition(_dialogBox, _pos);
+	sfText_setPosition(_txt, (sfVector2f){ _pos.x + 10, _pos.y });
 }
 
 /*
@@ -85,4 +82,11 @@ void displayDialogBox(sfRenderWindow* _window, sfText* _txt, sfRectangleShape* _
 	// Display
 	sfRenderWindow_drawRectangleShape(_window, _dialogBox, sfFalse);
 	sfRenderWindow_drawText(_window, _txt, sfFalse);
+}
+
+sfBool isClicked(sfRenderWindow* _w, sfRectangleShape* _dialogBox) {
+	sfFloatRect hitbox = sfRectangleShape_getGlobalBounds(_dialogBox);
+	sfVector2i mousePos = sfMouse_getPositionRenderWindow(_w);
+	if (mousePos.x > hitbox.left && mousePos.x < hitbox.left + hitbox.width && mousePos.y > hitbox.top && mousePos.y < hitbox.top + hitbox.height) return sfTrue;
+	else return sfFalse;
 }
