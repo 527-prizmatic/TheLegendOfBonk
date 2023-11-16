@@ -134,6 +134,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="dialogBox.c" />
+    <ClCompile Include="editor.c" />
     <ClCompile Include="inventory.c" />
     <ClCompile Include="main.c" />
     <ClCompile Include="player.c" />

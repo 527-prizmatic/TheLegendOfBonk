@@ -23,7 +23,8 @@ int main() {
 	initMapNull(tilemap);
 
 	sfRenderWindow* window = initRender();
-	sfView* view = initView();
+	sfView* viewGame = initGameView();
+	sfView* viewEditor = initEditorView();
 	
 	// Variable DIALOG BOX
 	sfFont* font = sfFont_createFromFile(TEXTURE_PATH"3Dventure.ttf");
@@ -60,11 +61,11 @@ int main() {
 	sfSprite_setPosition(spriteEdit, (sfVector2f) { 330.0f, 450.0f });
 
 	//Background
-sfTexture* backgroundTexture = sfTexture_createFromFile(TEXTURE_PATH"background.png", NULL);
-sfSprite* backgroundSprite = sfSprite_create();
-sfSprite_setTexture(backgroundSprite, backgroundTexture, sfFalse);
-sfSprite_setScale(backgroundSprite, (sfVector2f) { 1.0f, 1.0f });
-sfSprite_setPosition(backgroundSprite, (sfVector2f) { 0.0f, 0.0f });
+	sfTexture* backgroundTexture = sfTexture_createFromFile(TEXTURE_PATH"background.png", NULL);
+	sfSprite* backgroundSprite = sfSprite_create();
+	sfSprite_setTexture(backgroundSprite, backgroundTexture, sfFalse);
+	sfSprite_setScale(backgroundSprite, (sfVector2f) { 1.0f, 1.0f });
+	sfSprite_setPosition(backgroundSprite, (sfVector2f) { 0.0f, 0.0f });
 
 
 	
@@ -84,41 +85,28 @@ sfSprite_setPosition(backgroundSprite, (sfVector2f) { 0.0f, 0.0f });
 	char edit[] = "EDIT";
 	char craft[] = "CRAFT !";
 
+	char tileSelection = 0;
+
+	char flagEditorSel = 0;
+
 	initPlayer();
 	sfEvent event;
 	float tick = 0.0f;
-	GameState gameState = MENU;
 
-	char flagCraft = 0;
+	load_map(tilemap, &playerPos, inventory);
 
 	// Game loop
 	while (sfRenderWindow_isOpen(window)) {
 		while (sfRenderWindow_pollEvent(window, &event)) {
 			if (event.type == sfEvtClosed) sfRenderWindow_close(window);
-			else if (event.type == sfEvtMouseButtonPressed && event.mouseButton.button == sfMouseLeft) {
-				if (gameState == MENU) {
-					if (isClicked(window, buttonPlay)) {
-						gameState = GAME;
-						load_map(tilemap, &playerPos, inventory);
-					}
-					else if (isClicked(window, buttonQuit)) gameState = QUIT;
-				}
-
-				else if (gameState == GAME) {
-					if (isClicked(window, buttonCraft)) {
-						if (inventory[0] && inventory[1] && inventory[2] && inventory[3]) {
-							flagCraft = 1;
-							printf("z");
-						}
-					}
-				}
-			}
 		}
 		restartClock();
 		sfRenderWindow_clear(window, sfBlack);
 
-		if (gameState == MENU) {			
+		if (gameState == MENU) {
+			sfRenderWindow_setView(window, sfRenderWindow_getDefaultView(window));		
 			sfRenderWindow_drawSprite(window, backgroundSprite, NULL);
+
 			updateDialogBox(str, sizeof(str), sfTxt_db, dialogBox, (sfVector2f) { 50.0f, 50.0f }, DEFAULT_DIALOG_SIZE);
 			updateDialogBox(game, sizeof(game), sfTxt_g, buttonPlay, (sfVector2f) { 225.0f, 350.0f }, DEFAULT_DIALOG_SIZE);
 			updateDialogBox(quit, sizeof(quit), sfTxt_q, buttonQuit, (sfVector2f) { 425.0f, 350.0f }, DEFAULT_DIALOG_SIZE);
@@ -129,44 +117,72 @@ sfSprite_setPosition(backgroundSprite, (sfVector2f) { 0.0f, 0.0f });
 			sfRenderWindow_drawSprite(window, spriteQuit, NULL);
             sfRenderWindow_drawSprite(window, spriteEdit, NULL);
 			sfRenderWindow_display(window);
+
+			if (isClicked(window, buttonPlay)) gameState = GAME;
+			else if (isClicked(window, buttonEdit)) gameState = EDITOR;
+			else if (isClicked(window, buttonQuit)) gameState = QUIT;
 		}
 		else if (gameState == GAME) {
 			tick += getDeltaTime();
 			if (tick >= TICK_TIME) {
 				tick = 0.0f;
 
-				if (flagCraft == 1) {
-					for (int i = 0; i < 4; i++) {
-						inventory[i] = 0;
-					}
-					inventory[0] = 2;
-					flagCraft = 0;
-				}
-
 				// Updates
 				updatePlayer(tilemap);
-				updateView(window, view, playerPos);
+				updateView(window, viewGame, playerPos);
 				updateDialogBox(craft, sizeof(craft), sfTxt_c, buttonCraft, (sfVector2f) { 430.0f, 480.0f }, (sfVector2f) { 0.0f, 30.0f });
 
-
-				sfRenderWindow_setView(window, view);
-				renderMap(tilemap, window, sfView_getCenter(view));
-				displayPlayer(window);
-
 				// Rendering
+				sfRenderWindow_setView(window, viewGame);
+				renderMap(tilemap, window, sfView_getCenter(viewGame));
+				displayPlayer(window);
 				displayInventory(window, inventory, inventorySprite, keySprite);
-				if (inventory[0] && inventory[1] && inventory[2] && inventory[3]) {
-					displayDialogBox(window, sfTxt_c, buttonCraft, sfTrue);
-				}
+				if (hasAllKeyPieces(inventory)) displayDialogBox(window, sfTxt_c, buttonCraft, sfTrue);
 
 				sfRenderWindow_display(window);
 
 				if (sfKeyboard_isKeyPressed(sfKeyK) && sfKeyboard_isKeyPressed(sfKeyLControl)) save_map(tilemap, playerPos, inventory);
 				if (sfKeyboard_isKeyPressed(sfKeyL) && sfKeyboard_isKeyPressed(sfKeyLControl)) load_map(tilemap, &playerPos, inventory);
+
+				if (isClicked(window, buttonCraft)) {
+					if (inventory[0] && inventory[1] && inventory[2] && inventory[3]) {
+						for (int i = 0; i < 4; i++) inventory[i] = 0;
+						inventory[0] = 2;
+					}
+				}
+
 				if (sfKeyboard_isKeyPressed(sfKeyEscape)) {
 					save_map(tilemap, playerPos, inventory);
 					gameState = MENU;
 				}
+			}
+		}
+		else if (gameState == EDITOR) {
+			tick += getDeltaTime();
+			if (tick >= TICK_TIME) {
+				tick = 0.0f;
+
+				if (sfMouse_isButtonPressed(sfMouseLeft)) changeTile(window, viewEditor, tilemap, tileSelection);
+
+				if (sfKeyboard_isKeyPressed(sfKeyLeft)) {
+					if (!flagEditorSel) {
+						tileSelection = (tileSelection + 1) % 4;
+						flagEditorSel = 1;
+					}
+				}
+				else flagEditorSel = 0;
+
+				printf("%d\n", tilemap[0][0]);
+
+				sfRenderWindow_setView(window, viewEditor);
+				updateEditorView(window, viewEditor);
+				renderMap(tilemap, window, sfView_getCenter(viewEditor));
+				sfRenderWindow_display(window);
+			}
+
+			if (sfKeyboard_isKeyPressed(sfKeyEscape)) {
+				save_map(tilemap, playerPos, inventory);
+				gameState = MENU;
 			}
 		}
 		else if (gameState == QUIT) break;

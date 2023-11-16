@@ -14,7 +14,8 @@ sfRenderWindow* initRender();
 
 /* Initializes the rendering viewport.
 *  \return A pointed to a newly created sfView */
-sfView* initView();
+sfView* initGameView();
+sfView* initEditorView();
 
 /* Updates the given viewport's location to keep it centered on the player character as much as possible.
 *  \param _w - A render window
