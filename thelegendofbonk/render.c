@@ -12,9 +12,9 @@ sfSprite* tile;
 sfRenderWindow* initRender() {
 	sfVideoMode mode = { 800, 600, 32 };
     sfRenderWindow* _w = sfRenderWindow_create(mode, "TheLegendOfBonk", sfResize | sfClose, NULL);
-	tilesheet = sfTexture_createFromFile(TEXTURE_PATH"tilemap_poc.png", NULL);
+	tilesheet = sfTexture_createFromFile(TEXTURE_PATH"tilesheet.png", NULL);
 	tile = sfSprite_create();
-	sfSprite_setScale(tile, (sfVector2f){ TILE_PX / 32, TILE_PX / 32 });
+	sfSprite_setScale(tile, (sfVector2f){ SCALE, SCALE });
 	return _w;
 }
 
@@ -78,3 +78,23 @@ void renderMap(char _map[H_MAP_T][W_MAP_T], sfRenderWindow* _w, sfVector2f _pos)
 	}
 }
 
+void renderEditorUI(sfRenderWindow* _w, sfView* _v) {
+	sfRenderWindow_setView(_w, sfRenderWindow_getDefaultView(_w));
+
+	// Displays dark overlay to hide the map while picking a tile
+	sfRectangleShape* overlay = sfRectangleShape_create();
+	sfRectangleShape_setSize(overlay, vector2f(1200, 900));
+	sfRectangleShape_setFillColor(overlay, sfColor_fromRGBA(0, 0, 0, 128));
+	sfRenderWindow_drawRectangleShape(_w, overlay, NULL);
+
+	// Renders all available tiles
+	for (int i = 0; i < 10; i++) {
+		for (int j = 0; j < 18; j++) {
+			sfSprite_setPosition(tile, (sfVector2f) { i* TILE_PX + 24, j* TILE_PX + 24 });
+			if (textureFromId(j * 18 + i).width == 0) break;
+			sfSprite_setTextureRect(tile, textureFromId(j * 18 + i));
+			sfRenderWindow_drawSprite(_w, tile, NULL);
+		}
+	}
+	sfRenderWindow_setView(_w, _v);
+}

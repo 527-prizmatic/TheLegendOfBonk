@@ -12,4 +12,6 @@ void initInventory(sfSprite* _inventorySprite, sfSprite* _keySprite);
 *  \param _keySprite - A sprite object for use as item icons */
 void displayInventory(sfRenderWindow* _window, int* _inventory, sfSprite* _inventorySprite, sfSprite* _keySprite);
 
+/* Checks if the player is carrying all key pieces.
+*  \param _inv - An inventory to scan for key pieces */
 sfBool hasAllKeyPieces(int _inv[4]);
