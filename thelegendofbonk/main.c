@@ -14,8 +14,6 @@
 #include "inventory.h"
 #include "save.h"
 
-#define TICKSPEED 30
-
 // TODO MUSIC BONEY M RASPUTIN
 
 int main() {
@@ -27,43 +25,33 @@ int main() {
 	sfView* view = initView();
 	
 	// Variable DIALOG BOX
-	sfFont* font = initFont();
-	sfText* sfTxt_db = initText();
-	sfText* sfTxt_g = initText();
-	sfText* sfTxt_q = initText();
+	sfFont* font = sfFont_createFromFile(TEXTURE_PATH"3Dventure.ttf");
+	sfText* sfTxt_db = sfText_create();
+	sfText* sfTxt_g = sfText_create();
+	sfText* sfTxt_q = sfText_create();
 
-	sfRectangleShape* dialogBox = initRectangle();
+	sfRectangleShape* dialogBox = sfRectangleShape_create();
 	initDialogBox(sfTxt_db, font, dialogBox);
-	sfRectangleShape* buttonGame = initRectangle();
+	sfRectangleShape* buttonGame = sfRectangleShape_create();
 	initDialogBox(sfTxt_g, font, buttonGame);
-	sfRectangleShape* buttonQuit = initRectangle();
+	sfRectangleShape* buttonQuit = sfRectangleShape_create();
 	initDialogBox(sfTxt_q, font, buttonQuit);
 
-	// Variable INVENTORY
+	// Inventory handling
 	int inventory[4] = { 0, 0, 0, 0 };
-	sfSprite* inventorySprite = initSprite();
-	sfSprite* keySprite = initSprite(); 
-	sfText* craftText = initText();
-	sfRectangleShape* craftButton = initRectangle();
+	sfSprite* inventorySprite = sfSprite_create();
+	sfSprite* keySprite = sfSprite_create();
+	sfText* craftText = sfText_create();
+	sfRectangleShape* craftButton = sfRectangleShape_create();
 	initInventory(inventorySprite, keySprite, craftButton, craftText);
 
 	char str[] = "The\nLegend\nof\nBonk";
 	char game[] = "GAME";
 	char quit[] = "QUIT";
 
-	for (int i = 0; i < H_MAP_T; i++) {
-		for (int j = 0; j < W_MAP_T; j++) {
-			printf("%d ", tilemap[i][j]);
-		}
-		printf("\n");
-	}
-
-	//INIT
 	initPlayer();
-	initView(window);
 	sfEvent event;
 	float tick = 0.0f;
-
 	GameState gameState = MENU;
 
 	// Game loop
@@ -96,7 +84,7 @@ int main() {
 		}
 		else if (gameState == GAME) {
 			tick += getDeltaTime();
-			if (tick >= 1.0f / TICKSPEED) {
+			if (tick >= TICK_TIME) {
 				tick = 0.0f;
 				// Updates
 				updatePlayer(tilemap);
@@ -104,7 +92,7 @@ int main() {
 
 				// Rendering
 				sfRenderWindow_setView(window, view);
-				renderMap(tilemap, window);
+				renderMap(tilemap, window, sfView_getCenter(view));
 				displayPlayer(window);
 				displayInventory(window, inventory, inventorySprite, keySprite, craftButton, craftText);
 				sfRenderWindow_display(window);
@@ -118,6 +106,7 @@ int main() {
 			}
 		}
 		else if (gameState == QUIT) break;
+		
 	}
 
 	sfRenderWindow_close(window);
