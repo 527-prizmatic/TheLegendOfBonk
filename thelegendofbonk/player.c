@@ -31,9 +31,11 @@ sfVector2f vector2f(float _x, float _y)
 
 void initPlayer() 
 {
-    player = sfRectangleShape_create();  
-    sfRectangleShape_setSize(player, (sfVector2f){48, 48});
-    sfRectangleShape_setFillColor(player, sfWhite);	 
+    player = sfSprite_create();
+    spriteSheet = sfTexture_createFromFile("..\\assets\\textures\\spriteSheet.png", NULL);
+    sfSprite_setTexture(player, spriteSheet, sfTrue);
+    sfSprite_setTextureRect(player, irect);
+    sfSprite_setScale(player, vector2f(2.0f, 2.0f));
     sfSprite_setPosition(player, playerPos);
 
     animTime = 0.0f;
@@ -157,12 +159,11 @@ void movePlayer(moveDir _dir, sfBool _isDiag) {
     float move = playerSpeed * getDeltaTime();
     if (_isDiag) move /= sqrt(2);
     switch (_dir) {
-    case UP: frameY = DOWN; playerPos.y -= move; animTime += getDeltaTime(); isMoving = sfTrue; break;
+        case UP: frameY = DOWN; playerPos.y -= move; animTime += getDeltaTime(); isMoving = sfTrue; break;
         case RIGHT:frameY = LEFT; playerPos.x += move; animTime += getDeltaTime(); isMoving = sfTrue; break; 
         case DOWN: frameY = UP; playerPos.y += move; animTime += getDeltaTime(); isMoving = sfTrue; break;
         case LEFT: frameY = RIGHT;playerPos.x -= move; animTime += getDeltaTime(); isMoving = sfTrue; break; 
     }
-
 }
 
 void displayPlayer(sfRenderWindow* _window) {
