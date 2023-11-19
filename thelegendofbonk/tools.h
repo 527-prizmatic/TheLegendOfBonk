@@ -7,7 +7,7 @@
 #define TEXTURE_PATH "..\\assets\\textures\\"
 #define AUDIO_PATH "..\\assets\\audio\\"
 
-#define TICKSPEED 60
+#define TICKSPEED 120
 #define TICK_TIME 1 / (float)TICKSPEED
 
 #define KEY_UP sfKeyZ
@@ -19,6 +19,7 @@ typedef enum GameState {
 	MENU,
 	GAME,
 	EDITOR,
+	BREAK,
 	QUIT
 } GameState;
 
