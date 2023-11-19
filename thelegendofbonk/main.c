@@ -23,11 +23,14 @@ int main() {
 	char tilemap[H_MAP_T][W_MAP_T];
 	initMapNull(tilemap);
 
+	// Main window
 	sfRenderWindow* window = initRender();
+	// Game mode view
 	sfView* viewGame = initGameView();
+	// Editor mode view
 	sfView* viewEditor = initEditorView();
-	
-	// ---MENU PRINCIPAL---
+
+	// ---MAIN MENU---
 	sfFont* font = sfFont_createFromFile(TEXTURE_PATH"3Dventure.ttf");
 	sfText* sfTxt_db = sfText_create();
 	sfText* sfTxt_g = sfText_create();
@@ -42,16 +45,22 @@ int main() {
 	sfRectangleShape* buttonQuit = sfRectangleShape_create();
 	initDialogBox(sfTxt_q, font, 30, buttonQuit);
 
-	// Visuel -MENU PRINCIPAL-
+	// Var -MAIN MENU-
+	char title[] = "The\nLegend\nof\nBonk";
+	char game[] = "GAME";
+	char quit[] = "QUIT";
+	char edit[] = "EDIT";
+
+	// Visuel -MAIN MENU BUTTON-
 	sfSprite* spritePlay = sfSprite_create();
 	sfSprite* spriteQuit = sfSprite_create();
 	sfSprite* spriteEdit = sfSprite_create();
 	sfTexture* buttonTexture = sfTexture_createFromFile(TEXTURE_PATH"play.png", NULL);
 	sfTexture* buttonTexture2 = sfTexture_createFromFile(TEXTURE_PATH"quit.png", NULL);
 	sfTexture* buttonTexture3 = sfTexture_createFromFile(TEXTURE_PATH"edit.png", NULL);
-	
-	sfSprite_setTexture(spritePlay, buttonTexture, sfFalse); 
-	sfSprite_setScale(spritePlay, (sfVector2f) { 3.5f, 3.5f }); 
+
+	sfSprite_setTexture(spritePlay, buttonTexture, sfFalse);
+	sfSprite_setScale(spritePlay, (sfVector2f) { 3.5f, 3.5f });
 	sfSprite_setPosition(spritePlay, (sfVector2f) { 200.0f, 350.0f });
 	sfSprite_setTexture(spriteQuit, buttonTexture2, sfFalse);
 	sfSprite_setScale(spriteQuit, (sfVector2f) { 3.5f, 3.5f });
@@ -60,6 +69,14 @@ int main() {
 	sfSprite_setScale(spriteEdit, (sfVector2f) { 3.5f, 3.5f });
 	sfSprite_setPosition(spriteEdit, (sfVector2f) { 330.0f, 450.0f });
 
+	//Background
+	sfTexture* backgroundTexture = sfTexture_createFromFile(TEXTURE_PATH"background.png", NULL);
+	sfSprite* backgroundSprite = sfSprite_create();
+	sfSprite_setTexture(backgroundSprite, backgroundTexture, sfFalse);
+	sfSprite_setScale(backgroundSprite, (sfVector2f) { 1.0f, 1.0f });
+	sfSprite_setPosition(backgroundSprite, (sfVector2f) { 0.0f, 0.0f });
+
+	// ---OPTION MENU---
 	sfText* sfTxt_menuButton = sfText_create();
 	sfText* sfTxt_optionButton = sfText_create();
 	sfText* sfTxt_quitButton = sfText_create();
@@ -71,7 +88,7 @@ int main() {
 	sfRectangleShape* pauseQuitButton = sfRectangleShape_create();
 	initDialogBox(sfTxt_quitButton, font, 30, pauseQuitButton);
 
-	/* VISUEL BOUTON MENU OPTION
+	/* VISUEL -OPTION MENU BUTTON -
 	sfSprite* spriteMenuButtonPlay = sfSprite_create();
 	sfSprite* spriteMenuButtonOption = sfSprite_create();
 	sfSprite* spriteMenuButtonQuit= sfSprite_create();
@@ -90,40 +107,20 @@ int main() {
 	sfSprite_setPosition(menuButtonQuitTexture, (sfVector2f) { 330.0f, 450.0f });
 	*/
 
-	//Background
-	sfTexture* backgroundTexture = sfTexture_createFromFile(TEXTURE_PATH"background.png", NULL);
-	sfSprite* backgroundSprite = sfSprite_create();
-	sfSprite_setTexture(backgroundSprite, backgroundTexture, sfFalse);
-	sfSprite_setScale(backgroundSprite, (sfVector2f) { 1.0f, 1.0f });
-	sfSprite_setPosition(backgroundSprite, (sfVector2f) { 0.0f, 0.0f });
-
-
-	
-	// Inventory handling
+	// INVENTORY
 	int inventory[4] = { 0, 0, 0, 0 };
+	char craft[] = "CRAFT !";
+	char flagCraft = 0;
+
 	sfSprite* inventorySprite = sfSprite_create();
 	sfSprite* keySprite = sfSprite_create();
 	initInventory(inventorySprite, keySprite);
-
 	sfText* sfTxt_c = sfText_create();
 	sfRectangleShape* buttonCraft = sfRectangleShape_create();
 	initDialogBox(sfTxt_c, font, 20, buttonCraft);
-	  
-	char str[] = "The\nLegend\nof\nBonk";
-	char game[] = "GAME";
-	char quit[] = "QUIT";
-	char edit[] = "EDIT";
-	char craft[] = "CRAFT !";
 
 	char tileSelection = 0;
-	char flagClick = 0;
-
 	char flagEditorSel = 0;
-	char flagCraft = 0;
-<<<<<<< HEAD
-=======
-	char flagEditorUI = 0;
->>>>>>> nucleus
 
 	initPlayer();
 	sfEvent event;
@@ -131,7 +128,7 @@ int main() {
 
 	load_map(tilemap, &playerPos, inventory);
 
-	//Musique 
+	//Music 
 	float volume = 0.0f;
 	char flagMusic = 0;
 
@@ -167,10 +164,10 @@ int main() {
 		sfRenderWindow_clear(window, sfBlack);
 
 		if (gameState == MENU) {
-			sfRenderWindow_setView(window, sfRenderWindow_getDefaultView(window));		
+			sfRenderWindow_setView(window, sfRenderWindow_getDefaultView(window));
 			sfRenderWindow_drawSprite(window, backgroundSprite, NULL);
 
-			updateDialogBox(str, sizeof(str), sfTxt_db, dialogBox, (sfVector2f) { 50.0f, 50.0f }, DEFAULT_DIALOG_SIZE);
+			updateDialogBox(title, sizeof(title), sfTxt_db, dialogBox, (sfVector2f) { 50.0f, 50.0f }, DEFAULT_DIALOG_SIZE);
 			updateDialogBox(game, sizeof(game), sfTxt_g, buttonPlay, (sfVector2f) { 225.0f, 350.0f }, DEFAULT_DIALOG_SIZE);
 			updateDialogBox(quit, sizeof(quit), sfTxt_q, buttonQuit, (sfVector2f) { 425.0f, 350.0f }, DEFAULT_DIALOG_SIZE);
 			updateDialogBox(quit, sizeof(edit), sfTxt_q, buttonEdit, (sfVector2f) { 370.0f, 450.0f }, DEFAULT_DIALOG_SIZE);
@@ -178,7 +175,7 @@ int main() {
 			displayDialogBox(window, sfTxt_db, dialogBox, sfFalse);
 			sfRenderWindow_drawSprite(window, spritePlay, NULL);
 			sfRenderWindow_drawSprite(window, spriteQuit, NULL);
-            sfRenderWindow_drawSprite(window, spriteEdit, NULL);
+			sfRenderWindow_drawSprite(window, spriteEdit, NULL);
 			sfRenderWindow_display(window);
 
 			if (isClicked(window, buttonPlay)) gameState = GAME;
@@ -249,7 +246,7 @@ int main() {
 			if (tick >= TICK_TIME) {
 				tick = 0.0f;
 
-				if (sfMouse_isButtonPressed(sfMouseLeft) && !flagEditorUI && !flagClick) changeTile(window, viewEditor, tilemap, tileSelection);
+				if (sfMouse_isButtonPressed(sfMouseLeft)) changeTile(window, viewEditor, tilemap, tileSelection);
 
 				if (sfKeyboard_isKeyPressed(sfKeyLeft)) {
 					if (!flagEditorSel) {
@@ -259,25 +256,13 @@ int main() {
 				}
 				else flagEditorSel = 0;
 
+				printf("%d\n", tilemap[0][0]);
+
 				sfRenderWindow_setView(window, viewEditor);
 				updateEditorView(window, viewEditor);
 				renderMap(tilemap, window, sfView_getCenter(viewEditor));
-				if (flagEditorUI) renderEditorUI(window, viewEditor);
 				sfRenderWindow_display(window);
 			}
-
-			if (sfKeyboard_isKeyPressed(sfKeyEnter)) flagEditorUI = 1;
-
-			if (sfMouse_isButtonPressed(sfMouseLeft) && flagEditorUI) {
-				flagClick = 1;
-				sfVector2f mouseCursor = sfRenderWindow_mapPixelToCoords(window, sfMouse_getPosition(window), viewGame);
-				sfVector2i pos = { ((int)mouseCursor.x - 24) / TILE_PX, ((int)mouseCursor.y - 24) / TILE_PX };
-				tileSelection = pos.x + pos.y * 18;
-				printf("%d", tileSelection);
-				flagEditorUI = 0;
-			}
-
-			if (!sfMouse_isButtonPressed(sfMouseLeft) && flagClick) flagClick = 0;
 
 			if (sfKeyboard_isKeyPressed(sfKeyEscape)) {
 				save_map(tilemap, playerPos, inventory);
