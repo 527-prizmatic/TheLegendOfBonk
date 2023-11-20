@@ -8,7 +8,7 @@ const sfIntRect t_grass			= { TS * 1, TS * 4, 48, 48 };
 const sfIntRect t_water			= { TS * 5, TS * 8, 48, 48 };
 const sfIntRect t_sand			= { TS * 1, TS * 13, 48, 48 };
 const sfIntRect t_rock			= { TS * 6, TS * 4, 48, 48 };
-const sfIntRect t_a			= { TS * 5, TS * 7, 48, 48 };
+const sfIntRect t_a				= { TS * 5, TS * 7, 48, 48 };
 
 sfIntRect textureFromId(int _id) {
 	switch (_id) {
