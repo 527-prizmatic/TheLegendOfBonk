@@ -3,7 +3,7 @@
 #include <stdlib.h>
 #include <math.h>
 
-#define H_MAP_T 40 // Map height in tiles
+#define H_MAP_T 60 // Map height in tiles
 #define W_MAP_T 80 // Map width in tiles
 #define TILE_PX 64 // Tile size in pixels
 #define SCALE 4.0 / 3.0 // Tile texture scale
