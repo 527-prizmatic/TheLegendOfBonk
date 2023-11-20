@@ -8,6 +8,9 @@
 #include "SFML/Graphics.h"
 #include "map.h"
 
+sfTexture* tilesheet;
+sfSprite* tile;
+
 /* Initializes the rendering engine by creating windows, texture sheets and the like.
 *  \return A pointed to a newly created sfRenderWindow */
 sfRenderWindow* initRender();
@@ -27,3 +30,5 @@ void updateView(sfRenderWindow* _w, sfView* _v, sfVector2f _pos);
 *  \param _map - An initialized tilemap to be displayed
 *  \param _window - The window to display the map on */
 void renderMap(char _map[H_MAP_T][W_MAP_T], sfRenderWindow* _w, sfVector2f _pos);
+
+void renderEditorUI(sfRenderWindow* _w, sfView* _v);

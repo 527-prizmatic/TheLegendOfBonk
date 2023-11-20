@@ -88,8 +88,11 @@ int main() {
 	char craft[] = "CRAFT !";
 
 	char tileSelection = 0;
+	char flagClick = 0;
 
 	char flagEditorSel = 0;
+	char flagCraft = 0;
+	char flagEditorUI = 0;
 
 	initPlayer();
 	sfEvent event;
@@ -215,7 +218,7 @@ int main() {
 			if (tick >= TICK_TIME) {
 				tick = 0.0f;
 
-				if (sfMouse_isButtonPressed(sfMouseLeft)) changeTile(window, viewEditor, tilemap, tileSelection);
+				if (sfMouse_isButtonPressed(sfMouseLeft) && !flagEditorUI && !flagClick) changeTile(window, viewEditor, tilemap, tileSelection);
 
 				if (sfKeyboard_isKeyPressed(sfKeyLeft)) {
 					if (!flagEditorSel) {
@@ -225,13 +228,25 @@ int main() {
 				}
 				else flagEditorSel = 0;
 
-				printf("%d\n", tilemap[0][0]);
-
 				sfRenderWindow_setView(window, viewEditor);
 				updateEditorView(window, viewEditor);
 				renderMap(tilemap, window, sfView_getCenter(viewEditor));
+				if (flagEditorUI) renderEditorUI(window, viewEditor);
 				sfRenderWindow_display(window);
 			}
+
+			if (sfKeyboard_isKeyPressed(sfKeyEnter)) flagEditorUI = 1;
+
+			if (sfMouse_isButtonPressed(sfMouseLeft) && flagEditorUI) {
+				flagClick = 1;
+				sfVector2f mouseCursor = sfRenderWindow_mapPixelToCoords(window, sfMouse_getPosition(window), viewGame);
+				sfVector2i pos = { ((int)mouseCursor.x - 24) / TILE_PX, ((int)mouseCursor.y - 24) / TILE_PX };
+				tileSelection = pos.x + pos.y * 18;
+				printf("%d", tileSelection);
+				flagEditorUI = 0;
+			}
+
+			if (!sfMouse_isButtonPressed(sfMouseLeft) && flagClick) flagClick = 0;
 
 			if (sfKeyboard_isKeyPressed(sfKeyEscape)) {
 				save_map(tilemap, playerPos, inventory);
