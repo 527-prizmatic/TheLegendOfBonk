@@ -14,6 +14,8 @@
 #define KEY_DOWN sfKeyS
 #define KEY_LEFT sfKeyQ
 #define KEY_RIGHT sfKeyD
+#define KEY_PAUSE sfKeyEscape
+#define KEY_EDITOR_UI sfKeyEnter
 
 typedef enum GameState {
 	MENU,

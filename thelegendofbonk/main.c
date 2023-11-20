@@ -32,24 +32,13 @@ int main() {
 
 	// ---MAIN MENU---
 	sfFont* font = sfFont_createFromFile(TEXTURE_PATH"3Dventure.ttf");
-	sfText* sfTxt_db = sfText_create();
-	sfText* sfTxt_g = sfText_create();
-	sfText* sfTxt_q = sfText_create();
+	sfText* textTitle = sfText_create();
 
 	sfRectangleShape* dialogBox = sfRectangleShape_create();
-	initDialogBox(sfTxt_db, font, 30, dialogBox);
-	sfRectangleShape* buttonPlay = sfRectangleShape_create();
-	initDialogBox(sfTxt_g, font, 30, buttonPlay);
-	sfRectangleShape* buttonEdit = sfRectangleShape_create();
-	initDialogBox(sfTxt_g, font, 30, buttonEdit);
-	sfRectangleShape* buttonQuit = sfRectangleShape_create();
-	initDialogBox(sfTxt_q, font, 30, buttonQuit);
+	initDialogBox(textTitle, font, 30, dialogBox);
 
 	// Var -MAIN MENU-
 	char title[] = "The\nLegend\nof\nBonk";
-	char game[] = "GAME";
-	char quit[] = "QUIT";
-	char edit[] = "EDIT";
 
 	// Visuel -MAIN MENU BUTTON-
 	sfSprite* spritePlay = sfSprite_create();
@@ -77,55 +66,31 @@ int main() {
 	sfSprite_setPosition(backgroundSprite, (sfVector2f) { 0.0f, 0.0f });
 
 	// ---OPTION MENU---
-	sfText* sfTxt_menuButton = sfText_create();
-	sfText* sfTxt_optionButton = sfText_create();
-	sfText* sfTxt_quitButton = sfText_create();
-	sfText* sfTxt_volumeUp = sfText_create();
-	sfText* sfTxt_volumeDown = sfText_create();
-	sfText* sfTxt_return = sfText_create();
 	sfText* sfTxt_volume = sfText_create();
 	sfText_setFont(sfTxt_volume, font);
 	sfText_setCharacterSize(sfTxt_volume, 30);
 	sfText_setPosition(sfTxt_volume, vector2f(250.0f, 250.0f));
 
-	sfRectangleShape* pauseMenuButton = sfRectangleShape_create();
-	initDialogBox(sfTxt_menuButton, font, 30, pauseMenuButton);
-	sfRectangleShape* pauseOptionButton = sfRectangleShape_create();
-	initDialogBox(sfTxt_optionButton, font, 30, pauseOptionButton);
-	sfRectangleShape* pauseQuitButton = sfRectangleShape_create();
-	initDialogBox(sfTxt_quitButton, font, 30, pauseQuitButton);
-
-	sfRectangleShape* volumeUpButton = sfRectangleShape_create();
-	initDialogBox(sfTxt_volumeUp, font, 30, volumeUpButton);
-	sfRectangleShape* volumeDownButton = sfRectangleShape_create();
-	initDialogBox(sfTxt_volumeDown, font, 30, volumeDownButton);
-	sfRectangleShape* returnButton = sfRectangleShape_create();
-	initDialogBox(sfTxt_return, font, 30, returnButton);
-
-
 	// Var -MAIN MENU-
-	char txtVolume[100] = "Volume :";
-	char txtButtonMenu[] = "MENU";
-	char txtButtonOption[] = "OPTION";
-	char txtButtonQuit[] = "QUIT";
-	char txtVolumeUp[] = "VOLUME +";
-	char txtVolumeDown[] = "VOLUME -";
-	char txtReturn[] = "RETURN";
+	char txtVolume[16] = "Volume :";
 	char flagPauseMenu = 0;
 	char flagOption = 0;
 	char flagClick = 0;
 
-	
-	sfSprite* spriteMenuButtonPlay = sfSprite_create();
+	sfSprite* spriteMenuButtonReturn = sfSprite_create();
 	sfSprite* spriteMenuButtonOption = sfSprite_create();
 	sfSprite* spriteMenuButtonQuit= sfSprite_create();
+	sfSprite* spriteVolumeUp = sfSprite_create();
+	sfSprite* spriteVolumeDown = sfSprite_create();
 	sfTexture* menuButtonMenuTexture = sfTexture_createFromFile(TEXTURE_PATH"return.png", NULL);
 	sfTexture* menuButtonQuitTexture = sfTexture_createFromFile(TEXTURE_PATH"quit2.png", NULL);
 	sfTexture* menuButtonOptionTexture = sfTexture_createFromFile(TEXTURE_PATH"option.png", NULL);
+	sfTexture* volumeUpTexture = sfTexture_createFromFile(TEXTURE_PATH"volumePlus.png", NULL);
+	sfTexture* volumeDownTexture = sfTexture_createFromFile(TEXTURE_PATH"volumeMoin.png", NULL);
 
-	sfSprite_setTexture(spriteMenuButtonPlay, menuButtonMenuTexture, sfFalse);
-	sfSprite_setScale(spriteMenuButtonPlay, (sfVector2f) { 3.5f, 3.5f });
-	sfSprite_setPosition(spriteMenuButtonPlay, (sfVector2f) { 350.0f, 180.0f });
+	sfSprite_setTexture(spriteMenuButtonReturn, menuButtonMenuTexture, sfFalse);
+	sfSprite_setScale(spriteMenuButtonReturn, (sfVector2f) { 3.5f, 3.5f });
+	sfSprite_setPosition(spriteMenuButtonReturn, (sfVector2f) { 350.0f, 180.0f });
 
 	sfSprite_setTexture(spriteMenuButtonOption, menuButtonOptionTexture, sfFalse);
 	sfSprite_setScale(spriteMenuButtonOption, (sfVector2f) { 3.5f, 3.5f });
@@ -134,11 +99,6 @@ int main() {
 	sfSprite_setTexture(spriteMenuButtonQuit, menuButtonQuitTexture, sfFalse);
 	sfSprite_setScale(spriteMenuButtonQuit, (sfVector2f) { 3.5f, 3.5f });
 	sfSprite_setPosition(spriteMenuButtonQuit, (sfVector2f) { 350.0f, 320.0f });
-
-	sfSprite* spriteVolumeUp = sfSprite_create();
-    sfSprite* spriteVolumeDown = sfSprite_create();
-	sfTexture* volumeUpTexture = sfTexture_createFromFile(TEXTURE_PATH"volumePlus.png", NULL);
-    sfTexture* volumeDownTexture = sfTexture_createFromFile(TEXTURE_PATH"volumeMoin.png", NULL);
 
     sfSprite_setTexture(spriteVolumeUp, volumeUpTexture, sfFalse);
 	sfSprite_setScale(spriteVolumeUp, (sfVector2f) { 3.5f, 3.5f }); 
@@ -199,23 +159,20 @@ int main() {
 			sfRenderWindow_setView(window, sfRenderWindow_getDefaultView(window));
 			sfRenderWindow_drawSprite(window, backgroundSprite, NULL);
 
-			updateDialogBox(title, sizeof(title), sfTxt_db, dialogBox, (sfVector2f) { 50.0f, 50.0f }, DEFAULT_DIALOG_SIZE);
-			updateDialogBox(game, sizeof(game), sfTxt_g, buttonPlay, (sfVector2f) { 225.0f, 350.0f }, DEFAULT_DIALOG_SIZE);
-			updateDialogBox(quit, sizeof(quit), sfTxt_q, buttonQuit, (sfVector2f) { 425.0f, 350.0f }, DEFAULT_DIALOG_SIZE);
-			updateDialogBox(quit, sizeof(edit), sfTxt_q, buttonEdit, (sfVector2f) { 370.0f, 450.0f }, DEFAULT_DIALOG_SIZE);
+			updateDialogBox(title, sizeof(title), textTitle, dialogBox, (sfVector2f) { 50.0f, 50.0f }, DEFAULT_DIALOG_SIZE);
 
-			displayDialogBox(window, sfTxt_db, dialogBox, sfFalse);
+			displayDialogBox(window, textTitle, dialogBox, sfFalse);
 			sfRenderWindow_drawSprite(window, spritePlay, NULL);
-			sfRenderWindow_drawSprite(window, spriteQuit, NULL);
 			sfRenderWindow_drawSprite(window, spriteEdit, NULL);
+			sfRenderWindow_drawSprite(window, spriteQuit, NULL);
 			sfRenderWindow_display(window);
 
-			if (isClicked(window, buttonPlay)) gameState = GAME;
-			else if (isClicked(window, buttonEdit)) {
+			if (isClicked(window, spritePlay)) gameState = GAME;
+			else if (isClicked(window, spriteEdit)) {
 				gameState = EDITOR;
 				flagClick = 1;
 			}
-			else if (isClicked(window, buttonQuit)) gameState = QUIT;
+			else if (isClicked(window, spriteQuit)) gameState = QUIT;
 		}
 		else if (gameState == GAME) {
 			tick += getDeltaTime();
@@ -255,7 +212,7 @@ int main() {
 					}
 				}
 
-				if (sfKeyboard_isKeyPressed(sfKeyEscape)) {
+				if (sfKeyboard_isKeyPressed(KEY_PAUSE)) {
 					if (!flagPauseMenu) {
 						save_map(tilemap, propmap, playerPos, inventory, music);
 						gameState = BREAK;
@@ -288,7 +245,7 @@ int main() {
 				sfRenderWindow_display(window);
 			}
 
-			if (sfKeyboard_isKeyPressed(sfKeyEnter)) flagEditorUI = 1;
+			if (sfKeyboard_isKeyPressed(KEY_EDITOR_UI)) flagEditorUI = 1;
 
 			if (sfMouse_isButtonPressed(sfMouseLeft) && flagEditorUI) {
 				flagClick = 1;
@@ -303,7 +260,7 @@ int main() {
 
 			if (!sfMouse_isButtonPressed(sfMouseLeft) && flagClick) flagClick = 0;
 
-			if (sfKeyboard_isKeyPressed(sfKeyEscape)) {
+			if (sfKeyboard_isKeyPressed(KEY_PAUSE)) {
 				if (flagEditorUI == 0 && flagEditorLeave == 0) {
 					save_map(tilemap, propmap, playerPos, inventory, music);
 					sfMusic_play(music);
@@ -321,47 +278,44 @@ int main() {
 			sfRenderWindow_setView(window, sfRenderWindow_getDefaultView(window));
 			sfRenderWindow_drawSprite(window, backgroundSprite, NULL);
 			if (!flagOption){
-				updateDialogBox(txtButtonMenu, sizeof(txtButtonMenu), sfTxt_menuButton, pauseMenuButton, vector2f(370.0f, 180.0f), DEFAULT_DIALOG_SIZE);
-				updateDialogBox(txtButtonOption, sizeof(txtButtonOption), sfTxt_optionButton, pauseOptionButton, vector2f(370.0f, 250.0f), DEFAULT_DIALOG_SIZE);
-				updateDialogBox(txtButtonQuit, sizeof(txtButtonQuit), sfTxt_quitButton, pauseQuitButton, vector2f(370.0f, 320.0f), DEFAULT_DIALOG_SIZE);
+				sfSprite_setPosition(spriteMenuButtonReturn, (sfVector2f) { 350.0f, 180.0f });
 
-				updateDialogBox(txtVolumeUp, sizeof(txtVolumeUp), sfTxt_volumeUp, volumeUpButton, vector2f(250.0f, 200.0f), DEFAULT_DIALOG_SIZE);
-				updateDialogBox(txtVolumeDown, sizeof(txtVolumeDown), sfTxt_volumeDown, volumeDownButton, vector2f(450.0f, 200.0f), DEFAULT_DIALOG_SIZE);
-				updateDialogBox(txtReturn, sizeof(txtReturn), sfTxt_return, returnButton, vector2f(250.0f, 300.0f), DEFAULT_DIALOG_SIZE);
-
-				sfSprite_setPosition(spriteMenuButtonPlay, (sfVector2f) { 350.0f, 180.0f });
-
-				sfRenderWindow_drawSprite(window, spriteMenuButtonPlay, NULL); 
+				sfRenderWindow_drawSprite(window, spriteMenuButtonReturn, NULL); 
 				sfRenderWindow_drawSprite(window, spriteMenuButtonOption, NULL); 
 				sfRenderWindow_drawSprite(window, spriteMenuButtonQuit, NULL); 
 
-				if (isClicked(window, pauseMenuButton)) {
+				if (isClicked(window, spriteMenuButtonReturn)) {
 					save_map(tilemap, propmap, playerPos, inventory, music);
 					gameState = MENU;
 				}
-				else if (isClicked(window, pauseOptionButton)) flagOption = 1;
-				else if (isClicked(window, pauseQuitButton)) gameState = QUIT;
+				else if (isClicked(window, spriteMenuButtonOption) && flagClick == 0) {
+					flagOption = 1;
+					flagClick == 1;
+				}
+				else if (isClicked(window, spriteMenuButtonQuit) && flagClick == 0) gameState = QUIT;
 			}
 			else {
-				
-				sfSprite_setPosition(spriteMenuButtonPlay, vector2f(250.0f, 300.0f));
+				sfSprite_setPosition(spriteMenuButtonReturn, vector2f(250.0f, 300.0f));
 				sfRenderWindow_drawSprite(window, spriteVolumeUp, NULL);
                 sfRenderWindow_drawSprite(window, spriteVolumeDown, NULL);
-				sfRenderWindow_drawSprite(window, spriteMenuButtonPlay, NULL); 
+				sfRenderWindow_drawSprite(window, spriteMenuButtonReturn, NULL); 
 
 				canChangeVolume += getDeltaTime();
 				if (canChangeVolume > 0.1f) {
-					if (isClicked(window, volumeUpButton)) changeVolume(music, 1);
-					else if (isClicked(window, volumeDownButton)) changeVolume(music, 0);
+					if (isClicked(window, spriteVolumeUp)) changeVolume(music, 1);
+					else if (isClicked(window, spriteVolumeDown)) changeVolume(music, 0);
 					canChangeVolume = 0;
 				}
-				if (isClicked(window, returnButton)) flagOption = 0;
-				sprintf_s(txtVolume, 100, "Volume : %.f", sfMusic_getVolume(music));
+				if (isClicked(window, spriteMenuButtonReturn) && flagClick == 0) {
+					flagOption = 0;
+					flagClick = 1;
+				}
+				sprintf_s(txtVolume, 16, "Volume : %.f", sfMusic_getVolume(music));
 				sfText_setString(sfTxt_volume, txtVolume);
 				sfRenderWindow_drawText(window, sfTxt_volume, NULL);
 			}
 
-			if (sfKeyboard_isKeyPressed(sfKeyEscape)) {
+			if (sfKeyboard_isKeyPressed(KEY_PAUSE)) {
 				if (!flagPauseMenu) {
 					save_map(tilemap, propmap, playerPos, inventory, music);
 					flagOption = 0;
@@ -370,6 +324,8 @@ int main() {
 				flagPauseMenu = 1;
 			}
 			else flagPauseMenu = 0;
+
+			if (!sfMouse_isButtonPressed(sfMouseLeft)) flagClick = 0;
 
 			sfRenderWindow_display(window);
 		}
