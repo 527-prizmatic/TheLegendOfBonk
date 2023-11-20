@@ -23,7 +23,9 @@
 int main() {
 	initTools();
 	char tilemap[H_MAP_T][W_MAP_T];
+	char propmap[H_MAP_T][W_MAP_T];
 	initMapNull(tilemap);
+	initMapNull(propmap);
 
 	// Main window
 	sfRenderWindow* window = initRender();
@@ -83,7 +85,7 @@ int main() {
 	sfText* sfTxt_optionButton = sfText_create();
 	sfText* sfTxt_quitButton = sfText_create();
 	sfText* sfTxt_volumeUp = sfText_create();
-	sfText* sfTxt_volumeDown= sfText_create();
+	sfText* sfTxt_volumeDown = sfText_create();
 	sfText* sfTxt_return = sfText_create();
 	sfText* sfTxt_volume = sfText_create();
 	sfText_setFont(sfTxt_volume, font);
@@ -115,6 +117,8 @@ int main() {
 	char txtReturn[] = "RETURN";
 	char flagPauseMenu = 0;
 	char flagOption = 0;
+	char flagClick = 0;
+	char flagEditorUI = 0;
 
 	/* VISUEL -OPTION MENU BUTTON -
 	sfSprite* spriteMenuButtonPlay = sfSprite_create();
@@ -148,7 +152,6 @@ int main() {
 	initDialogBox(sfTxt_c, font, 20, buttonCraft);
 
 	char tileSelection = 0;
-	char flagEditorSel = 0;
 
 	initPlayer();
 	sfEvent event;
@@ -238,6 +241,7 @@ int main() {
 				sfRenderWindow_setView(window, viewGame);
 				renderMap(tilemap, window, sfView_getCenter(viewGame));
 				displayPlayer(window);
+				renderMap(propmap, window, sfView_getCenter(viewGame));
 				displayInventory(window, inventory, inventorySprite, keySprite);
 				if (hasAllKeyPieces(inventory)) displayDialogBox(window, sfTxt_c, buttonCraft, sfTrue);
 
@@ -269,21 +273,16 @@ int main() {
 			if (tick >= TICK_TIME) {
 				tick = 0.0f;
 
-				if (sfMouse_isButtonPressed(sfMouseLeft)) changeTile(window, viewEditor, tilemap, tileSelection);
-
-				if (sfKeyboard_isKeyPressed(sfKeyLeft)) {
-					if (!flagEditorSel) {
-						tileSelection = (tileSelection + 1) % 4;
-						flagEditorSel = 1;
-					}
+				if (sfMouse_isButtonPressed(sfMouseLeft) && !flagClick) {
+					changeTile(window, viewEditor, tilemap, tileSelection);
+					flagClick = 0;
 				}
-				else flagEditorSel = 0;
-
-				printf("%d\n", tilemap[0][0]);
 
 				sfRenderWindow_setView(window, viewEditor);
 				updateEditorView(window, viewEditor);
 				renderMap(tilemap, window, sfView_getCenter(viewEditor));
+				renderMap(propmap, window, sfView_getCenter(viewEditor));
+				if (flagEditorUI) renderEditorUI(window, sfRenderWindow_getDefaultView(window));
 				sfRenderWindow_display(window);
 			}
 
@@ -294,7 +293,6 @@ int main() {
 				sfVector2f mouseCursor = sfRenderWindow_mapPixelToCoords(window, sfMouse_getPosition(window), sfRenderWindow_getDefaultView(window));
 				sfVector2i pos = { ((int)mouseCursor.x - 16) / TILE_PX, ((int)mouseCursor.y - 16) / TILE_PX };
 				tileSelection = pos.x + pos.y * 12;
-				printf("%d", tileSelection);
 				flagEditorUI = 0;
 			}
 
