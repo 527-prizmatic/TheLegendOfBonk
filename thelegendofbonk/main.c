@@ -16,6 +16,7 @@
 #include "inventory.h"
 #include "save.h"
 #include "editor.h"
+#include "music.h"
 
 // TODO MUSIC BONEY M RASPUTIN
 
@@ -114,6 +115,7 @@ int main() {
 	char txtReturn[] = "RETURN";
 	char flagPauseMenu = 0;
 	char flagOption = 0;
+
 	/* VISUEL -OPTION MENU BUTTON -
 	sfSprite* spriteMenuButtonPlay = sfSprite_create();
 	sfSprite* spriteMenuButtonOption = sfSprite_create();
@@ -155,14 +157,11 @@ int main() {
 	load_map(tilemap, &playerPos, inventory);
 
 	//Music 
-	float volume = 0.0f;
 	char flagMusic = 0;
+	float canChangeVolume = 0;
 
 	sfMusic* music = sfMusic_createFromFile(AUDIO_PATH"01_main_screen_trailer.wav");
-	sfSoundStatus audioStatus;
 	sfMusic_play(music);
-	
-	volume = sfMusic_getVolume(music);
 	sfMusic_setLoop(music, sfTrue);
 
 	// Game loop
@@ -221,23 +220,6 @@ int main() {
 					inventory[0] = 2;
 					flagCraft = 0;
 				}
-				// Gestion musique
-				audioStatus = sfMusic_getStatus(music);
-				if (audioStatus == sfPlaying)
-				{
-					if (sfKeyboard_isKeyPressed(sfKeyRight) && volume < 100) volume += 1;
-					if (sfKeyboard_isKeyPressed(sfKeyLeft) && volume > 0) volume -= 1;
-					if (volume != sfMusic_getVolume(music)) sfMusic_setVolume(music, volume);
-				}
-
-				if (sfKeyboard_isKeyPressed(sfKeyM)) {
-					if (!flagMusic) {
-						if (audioStatus == sfPlaying) sfMusic_pause(music);
-						else if (audioStatus == sfPaused) sfMusic_play(music);
-					}
-					flagMusic = 1;
-				}
-				else flagMusic = 0;
 
 				// Updates
 				updatePlayer(tilemap);
@@ -274,6 +256,7 @@ int main() {
 			}
 		}
 		else if (gameState == EDITOR) {
+			sfMusic_stop(music);
 			tick += getDeltaTime();
 			if (tick >= TICK_TIME) {
 				tick = 0.0f;
@@ -298,6 +281,7 @@ int main() {
 
 			if (sfKeyboard_isKeyPressed(sfKeyEscape)) {
 				save_map(tilemap, playerPos, inventory);
+				sfMusic_play(music);
 				gameState = MENU;
 			}
 		}
@@ -321,20 +305,16 @@ int main() {
 				else if (isClicked(window, pauseOptionButton)) flagOption = 1;
 				else if (isClicked(window, pauseQuitButton)) gameState = QUIT;
 			}
-			else{
+			else {
 				displayDialogBox(window, sfTxt_volumeUp, volumeUpButton, sfTrue);
 				displayDialogBox(window, sfTxt_volumeDown, volumeDownButton, sfTrue);
 				displayDialogBox(window, sfTxt_return, returnButton, sfTrue);
-				if (isClicked(window, volumeUpButton) && sfMusic_getVolume(music) >= 0 && sfMusic_getVolume(music) < 100)
-				{
-					volume += 1;
+				canChangeVolume += getDeltaTime();
+				if (canChangeVolume > 0.1f) {
+					if (isClicked(window, volumeUpButton)) changeVolume(music, 1);
+					else if (isClicked(window, volumeDownButton)) changeVolume(music, 0);
+					canChangeVolume = 0;
 				}
-				else if (isClicked(window, volumeDownButton) && sfMusic_getVolume(music) > 0 && sfMusic_getVolume(music) <= 100)
-				{
-					volume -= 1;
-				}
-				if (volume != sfMusic_getVolume(music)) sfMusic_setVolume(music, volume);
-
 				if (isClicked(window, returnButton)) flagOption = 0;
 				sprintf_s(txtVolume, 100, "Volume : %.f", sfMusic_getVolume(music));
 				sfText_setString(sfTxt_volume, txtVolume);
