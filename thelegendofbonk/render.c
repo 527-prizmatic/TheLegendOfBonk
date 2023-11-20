@@ -88,11 +88,13 @@ void renderEditorUI(sfRenderWindow* _w, sfView* _v) {
 	sfRenderWindow_drawRectangleShape(_w, overlay, NULL);
 
 	// Renders all available tiles
-	for (int i = 0; i < 10; i++) {
-		for (int j = 0; j < 18; j++) {
-			sfSprite_setPosition(tile, (sfVector2f) { i* TILE_PX + 24, j* TILE_PX + 24 });
-			if (textureFromId(j * 18 + i).width == 0) break;
-			sfSprite_setTextureRect(tile, textureFromId(j * 18 + i));
+	int id = 0;
+	for (int i = 0; i < 12; i++) {
+		for (int j = 0; j < 9; j++) {
+			id = 2;
+			sfSprite_setPosition(tile, (sfVector2f) { i * TILE_PX + 16, j * TILE_PX + 16 });
+			if (textureFromId(j * 12 + i).width == 0 && j * 12 + i != 0) break;
+			sfSprite_setTextureRect(tile, textureFromId(j * 12 + i));
 			sfRenderWindow_drawSprite(_w, tile, NULL);
 		}
 	}
