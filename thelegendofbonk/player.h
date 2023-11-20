@@ -26,6 +26,10 @@ sfBool checkForCollisions(char _map[H_MAP_T][W_MAP_T], moveDir _dir);
 *  \param _map - An initialized tilemap */
 sfBool isInWater(char _map[H_MAP_T][W_MAP_T]);
 
+/* Checks if the player character is walking through grass.
+*  \param _map - An initialized tilemap */
+sfBool isInGrass(char _map[H_MAP_T][W_MAP_T]);
+
 /* Handles player movement.
 *  \param _dir - Movement direction
 *  \param _isDiag - Should we divide speed by the square root of two for the sake of keeping diagonal movement balanced? */
