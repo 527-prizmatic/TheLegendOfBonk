@@ -17,6 +17,7 @@
 #include "save.h"
 #include "editor.h"
 #include "music.h"
+#include "interact.h"
 
 // TODO MUSIC BONEY M RASPUTIN
 
@@ -168,8 +169,6 @@ int main() {
 	sfMusic_setLoop(music, sfTrue);
 
 	char flagEditor = 0; 
-	char flagEditorUI = 0;
-	char flagClick = 0;
 	char UIflagClick = 0;
 
 	// Game loop
@@ -177,15 +176,7 @@ int main() {
 		while (sfRenderWindow_pollEvent(window, &event)) {
 			if (event.type == sfEvtClosed) sfRenderWindow_close(window);
 			else if (event.type == sfEvtMouseButtonPressed && event.mouseButton.button == sfMouseLeft) {
-				if (gameState == MENU) {
-					if (isClicked(window, buttonPlay)) {
-						gameState = GAME;
-						load_map(tilemap, &playerPos, inventory);
-					}
-					else if (isClicked(window, buttonQuit)) gameState = QUIT;
-				}
-
-				else if (gameState == GAME) {
+				if (gameState == GAME) {
 					if (isClicked(window, buttonCraft)) {
 						if (inventory[0] && inventory[1] && inventory[2] && inventory[3]) {
 							flagCraft = 1;
@@ -212,7 +203,11 @@ int main() {
 			sfRenderWindow_drawSprite(window, spriteEdit, NULL);
 			sfRenderWindow_display(window);
 
-			if (isClicked(window, buttonPlay)) gameState = GAME;
+			if (isClicked(window, buttonPlay)) {
+				gameState = GAME;
+				load_map(tilemap, &playerPos, inventory);
+				interactTilePos(tilemap);
+			}
 			else if (isClicked(window, buttonEdit)) {
 				gameState = EDITOR;
 				flagClick = 1;
@@ -246,7 +241,7 @@ int main() {
 				if (hasAllKeyPieces(inventory)) displayDialogBox(window, sfTxt_c, buttonCraft, sfTrue);
 
 				sfRenderWindow_display(window);
-
+				
 				if (sfKeyboard_isKeyPressed(sfKeyK) && sfKeyboard_isKeyPressed(sfKeyLControl)) save_map(tilemap, playerPos, inventory);
 				if (sfKeyboard_isKeyPressed(sfKeyL) && sfKeyboard_isKeyPressed(sfKeyLControl)) load_map(tilemap, &playerPos, inventory);
 

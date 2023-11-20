@@ -1,5 +1,6 @@
 #pragma once
 #include "render.h"
+#include "interact.h"
 
 sfVector2f playerPos;
 
@@ -38,3 +39,5 @@ void movePlayer(moveDir _dir, sfBool _isDiag, char _map[H_MAP_T][W_MAP_T]);
 /* Renders player character's sprite in the game window.
 *  \param _window - The window to display the sprite on */
 void displayPlayer(sfRenderWindow* _window);
+
+sfBool canInteract();
