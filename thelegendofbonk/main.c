@@ -150,7 +150,10 @@ int main() {
 			sfRenderWindow_display(window);
 
 			if (isClicked(window, buttonPlay)) gameState = GAME;
-			else if (isClicked(window, buttonEdit)) gameState = EDITOR;
+			else if (isClicked(window, buttonEdit)) {
+				gameState = EDITOR;
+				flagClick = 1;
+			}
 			else if (isClicked(window, buttonQuit)) gameState = QUIT;
 		}
 		else if (gameState == GAME) {
@@ -239,8 +242,8 @@ int main() {
 			if (sfMouse_isButtonPressed(sfMouseLeft) && flagEditorUI) {
 				flagClick = 1;
 				sfVector2f mouseCursor = sfRenderWindow_mapPixelToCoords(window, sfMouse_getPosition(window), sfRenderWindow_getDefaultView(window));
-				sfVector2i pos = { ((int)mouseCursor.x - 24) / TILE_PX, ((int)mouseCursor.y - 24) / TILE_PX };
-				tileSelection = pos.x + pos.y * 18;
+				sfVector2i pos = { ((int)mouseCursor.x - 16) / TILE_PX, ((int)mouseCursor.y - 16) / TILE_PX };
+				tileSelection = pos.x + pos.y * 12;
 				printf("%d", tileSelection);
 				flagEditorUI = 0;
 			}
