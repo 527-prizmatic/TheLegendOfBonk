@@ -279,6 +279,19 @@ int main() {
 				sfRenderWindow_display(window);
 			}
 
+			if (sfKeyboard_isKeyPressed(sfKeyEnter)) flagEditorUI = 1;
+
+			if (sfMouse_isButtonPressed(sfMouseLeft) && flagEditorUI) {
+				flagClick = 1;
+				sfVector2f mouseCursor = sfRenderWindow_mapPixelToCoords(window, sfMouse_getPosition(window), sfRenderWindow_getDefaultView(window));
+				sfVector2i pos = { ((int)mouseCursor.x - 24) / TILE_PX, ((int)mouseCursor.y - 24) / TILE_PX };
+				tileSelection = pos.x + pos.y * 18;
+				printf("%d", tileSelection);
+				flagEditorUI = 0;
+			}
+
+			if (!sfMouse_isButtonPressed(sfMouseLeft) && flagClick) flagClick = 0;
+
 			if (sfKeyboard_isKeyPressed(sfKeyEscape)) {
 				save_map(tilemap, playerPos, inventory);
 				sfMusic_play(music);
