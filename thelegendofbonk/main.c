@@ -164,6 +164,11 @@ int main() {
 	sfMusic_play(music);
 	sfMusic_setLoop(music, sfTrue);
 
+	char flagEditor = 0; 
+	char flagEditorUI = 0;
+	char flagClick = 0;
+	char UIflagClick = 0;
+
 	// Game loop
 	while (sfRenderWindow_isOpen(window)) {
 		while (sfRenderWindow_pollEvent(window, &event)) {
@@ -279,7 +284,7 @@ int main() {
 				sfRenderWindow_display(window);
 			}
 
-			if (sfKeyboard_isKeyPressed(sfKeyEnter)) flagEditorUI = 1;
+			if (sfKeyboard_isKeyPressed(sfKeyEnter)) flagEditorUI = 1; 
 
 			if (sfMouse_isButtonPressed(sfMouseLeft) && flagEditorUI) {
 				flagClick = 1;
