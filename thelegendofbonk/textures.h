@@ -4,3 +4,9 @@
 /* Returns mapping coordinates for various tile textures based on numerical IDs.
 *  \param _id - Tile texture ID */
 sfIntRect textureFromId(int _id);
+
+/* Checks whether the given tile ID corresponds to solid terrain. */
+sfBool isSolidBlock(char _id);
+
+/* Checks whether the given tile ID corresponds to water tiles. */
+sfBool isWater(char _id);

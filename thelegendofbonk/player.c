@@ -4,6 +4,7 @@
 #include "SFML/Graphics.h"
 #include "map.h"
 #include "tools.h"
+#include "textures.h"
 
 #define DISPLAY_HITBOX sfFalse
 
@@ -88,20 +89,6 @@ void updatePlayer(char _map[H_MAP_T][W_MAP_T]) {
     }
     sfSprite_setTextureRect(player, irect);
     sfSprite_setPosition(player, playerPos);
-}
-
-sfBool isSolidBlock(char _id) {
-    switch (_id) {
-    // case 3: return sfTrue;
-    default: return sfFalse;
-    }
-}
-
-sfBool isWater(char _id) {
-    switch (_id) {
-    // case 1: return sfTrue;
-    default: return sfFalse;
-    }
 }
 
 sfBool checkForCollisions(char _map[H_MAP_T][W_MAP_T], moveDir _dir) {
