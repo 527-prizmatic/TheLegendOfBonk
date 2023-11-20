@@ -4,6 +4,7 @@
 
 #include "tools.h"
 #include "map.h"
+#include "SFML/Audio.h"
 
 #define SAVE_PATH "..\\saves\\"
 
@@ -11,11 +12,11 @@
 *  \param _map - A tilemap
 *  \param _player_pos - The player character's in-world coordinates
 *  \param _inv - The player character's inventory */
-void save_map(char _map[H_MAP_T][W_MAP_T], sfVector2f _player_pos, int _inv[4]);
+void save_map(char _map[H_MAP_T][W_MAP_T], char _props[H_MAP_T][W_MAP_T], sfVector2f _player_pos, int _inv[4], sfMusic* _mus);
 
 
 /* Loads a few data from an external save file.
 *  \param _map - A tilemap
 *  \param _player_pos - A pointer to the player character's in-world coordinates
 *  \param _inv - The player character's inventory */
-void load_map(char _map[H_MAP_T][W_MAP_T], sfVector2f* _player_pos, int _inv[4]);
+void load_map(char _map[H_MAP_T][W_MAP_T], char _props[H_MAP_T][W_MAP_T], sfVector2f* _player_pos, int _inv[4], sfMusic* _mus);

@@ -3,7 +3,6 @@
 
 void changeVolume(sfMusic* _music, char _volumeVal) {
 	float vol = sfMusic_getVolume(_music);
-	printf("%.3f\n", vol);
 
 	if (_volumeVal == 1) {
 		vol += 10.0f;
