@@ -23,7 +23,9 @@
 int main() {
 	initTools();
 	char tilemap[H_MAP_T][W_MAP_T];
+	char propmap[H_MAP_T][W_MAP_T];
 	initMapNull(tilemap);
+	initMapNull(propmap);
 
 	// Main window
 	sfRenderWindow* window = initRender();
@@ -234,6 +236,7 @@ int main() {
 				sfRenderWindow_setView(window, viewGame);
 				renderMap(tilemap, window, sfView_getCenter(viewGame));
 				displayPlayer(window);
+				renderMap(propmap, window, sfView_getCenter(viewGame));
 				displayInventory(window, inventory, inventorySprite, keySprite);
 				if (hasAllKeyPieces(inventory)) displayDialogBox(window, sfTxt_c, buttonCraft, sfTrue);
 
@@ -273,6 +276,7 @@ int main() {
 				sfRenderWindow_setView(window, viewEditor);
 				updateEditorView(window, viewEditor);
 				renderMap(tilemap, window, sfView_getCenter(viewEditor));
+				renderMap(propmap, window, sfView_getCenter(viewEditor));
 				if (flagEditorUI) renderEditorUI(window, sfRenderWindow_getDefaultView(window));
 				sfRenderWindow_display(window);
 			}
