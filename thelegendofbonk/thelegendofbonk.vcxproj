@@ -137,6 +137,7 @@
     <ClCompile Include="editor.c" />
     <ClCompile Include="inventory.c" />
     <ClCompile Include="main.c" />
+    <ClCompile Include="music.c" />
     <ClCompile Include="player.c" />
     <ClCompile Include="map.c" />
     <ClCompile Include="render.c" />
@@ -148,6 +149,7 @@
     <ClInclude Include="dialogBox.h" />
     <ClInclude Include="editor.h" />
     <ClInclude Include="inventory.h" />
+    <ClInclude Include="music.h" />
     <ClInclude Include="player.h" />
     <ClInclude Include="map.h" />
     <ClInclude Include="render.h" />
