@@ -238,7 +238,7 @@ int main() {
 
 			if (sfMouse_isButtonPressed(sfMouseLeft) && flagEditorUI) {
 				flagClick = 1;
-				sfVector2f mouseCursor = sfRenderWindow_mapPixelToCoords(window, sfMouse_getPosition(window), viewGame);
+				sfVector2f mouseCursor = sfRenderWindow_mapPixelToCoords(window, sfMouse_getPosition(window), sfRenderWindow_getDefaultView(window));
 				sfVector2i pos = { ((int)mouseCursor.x - 24) / TILE_PX, ((int)mouseCursor.y - 24) / TILE_PX };
 				tileSelection = pos.x + pos.y * 18;
 				printf("%d", tileSelection);
