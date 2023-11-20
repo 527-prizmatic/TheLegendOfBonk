@@ -142,37 +142,33 @@ int main() {
 
 	// Game loop
 	while (sfRenderWindow_isOpen(window)) {
-		while (sfRenderWindow_pollEvent(window, &event)) {
-			if (event.type == sfEvtClosed) sfRenderWindow_close(window);
-			else if (event.type == sfEvtMouseButtonPressed && event.mouseButton.button == sfMouseLeft) {
-				if (isClicked(window, buttonCraft) && gameState == GAME) {
-					if (inventory[0] && inventory[1] && inventory[2] && inventory[3]) {
-						flagCraft = 1;
-					}
-				}
-			}
-		}
+		while (sfRenderWindow_pollEvent(window, &event)) if (event.type == sfEvtClosed) sfRenderWindow_close(window);
 		restartClock();
 		sfRenderWindow_clear(window, sfBlack);
+		if (!sfMouse_isButtonPressed(sfMouseLeft) && flagClick) flagClick = 0; // Technical flag used in misc functions to check if the user is left-clicking somewhere
 
 		if (gameState == MENU) {
-			sfRenderWindow_setView(window, sfRenderWindow_getDefaultView(window));
-			sfRenderWindow_drawSprite(window, backgroundSprite, NULL);
+			// Rendering functions
+			tick += getDeltaTime();
+			if (tick >= TICK_TIME) {
+				tick = 0.0f;
+				sfRenderWindow_setView(window, sfRenderWindow_getDefaultView(window));
+				updateDialogBox(title, sizeof(title), textTitle, dialogBox, (sfVector2f) { 50.0f, 50.0f }, DEFAULT_DIALOG_SIZE);
 
-			updateDialogBox(title, sizeof(title), textTitle, dialogBox, (sfVector2f) { 50.0f, 50.0f }, DEFAULT_DIALOG_SIZE);
+				sfRenderWindow_drawSprite(window, backgroundSprite, NULL);
+				displayDialogBox(window, textTitle, dialogBox, sfFalse);
+				sfRenderWindow_drawSprite(window, spritePlay, NULL);
+				sfRenderWindow_drawSprite(window, spriteEdit, NULL);
+				sfRenderWindow_drawSprite(window, spriteQuit, NULL);
+				sfRenderWindow_display(window);
+			}
 
-			displayDialogBox(window, textTitle, dialogBox, sfFalse);
-			sfRenderWindow_drawSprite(window, spritePlay, NULL);
-			sfRenderWindow_drawSprite(window, spriteEdit, NULL);
-			sfRenderWindow_drawSprite(window, spriteQuit, NULL);
-			sfRenderWindow_display(window);
-
-			if (isClicked(window, spritePlay)) gameState = GAME;
-			else if (isClicked(window, spriteEdit)) {
+			if (isClicked(window, spritePlay)) gameState = GAME; // When clicking on the GAME button
+			else if (isClicked(window, spriteEdit)) { // When clicking on the EDIT button
 				gameState = EDITOR;
 				flagClick = 1;
 			}
-			else if (isClicked(window, spriteQuit)) gameState = QUIT;
+			else if (isClicked(window, spriteQuit)) gameState = QUIT; // When clicking on the QUIT button
 		}
 		else if (gameState == GAME) {
 			tick += getDeltaTime();
@@ -192,6 +188,13 @@ int main() {
 				updateView(window, viewGame, playerPos);
 				updateDialogBox(craft, sizeof(craft), sfTxt_c, buttonCraft, (sfVector2f) { 430.0f, 480.0f }, (sfVector2f) { 0.0f, 30.0f });
 
+				// Crafts the key when hitting "Craft" button
+				if (isClicked(window, buttonCraft)) {
+					if (inventory[0] && inventory[1] && inventory[2] && inventory[3]) {
+						flagCraft = 1;
+					}
+				}
+
 				// Rendering
 				sfRenderWindow_setView(window, viewGame);
 				renderMap(tilemap, window, sfView_getCenter(viewGame));
@@ -202,9 +205,7 @@ int main() {
 
 				sfRenderWindow_display(window);
 
-				if (sfKeyboard_isKeyPressed(sfKeyK) && sfKeyboard_isKeyPressed(sfKeyLControl)) save_map(tilemap, propmap, playerPos, inventory, music);
-				if (sfKeyboard_isKeyPressed(sfKeyL) && sfKeyboard_isKeyPressed(sfKeyLControl)) load_map(tilemap, propmap, &playerPos, inventory, music);
-
+				// Crafts the key when clicking on the "Craft" button with all key pieces in inventory.
 				if (isClicked(window, buttonCraft)) {
 					if (inventory[0] && inventory[1] && inventory[2] && inventory[3]) {
 						for (int i = 0; i < 4; i++) inventory[i] = 0;
@@ -228,6 +229,7 @@ int main() {
 			if (tick >= TICK_TIME) {
 				tick = 0.0f;
 
+				// Place tile on click
 				if (sfMouse_isButtonPressed(sfMouseLeft) && !flagClick) {
 					changeTile(window, viewEditor, tilemap, propmap, tileSelection);
 					flagClick = 0;
@@ -237,6 +239,7 @@ int main() {
 				if (sfKeyboard_isKeyPressed(sfKeyNum1)) flagEditorMode = 0;
 				else if (sfKeyboard_isKeyPressed(sfKeyNum2)) flagEditorMode = 1;
 
+				// Core rendering functions
 				sfRenderWindow_setView(window, viewEditor);
 				updateEditorView(window, viewEditor);
 				renderMap(tilemap, window, sfView_getCenter(viewEditor));
@@ -245,8 +248,10 @@ int main() {
 				sfRenderWindow_display(window);
 			}
 
+			// Opens map editor UI
 			if (sfKeyboard_isKeyPressed(KEY_EDITOR_UI)) flagEditorUI = 1;
 
+			// Picks one tile to place on the map whenever the player clicks on the editor UI screen
 			if (sfMouse_isButtonPressed(sfMouseLeft) && flagEditorUI) {
 				flagClick = 1;
 				sfVector2f mouseCursor = sfRenderWindow_mapPixelToCoords(window, sfMouse_getPosition(window), sfRenderWindow_getDefaultView(window));
@@ -258,23 +263,21 @@ int main() {
 				printf("%d %d", 64 * flagEditorMode, tileSelection);
 			}
 
-			if (!sfMouse_isButtonPressed(sfMouseLeft) && flagClick) flagClick = 0;
-
+			// When pressing the pause key (Esc by default):
 			if (sfKeyboard_isKeyPressed(KEY_PAUSE)) {
-				if (flagEditorUI == 0 && flagEditorLeave == 0) {
+				if (flagEditorUI == 0 && flagEditorLeave == 0) { // If the editor UI is closed, go back to menu
 					save_map(tilemap, propmap, playerPos, inventory, music);
 					sfMusic_play(music);
 					gameState = MENU;
 				}
-				else {
+				else { // Otherwise, just close the editor UI
 					flagEditorUI = 0;
 					flagEditorLeave = 1;
 				}
 			}
 			else flagEditorLeave = 0;
 		}
-		else if (gameState == BREAK)
-		{
+		else if (gameState == BREAK) { // When pause menu open
 			sfRenderWindow_setView(window, sfRenderWindow_getDefaultView(window));
 			sfRenderWindow_drawSprite(window, backgroundSprite, NULL);
 			if (!flagOption){
@@ -325,7 +328,6 @@ int main() {
 			}
 			else flagPauseMenu = 0;
 
-			if (!sfMouse_isButtonPressed(sfMouseLeft)) flagClick = 0;
 
 			sfRenderWindow_display(window);
 		}
