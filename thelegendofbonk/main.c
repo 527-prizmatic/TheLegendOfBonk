@@ -167,8 +167,10 @@ int main() {
 				displayInventory(window, inventory, inventorySprite, keySprite);
 				if (hasAllKeyPieces(inventory)) displayDialogBox(window, sfTxt_c, buttonCraft, sfTrue);
 
-				if (canInteract()) sfRenderWindow_drawText(window, sfTxt_interact, sfFalse);
-				if (sfKeyboard_isKeyPressed(sfKeyE) && canInteract() != -1) printf("Interaction ! %d\n", canInteract());
+				if (canInteract() !=-1 && !hasAllKeyPieces(inventory) && inventory[0] !=2) sfRenderWindow_drawText(window, sfTxt_interact, sfFalse);
+				if (sfKeyboard_isKeyPressed(sfKeyE) && canInteract() != -1) {
+					inventory[canInteract()] = 1;
+				}
 
 				// Crafts the key when clicking on the "Craft" button with all key pieces in inventory.
 				if (isClicked(window, buttonCraft)) {
@@ -227,7 +229,7 @@ int main() {
 			if (sfKeyboard_isKeyPressed(KEY_EDITOR_UI)) flagEditorUI = 1;
 
 			// Picks one tile to place on the map whenever the player clicks on the editor UI screen
-			if (sfMouse_isButtonPressed(sfMouseLeft) && flagEditorUI) {
+			if (sfMouse_isButtonPressed(sfMouseLeft) && flagEditorUI){
 				flagClick = 1;
 				sfVector2f mouseCursor = sfRenderWindow_mapPixelToCoords(window, sfMouse_getPosition(window), sfRenderWindow_getDefaultView(window));
 				sfVector2i pos = { ((int)mouseCursor.x - 16) / TILE_PX, ((int)mouseCursor.y - 64) / TILE_PX };

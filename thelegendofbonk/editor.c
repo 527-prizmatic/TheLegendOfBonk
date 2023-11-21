@@ -9,7 +9,7 @@
 #include "textures.h"
 
 void updateEditorView(sfRenderWindow* _w, sfView* _v) {
-	float camMoveSpeed = 500.0f;
+	float camMoveSpeed = 700.0f;
 	sfVector2f viewPos = sfView_getCenter(_v);
 
 	if (sfKeyboard_isKeyPressed(KEY_UP)) viewPos.y -= camMoveSpeed * TICK_TIME;

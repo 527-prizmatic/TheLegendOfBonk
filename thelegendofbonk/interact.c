@@ -1,10 +1,10 @@
 #include "interact.h"
 
+
 void interactTilePos(char _map[H_MAP_T][W_MAP_T])
 {
 	system("cls");
-	int chestCpt = 0;
-
+	chestCpt = 0;
 	for (int i = 0; i < H_MAP_T; i++)
 	{
 		for (int j = 0; j < W_MAP_T; j++)
