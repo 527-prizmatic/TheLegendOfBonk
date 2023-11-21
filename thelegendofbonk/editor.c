@@ -28,6 +28,10 @@ void updateEditorView(sfRenderWindow* _w, sfView* _v) {
 void changeTile(sfRenderWindow* _w, sfView* _v, char _map[H_MAP_T][W_MAP_T], char _prop[H_MAP_T][W_MAP_T], char _id) {
 	sfVector2f mouseCursor = sfRenderWindow_mapPixelToCoords(_w, sfMouse_getPosition(_w), _v);
 	sfVector2i pos = { (int)mouseCursor.x / TILE_PX, (int)mouseCursor.y / TILE_PX };
+	if (_id == 91 && chestCpt > 3) {
+		printf("Amount max of chest reach ! (max 4)");
+		return;
+	}
 	if (isMouseWithinWindow(_w)) {
 		if (_id < 64) _map[pos.y][pos.x] = _id;
 		else _prop[pos.y][pos.x] = _id;

@@ -18,7 +18,7 @@ int frameY;
 sfBool isMoving; 
 
 sfVector2f playerPos = { 20.0f, 20.0f };
-const float playerSpeed = 1500.0f;
+const float playerSpeed = 500.0f;
 sfRectangleShape* playerHitbox;
 
 void initPlayer() 

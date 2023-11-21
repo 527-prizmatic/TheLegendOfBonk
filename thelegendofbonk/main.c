@@ -87,6 +87,11 @@ int main() {
 	char flagEditorMode = 0; // Whether the map editor UI currently shows terrain or props
 	char flagEditorLeave = 0; // Toggled when ESC is pressed for timing purposes
 
+	/* == PNJ TXT == */
+	sfText* sfTxt_pnj = sfText_create();
+	char pnjTxt[] = "";
+	sfRectangleShape* pnjDialogBox = initDialogBox(sfTxt_pnj, font, 20);
+
 	/* == BGM == */
 	sfMusic* bgm = sfMusic_createFromFile(AUDIO_PATH"01_main_screen_trailer.wav");
 	char flagMusic = 0; // Whether the music is currently playing
@@ -198,6 +203,15 @@ int main() {
 				displayInventory(window, inventory, inventorySprite, keySprite);
 				if (hasAllKeyPieces(inventory)) displayDialogBox(window, sfTxt_c, buttonCraft, sfTrue);
 
+				if (canInteract() > 19){
+					int idPnj = canInteract() - 20;
+					sfRenderWindow_drawText(window, sfTxt_interact, sfFalse);
+					if (sfKeyboard_isKeyPressed(sfKeyE)){
+						updateDialogBox(pnjTxt, sizeof(pnjTxt), sfTxt_pnj, pnjDialogBox, (sfVector2f) { pnjArray[idPnj].pnjPosition.x, pnjArray[idPnj].pnjPosition.y }, DEFAULT_DIALOG_SIZE);
+						displayDialogBox(window, sfTxt_pnj, pnjDialogBox, sfFalse);
+					}
+				}
+
 				if (canInteract() !=-1 && !hasAllKeyPieces(inventory) && inventory[0] !=2) sfRenderWindow_drawText(window, sfTxt_interact, sfFalse);
 				if (sfKeyboard_isKeyPressed(sfKeyE) && canInteract() != -1) {
 					inventory[canInteract()] = 1;
@@ -241,6 +255,7 @@ int main() {
 
 				// Place tile on click
 				if (sfMouse_isButtonPressed(sfMouseLeft) && !flagClick) {
+					interactTilePos(propmap);
 					changeTile(window, viewEditor, tilemap, propmap, tileSelection);
 					flagClick = 0;
 				}
@@ -269,8 +284,6 @@ int main() {
 				tileSelection = pos.x + pos.y * 12;
 				tileSelection += 64 * flagEditorMode;
 				flagEditorUI = 0;
-
-				printf("%d %d", 64 * flagEditorMode, tileSelection);
 			}
 
 			// When pressing the pause key (Esc by default):

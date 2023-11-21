@@ -1,6 +1,7 @@
 #pragma once
 #include "tools.h"
 #include "map.h"
+#include "interact.h"
 
 /* Allows the user to move the editor's view around the map.
 *  \param _w - Render window object
