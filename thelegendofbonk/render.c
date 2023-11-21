@@ -79,7 +79,11 @@ void renderMap(char _map[H_MAP_T][W_MAP_T], sfRenderWindow* _w, sfVector2f _pos)
 	}
 }
 
-void renderEditorUI(sfRenderWindow* _w, sfView* _v, int _mode) {
+void renderEditorUI(sfRenderWindow* _w, sfView* _v, int _mode, sfFont* _font) {
+	char editorUIInfo[] = "1 to place Terrain   |   2 to place Props";
+	sfText* textEditorInfo = initText(_font, 30, vector2f(72.0f, 11.0f));
+	sfText_setString(textEditorInfo, editorUIInfo);
+
 	sfRenderWindow_setView(_w, sfRenderWindow_getDefaultView(_w));
 
 	// Displays dark overlay to hide the map while picking a tile
@@ -88,12 +92,14 @@ void renderEditorUI(sfRenderWindow* _w, sfView* _v, int _mode) {
 	sfRectangleShape_setFillColor(overlay, sfColor_fromRGBA(0, 0, 0, 128));
 	sfRenderWindow_drawRectangleShape(_w, overlay, NULL);
 
+	sfRenderWindow_drawText(_w, textEditorInfo, NULL);
+
 	// Renders all available tiles
 	int id = 0;
 	for (int i = 0; i < 12; i++) {
 		for (int j = 0; j < 5; j++) {
 			id = 2;
-			sfSprite_setPosition(tile, (sfVector2f) { i * TILE_PX + 16, j * TILE_PX + 16 });
+			sfSprite_setPosition(tile, (sfVector2f) { i * TILE_PX + 16, j * TILE_PX + 64 });
 			if (textureFromId(j * 12 + i).width == 0 && j * 12 + i != 0) break;
 			sfSprite_setTextureRect(tile, textureFromId(j * 12 + i + 64 * _mode));
 			sfRenderWindow_drawSprite(_w, tile, NULL);

@@ -1,5 +1,6 @@
 #pragma once
 #include "render.h"
+#include "interact.h"
 
 sfVector2f playerPos;
 

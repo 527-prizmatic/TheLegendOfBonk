@@ -69,9 +69,11 @@ const sfIntRect p_fence_t			= { TS * 7, TS * 6, 48, 48 };
 const sfIntRect p_fence_v			= { TS * 7, TS * 7, 48, 48 };
 const sfIntRect p_fence_b			= { TS * 7, TS * 8, 48, 48 };
 const sfIntRect p_fence_post		= { TS * 6, TS * 6, 48, 48 };
-const sfIntRect p_bush   	        = { TS * 7, TS * 2, 48, 48 };
 
 const sfIntRect p_sign				= { TS * 6, TS * 7, 48, 48 };
+const sfIntRect p_chest             = { TS * 5, TS * 7, 48, 48 };
+
+const sfIntRect p_bush   	        = { TS * 7, TS * 2, 48, 48 };
 
 sfIntRect textureFromId(int _id) {
 	switch (_id) {
@@ -141,6 +143,7 @@ sfIntRect textureFromId(int _id) {
 	case 89: return p_fence_post;
 
 	case 90: return p_sign;
+	case 91: return p_chest;
 
 	case 92: return p_bush;
 
@@ -157,8 +160,8 @@ sfBool isSolidBlock(char _id) {
 		case 80: return sfTrue;
 		case 82: return sfTrue;
 		case 90: return sfTrue;
-
-		case 92: return sfTrue;
+        case 91: return sfTrue;
+        case 92: return sfTrue;
 		default: return sfFalse;
 	}
 }
