@@ -31,4 +31,4 @@ void updateView(sfRenderWindow* _w, sfView* _v, sfVector2f _pos);
 *  \param _window - The window to display the map on */
 void renderMap(char _map[H_MAP_T][W_MAP_T], sfRenderWindow* _w, sfVector2f _pos);
 
-void renderEditorUI(sfRenderWindow* _w, sfView* _v, int _mode);
+void renderEditorUI(sfRenderWindow* _w, sfView* _v, int _mode, sfFont* _font);
