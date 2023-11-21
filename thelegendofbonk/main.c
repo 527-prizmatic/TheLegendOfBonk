@@ -17,6 +17,7 @@
 #include "save.h"
 #include "editor.h"
 #include "music.h"
+#include "interact.h"
 
 int main() {
 	/* == RENDERING ENGINE CORE */
@@ -24,11 +25,19 @@ int main() {
 	sfView* viewGame = initGameView(); // Game mode view
 	sfView* viewEditor = initEditorView(); // Editor mode view
 
+
 	/* == MAIN MENU ==  */
 	sfFont* font = sfFont_createFromFile(TEXTURE_PATH"3Dventure.ttf");
 	sfText* textTitle = sfText_create();
 	sfRectangleShape* titleBox = initDialogBox(textTitle, font, 30);
 	char title[] = "The\nLegend\nof\nBonk"; // Main menu dialog box text
+
+	/* == INTERACT HEADS-UP ==  */
+	sfText* sfTxt_interact = sfText_create();
+	sfText_setFont(sfTxt_interact, font);
+	sfText_setCharacterSize(sfTxt_interact, 30);
+	sfText_setPosition(sfTxt_interact, vector2f(440.0f, 470.0f));
+	sfText_setString(sfTxt_interact, "Press E !");
 
 	/* == PAUSE MENU == */
 	char txtVolume[16] = "Volume -"; // For volume display in the options screen
@@ -113,7 +122,10 @@ int main() {
 				sfRenderWindow_display(window);
 			}
 
-			if (isClicked(window, buttonMainPlay)) gameState = GAME; // When clicking on the GAME button
+			if (isClicked(window, buttonMainPlay)) { // When clicking on the GAME button
+				gameState = GAME;
+				interactTilePos(propmap);
+			}
 			else if (isClicked(window, buttonMainEdit)) { // When clicking on the EDIT button
 				gameState = EDITOR;
 				flagClick = 1;
@@ -155,7 +167,8 @@ int main() {
 				displayInventory(window, inventory, inventorySprite, keySprite);
 				if (hasAllKeyPieces(inventory)) displayDialogBox(window, sfTxt_c, buttonCraft, sfTrue);
 
-				sfRenderWindow_display(window);
+				if (canInteract()) sfRenderWindow_drawText(window, sfTxt_interact, sfFalse);
+				if (sfKeyboard_isKeyPressed(sfKeyE) && canInteract() != -1) printf("Interaction ! %d\n", canInteract());
 
 				// Crafts the key when clicking on the "Craft" button with all key pieces in inventory.
 				if (isClicked(window, buttonCraft)) {
@@ -173,6 +186,8 @@ int main() {
 					flagPauseMenu = 1;
 				}
 				else flagPauseMenu = 0;
+
+				sfRenderWindow_display(window);
 			}
 
 			bonkAnimTimer += getDeltaTime();
@@ -263,7 +278,7 @@ int main() {
 				sfSprite_setPosition(buttonPauseReturn, vector2f(250.0f, 300.0f));
 				sfRenderWindow_drawSprite(window, buttonOptionsVolPlus, NULL);
                 sfRenderWindow_drawSprite(window, buttonOptionsVolMinus, NULL);
-				sfRenderWindow_drawSprite(window, buttonPauseReturn, NULL); 
+				sfRenderWindow_drawSprite(window, buttonPauseReturn, NULL);
 
 				timerVolumeChange += getDeltaTime();
 				if (timerVolumeChange > 0.1f) {
