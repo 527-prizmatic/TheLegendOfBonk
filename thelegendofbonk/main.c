@@ -79,6 +79,15 @@ int main() {
 	initPlayer();
 	sfEvent event;
 	float tick = 0.0f;
+
+	/* == BONK == */
+	sfSprite* bonk = sfSprite_create();
+	sfTexture* textureBonk = sfTexture_createFromFile(TEXTURE_PATH"bonk.png", NULL);
+	sfSprite_setTexture(bonk, textureBonk, sfFalse);
+	sfSprite_setScale(bonk, vector2f(2.0f, 2.0f));
+	float bonkAnimTimer = 0.0f;
+	char frame = 0;
+	sfSprite_setTextureRect(bonk, (sfIntRect) { 0, 0, 32, 32 });
 	
 	/* == GAME LOOP == */
 	while (sfRenderWindow_isOpen(window)) {
@@ -141,6 +150,8 @@ int main() {
 				renderMap(tilemap, window, sfView_getCenter(viewGame));
 				renderMap(propmap, window, sfView_getCenter(viewGame));
 				displayPlayer(window);
+				sfSprite_setPosition(bonk, vector2f(500.0f, 500.0f));
+				sfRenderWindow_drawSprite(window, bonk, NULL);
 				displayInventory(window, inventory, inventorySprite, keySprite);
 				if (hasAllKeyPieces(inventory)) displayDialogBox(window, sfTxt_c, buttonCraft, sfTrue);
 
@@ -162,6 +173,14 @@ int main() {
 					flagPauseMenu = 1;
 				}
 				else flagPauseMenu = 0;
+			}
+
+			bonkAnimTimer += getDeltaTime();
+			if (bonkAnimTimer >= 0.1f) {
+				bonkAnimTimer = 0.0f;
+				frame++;
+				frame %= 8;
+				sfSprite_setTextureRect(bonk, (sfIntRect) { 32 * frame, 0, 32, 32 });
 			}
 		}
 		else if (gameState == EDITOR) {
