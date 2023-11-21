@@ -32,6 +32,8 @@ int main() {
 	sfRectangleShape* titleBox = initDialogBox(textTitle, font, 30);
 	char title[] = "The\nLegend\nof\nBonk"; // Main menu dialog box text
 
+	sfSprite* logo = initSprite(TEXTURE_PATH"logo.png", vector2f(0.7f, 0.7f), vector2f(130.0f, 20.0f));
+
 	/* == INTERACT HEADS-UP ==  */
 	sfText* sfTxt_interact = sfText_create();
 	sfText_setFont(sfTxt_interact, font);
@@ -89,6 +91,11 @@ int main() {
 	sfEvent event;
 	float tick = 0.0f;
 
+	/* == SONG UI == */
+	sfSound* songUI = sfSound_create();
+    sfSoundBuffer* bufferUI = sfSoundBuffer_createFromFile(AUDIO_PATH"Ui_song.wav");
+    sfSound_setBuffer(songUI, bufferUI);
+
 	/* == BONK == */
 	sfSprite* bonk = sfSprite_create();
 	sfTexture* textureBonk = sfTexture_createFromFile(TEXTURE_PATH"bonk.png", NULL);
@@ -107,6 +114,19 @@ int main() {
 
 		if (gameState == MENU) {
 			// Rendering functions
+			sfVector2i mousePos = sfMouse_getPositionRenderWindow(window); 
+            sfFloatRect spriteBounds = sfSprite_getGlobalBounds(buttonMainPlay); 
+			
+			if (sfFloatRect_contains(&spriteBounds, mousePos.x, mousePos.y)) 
+			{
+				sfColor hoverColor = sfColor_fromRGB(0, 0, 0,150); 
+				sfSprite_setColor(buttonMainPlay, hoverColor); 
+			}
+
+			else {
+				sfSprite_setColor(buttonMainPlay, sfWhite);  
+			}
+
 			tick += getDeltaTime();
 			if (tick >= TICK_TIME) {
 				tick = 0.0f;
@@ -115,7 +135,10 @@ int main() {
 
 				// Main menu UI
 				sfRenderWindow_drawSprite(window, spriteMenuBackground, NULL);
-				displayDialogBox(window, textTitle, titleBox, sfFalse);
+				
+				//Logo
+				sfRenderWindow_drawSprite(window, logo, NULL);
+
 				sfRenderWindow_drawSprite(window, buttonMainPlay, NULL);
 				sfRenderWindow_drawSprite(window, buttonMainEdit, NULL);
 				sfRenderWindow_drawSprite(window, buttonMainQuit, NULL);
@@ -123,10 +146,12 @@ int main() {
 			}
 
 			if (isClicked(window, buttonMainPlay)) { // When clicking on the GAME button
+				sfSound_play(songUI);
 				gameState = GAME;
 				interactTilePos(propmap);
 			}
 			else if (isClicked(window, buttonMainEdit)) { // When clicking on the EDIT button
+				sfSound_play(songUI);
 				gameState = EDITOR;
 				flagClick = 1;
 			}
@@ -152,6 +177,7 @@ int main() {
 
 				// Crafts the key when hitting "Craft" button
 				if (isClicked(window, buttonCraft)) {
+					sfSound_play(songUI); 
 					if (inventory[0] && inventory[1] && inventory[2] && inventory[3]) {
 						flagCraft = 1;
 					}
@@ -168,6 +194,7 @@ int main() {
 				if (hasAllKeyPieces(inventory)) displayDialogBox(window, sfTxt_c, buttonCraft, sfTrue);
 
 				if (canInteract() != -1) sfRenderWindow_drawText(window, sfTxt_interact, sfFalse);
+
 				if (sfKeyboard_isKeyPressed(sfKeyE) && canInteract() != -1) printf("Interaction ! %d\n", canInteract());
 
 				// Crafts the key when clicking on the "Craft" button with all key pieces in inventory.
@@ -180,6 +207,7 @@ int main() {
 
 				if (sfKeyboard_isKeyPressed(KEY_PAUSE)) {
 					if (!flagPauseMenu) {
+						sfSound_play(songUI); 
 						save_map(tilemap, propmap, playerPos, inventory, bgm);
 						gameState = BREAK;
 					}
@@ -199,6 +227,7 @@ int main() {
 			}
 		}
 		else if (gameState == EDITOR) {
+			sfSound_play(songUI);
 			sfMusic_stop(bgm);
 			tick += getDeltaTime();
 			if (tick >= TICK_TIME) {
@@ -257,6 +286,8 @@ int main() {
 			sfRenderWindow_drawSprite(window, spriteMenuBackground, NULL);
 			if (!flagOption){
 				sfSprite_setPosition(buttonPauseReturn, (sfVector2f) { 350.0f, 180.0f });
+				sfVector2i mousePos = sfMouse_getPositionRenderWindow(window); 
+				sfFloatRect spriteBounds = sfSprite_getGlobalBounds(buttonPauseReturn); 
 
 				// Pause menu UI
 				sfRenderWindow_drawSprite(window, buttonPauseReturn, NULL); 
@@ -264,14 +295,16 @@ int main() {
 				sfRenderWindow_drawSprite(window, buttonPauseQuit, NULL); 
 
 				if (isClicked(window, buttonPauseReturn)) {
+					sfSound_play(songUI);
 					save_map(tilemap, propmap, playerPos, inventory, bgm);
 					gameState = MENU;
 				}
 				else if (isClicked(window, buttonPauseOptions) && flagClick == 0) {
+					sfSound_play(songUI);
 					flagOption = 1;
 					flagClick == 1;
 				}
-				else if (isClicked(window, buttonPauseQuit) && flagClick == 0) gameState = QUIT;
+				else if (isClicked(window, buttonPauseQuit) && flagClick == 0) gameState = QUIT; sfSound_play(songUI);
 			}
 			else {
 				// Options menu UI
@@ -282,11 +315,21 @@ int main() {
 
 				timerVolumeChange += getDeltaTime();
 				if (timerVolumeChange > 0.1f) {
-					if (isClicked(window, buttonOptionsVolPlus)) changeVolume(bgm, 1);
-					else if (isClicked(window, buttonOptionsVolMinus)) changeVolume(bgm, 0);
-					timerVolumeChange = 0;
+					if (isClicked(window, buttonOptionsVolPlus))
+					{
+						sfSound_play(songUI);
+						changeVolume(bgm, 1);
+
+					}
+					else if (isClicked(window, buttonOptionsVolMinus))
+					{
+					sfSound_play(songUI);
+					changeVolume(bgm, 0);
+					timerVolumeChange = 0; 
+					}
 				}
 				if (isClicked(window, buttonPauseReturn) && flagClick == 0) {
+					sfSound_play(songUI); 
 					flagOption = 0;
 					flagClick = 1;
 				}
@@ -297,6 +340,7 @@ int main() {
 
 			if (sfKeyboard_isKeyPressed(KEY_PAUSE)) {
 				if (!flagPauseMenu) {
+					sfSound_play(songUI);
 					save_map(tilemap, propmap, playerPos, inventory, bgm);
 					flagOption = 0;
 					gameState = GAME;
