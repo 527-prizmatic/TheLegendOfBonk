@@ -18,7 +18,7 @@ int frameY;
 sfBool isMoving; 
 
 sfVector2f playerPos = { 20.0f, 20.0f };
-const float playerSpeed = 100.0f;
+const float playerSpeed = 1000.0f;
 sfRectangleShape* playerHitbox;
 
 void initPlayer() 
@@ -103,7 +103,7 @@ sfBool checkForCollisions(char _map[H_MAP_T][W_MAP_T], moveDir _dir) {
     if (_dir == UP) {
         int blockAbove = trunc((hitbox.top - playerSpeed * 2.1 * TICK_TIME) / TILE_PX);
         int cornerTL = trunc(hitbox.left / TILE_PX);
-        int cornerTR = trunc((hitbox.left + hitbox.width) / TILE_PX);
+        int cornerTR = trunc((hitbox.left + hitbox.width) / TILE_PX); 
         if (isSolidBlock(_map[blockAbove][cornerTL]) || isSolidBlock(_map[blockAbove][cornerTR])) {
             isMoving = sfFalse;
             return sfTrue;
@@ -136,7 +136,6 @@ sfBool checkForCollisions(char _map[H_MAP_T][W_MAP_T], moveDir _dir) {
             return sfTrue;
         }
     }
-
     return sfFalse;
 }
 
@@ -190,11 +189,4 @@ void displayPlayer(sfRenderWindow* _window) {
         if (DISPLAY_HITBOX) sfRenderWindow_drawRectangleShape(_window, playerHitbox, NULL);
 	}
 }
-
-sfBool canInteract() {
-    
-    
-    int interactRange = sqrt(pow((playerPos.x - interactPos.x), 2) + pow((playerPos.y - interactPos.y), 2));
-    if (interactRange <= 3) return sfTrue;
-    else return sfFalse;
-}
+ 

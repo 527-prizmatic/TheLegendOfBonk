@@ -2,6 +2,7 @@
 
 void interactTilePos(char _map[H_MAP_T][W_MAP_T])
 {
+	system("cls");
 	int chestCpt = 0;
 
 	for (int i = 0; i < H_MAP_T; i++)
@@ -10,10 +11,11 @@ void interactTilePos(char _map[H_MAP_T][W_MAP_T])
 		{
 			switch (_map[i][j])
 			{
-				case 5:
-					chestArray[chestCpt].id = chestArray;
-					chestArray[chestCpt].chestPosition.y = 48 * i;
-					chestArray[chestCpt].chestPosition.x = 48 * j;
+				case 91:
+					chestArray[chestCpt].id = chestCpt;
+					chestArray[chestCpt].chestPosition.y = TILE_PX * i;
+					chestArray[chestCpt].chestPosition.x = TILE_PX * j;
+					printf("Position Y : %f, Position X : %f\n", chestArray[chestCpt].chestPosition.y, chestArray[chestCpt].chestPosition.x);
 					chestCpt++;
 					break;
 				default:
@@ -21,5 +23,24 @@ void interactTilePos(char _map[H_MAP_T][W_MAP_T])
 			}
 		}
 	}
-	printf("Nb chest : %d", chestCpt);
+	printf("Nb chest : %d\n", chestCpt);
+}
+
+int canInteract() {
+    int playerRadius = 60;
+    int interactRadius = 20;
+    int sqrPosX = 0;
+    int sqrPosY = 0;
+    int sqrRadius = (playerRadius + interactRadius) * (playerRadius + interactRadius);
+
+	for (int i = 0; i < 5; i++)
+	{
+		sqrPosX = (playerPos.x - chestArray[i].chestPosition.x) * (playerPos.x - chestArray[i].chestPosition.x);
+		sqrPosY = (playerPos.y - chestArray[i].chestPosition.y) * (playerPos.y - chestArray[i].chestPosition.y);
+		if (sqrPosX + sqrPosY < sqrRadius)
+		{
+			return chestArray[i].id;
+		}
+	}
+	return -1;
 }

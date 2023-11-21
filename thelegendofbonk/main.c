@@ -31,8 +31,14 @@ int main() {
 	// Editor mode view
 	sfView* viewEditor = initEditorView();
 
-	// ---MAIN MENU---
 	sfFont* font = sfFont_createFromFile(TEXTURE_PATH"3Dventure.ttf");
+	sfText* sfTxt_interact = sfText_create();
+	sfText_setFont(sfTxt_interact, font);
+	sfText_setCharacterSize(sfTxt_interact, 30);
+	sfText_setPosition(sfTxt_interact, vector2f(440.0f, 470.0f));
+	sfText_setString(sfTxt_interact, "Press E !");
+		
+	// ---MAIN MENU---
 	sfText* sfTxt_db = sfText_create();
 	sfText* sfTxt_g = sfText_create();
 	sfText* sfTxt_q = sfText_create();
@@ -148,7 +154,6 @@ int main() {
 	sfSprite_setTexture(spriteVolumeDown, volumeDownTexture, sfFalse); 
 	sfSprite_setScale(spriteVolumeDown, (sfVector2f) { 3.5f, 3.5f }); 
 	sfSprite_setPosition(spriteVolumeDown, (sfVector2f) { 450.0f, 190.0f }); 
-	
 
 	// INVENTORY
 	int inventory[4] = { 0, 0, 0, 0 };
@@ -213,8 +218,7 @@ int main() {
 
 			if (isClicked(window, buttonPlay)) {
 				gameState = GAME;
-				load_map(tilemap, &playerPos, inventory);
-				interactTilePos(tilemap);
+				interactTilePos(propmap);
 			}
 			else if (isClicked(window, buttonEdit)) {
 				gameState = EDITOR;
@@ -248,8 +252,8 @@ int main() {
 				displayInventory(window, inventory, inventorySprite, keySprite);
 				if (hasAllKeyPieces(inventory)) displayDialogBox(window, sfTxt_c, buttonCraft, sfTrue);
 
-				sfRenderWindow_display(window);
-
+				if (canInteract()) sfRenderWindow_drawText(window, sfTxt_interact, sfFalse);
+				if (sfKeyboard_isKeyPressed(sfKeyE) && canInteract() != -1) printf("Interaction ! %d\n", canInteract());
 				if (sfKeyboard_isKeyPressed(sfKeyK) && sfKeyboard_isKeyPressed(sfKeyLControl)) save_map(tilemap, propmap, playerPos, inventory, music);
 				if (sfKeyboard_isKeyPressed(sfKeyL) && sfKeyboard_isKeyPressed(sfKeyLControl)) load_map(tilemap, propmap, &playerPos, inventory, music);
 
@@ -268,6 +272,8 @@ int main() {
 					flagPauseMenu = 1;
 				}
 				else flagPauseMenu = 0;
+
+				sfRenderWindow_display(window);
 			}
 		}
 		else if (gameState == EDITOR) {
@@ -348,7 +354,6 @@ int main() {
 				else if (isClicked(window, pauseQuitButton)) gameState = QUIT;
 			}
 			else {
-				
 				sfSprite_setPosition(spriteMenuButtonPlay, vector2f(250.0f, 300.0f));
 				sfRenderWindow_drawSprite(window, spriteVolumeUp, NULL);
                 sfRenderWindow_drawSprite(window, spriteVolumeDown, NULL);
