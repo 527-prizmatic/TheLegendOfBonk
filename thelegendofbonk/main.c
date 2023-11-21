@@ -114,6 +114,19 @@ int main() {
 
 		if (gameState == MENU) {
 			// Rendering functions
+			sfVector2i mousePos = sfMouse_getPositionRenderWindow(window); 
+            sfFloatRect spriteBounds = sfSprite_getGlobalBounds(buttonMainPlay); 
+			
+			if (sfFloatRect_contains(&spriteBounds, mousePos.x, mousePos.y)) 
+			{
+				sfColor hoverColor = sfColor_fromRGB(0, 0, 0,150); 
+				sfSprite_setColor(buttonMainPlay, hoverColor); 
+			}
+
+			else {
+				sfSprite_setColor(buttonMainPlay, sfWhite);  
+			}
+
 			tick += getDeltaTime();
 			if (tick >= TICK_TIME) {
 				tick = 0.0f;
@@ -272,6 +285,8 @@ int main() {
 			sfRenderWindow_drawSprite(window, spriteMenuBackground, NULL);
 			if (!flagOption){
 				sfSprite_setPosition(buttonPauseReturn, (sfVector2f) { 350.0f, 180.0f });
+				sfVector2i mousePos = sfMouse_getPositionRenderWindow(window); 
+				sfFloatRect spriteBounds = sfSprite_getGlobalBounds(buttonPauseReturn); 
 
 				// Pause menu UI
 				sfRenderWindow_drawSprite(window, buttonPauseReturn, NULL); 
@@ -309,7 +324,7 @@ int main() {
 					{
 					sfSound_play(songUI);
 					changeVolume(bgm, 0);
-					timerVolumeChange = 0;
+					timerVolumeChange = 0; 
 					}
 				}
 				if (isClicked(window, buttonPauseReturn) && flagClick == 0) {
