@@ -8,7 +8,7 @@ typedef struct {
 	int id;
 }Chest;
 
-Chest chestArray[5];
+Chest chestArray[16];
 
 void interactTilePos(char _map[H_MAP_T][W_MAP_T]);
 int canInteract();

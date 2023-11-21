@@ -24,22 +24,26 @@ void displayInventory(sfRenderWindow* _window, int* _inventory, sfSprite* _inven
 
     sfRenderWindow_setView(_window, sfRenderWindow_getDefaultView(_window));
     sfRenderWindow_drawSprite(_window, _inventorySprite, NULL);
-    if (sfKeyboard_isKeyPressed(sfKeyU)) _inventory[0] = 1;
-    if (sfKeyboard_isKeyPressed(sfKeyI)) _inventory[1] = 1;
-    if (sfKeyboard_isKeyPressed(sfKeyO)) _inventory[2] = 1;
-    if (sfKeyboard_isKeyPressed(sfKeyP)) _inventory[3] = 1;
-    if (sfKeyboard_isKeyPressed(sfKeyN))
-    {
-        for (int i = 0; i < 4; i++)
+
+    // == DEBUG FUNCTION - TO BE DELETED ONCE NOT NEEDED ANYMORE ==
+    if (sfRenderWindow_hasFocus(_window)) {
+        if (sfKeyboard_isKeyPressed(sfKeyU)) _inventory[0] = 1;
+        if (sfKeyboard_isKeyPressed(sfKeyI)) _inventory[1] = 1;
+        if (sfKeyboard_isKeyPressed(sfKeyO)) _inventory[2] = 1;
+        if (sfKeyboard_isKeyPressed(sfKeyP)) _inventory[3] = 1;
+        if (sfKeyboard_isKeyPressed(sfKeyN))
         {
-            _inventory[i] = 1;
+            for (int i = 0; i < 4; i++)
+            {
+                _inventory[i] = 1;
+            }
         }
-    }
-    if (sfKeyboard_isKeyPressed(sfKeyB))
-    {
-        for (int i = 0; i < 4; i++)
+        if (sfKeyboard_isKeyPressed(sfKeyB))
         {
-            _inventory[i] = 0;
+            for (int i = 0; i < 4; i++)
+            {
+                _inventory[i] = 0;
+            }
         }
     }
     
