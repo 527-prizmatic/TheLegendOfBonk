@@ -32,6 +32,8 @@ int main() {
 	sfRectangleShape* titleBox = initDialogBox(textTitle, font, 30);
 	char title[] = "The\nLegend\nof\nBonk"; // Main menu dialog box text
 
+	sfSprite* logo = initSprite(TEXTURE_PATH"logo.png", vector2f(0.7f, 0.7f), vector2f(130.0f, 20.0f));
+
 	/* == INTERACT HEADS-UP ==  */
 	sfText* sfTxt_interact = sfText_create();
 	sfText_setFont(sfTxt_interact, font);
@@ -89,6 +91,11 @@ int main() {
 	sfEvent event;
 	float tick = 0.0f;
 
+	/* == SONG UI == */
+	sfSound* songUI = sfSound_create();
+    sfSoundBuffer* bufferUI = sfSoundBuffer_createFromFile(AUDIO_PATH"Ui_song.wav");
+    sfSound_setBuffer(songUI, bufferUI);
+
 	/* == BONK == */
 	sfSprite* bonk = sfSprite_create();
 	sfTexture* textureBonk = sfTexture_createFromFile(TEXTURE_PATH"bonk.png", NULL);
@@ -115,7 +122,10 @@ int main() {
 
 				// Main menu UI
 				sfRenderWindow_drawSprite(window, spriteMenuBackground, NULL);
-				displayDialogBox(window, textTitle, titleBox, sfFalse);
+				
+				//Logo
+				sfRenderWindow_drawSprite(window, logo, NULL);
+
 				sfRenderWindow_drawSprite(window, buttonMainPlay, NULL);
 				sfRenderWindow_drawSprite(window, buttonMainEdit, NULL);
 				sfRenderWindow_drawSprite(window, buttonMainQuit, NULL);
@@ -123,10 +133,12 @@ int main() {
 			}
 
 			if (isClicked(window, buttonMainPlay)) { // When clicking on the GAME button
+				sfSound_play(songUI);
 				gameState = GAME;
 				interactTilePos(propmap);
 			}
 			else if (isClicked(window, buttonMainEdit)) { // When clicking on the EDIT button
+				sfSound_play(songUI);
 				gameState = EDITOR;
 				flagClick = 1;
 			}
@@ -152,6 +164,7 @@ int main() {
 
 				// Crafts the key when hitting "Craft" button
 				if (isClicked(window, buttonCraft)) {
+					sfSound_play(songUI); 
 					if (inventory[0] && inventory[1] && inventory[2] && inventory[3]) {
 						flagCraft = 1;
 					}
@@ -180,6 +193,7 @@ int main() {
 
 				if (sfKeyboard_isKeyPressed(KEY_PAUSE)) {
 					if (!flagPauseMenu) {
+						sfSound_play(songUI); 
 						save_map(tilemap, propmap, playerPos, inventory, bgm);
 						gameState = BREAK;
 					}
@@ -199,6 +213,7 @@ int main() {
 			}
 		}
 		else if (gameState == EDITOR) {
+			sfSound_play(songUI);
 			sfMusic_stop(bgm);
 			tick += getDeltaTime();
 			if (tick >= TICK_TIME) {
@@ -264,14 +279,16 @@ int main() {
 				sfRenderWindow_drawSprite(window, buttonPauseQuit, NULL); 
 
 				if (isClicked(window, buttonPauseReturn)) {
+					sfSound_play(songUI);
 					save_map(tilemap, propmap, playerPos, inventory, bgm);
 					gameState = MENU;
 				}
 				else if (isClicked(window, buttonPauseOptions) && flagClick == 0) {
+					sfSound_play(songUI);
 					flagOption = 1;
 					flagClick == 1;
 				}
-				else if (isClicked(window, buttonPauseQuit) && flagClick == 0) gameState = QUIT;
+				else if (isClicked(window, buttonPauseQuit) && flagClick == 0) gameState = QUIT; sfSound_play(songUI);
 			}
 			else {
 				// Options menu UI
@@ -282,11 +299,21 @@ int main() {
 
 				timerVolumeChange += getDeltaTime();
 				if (timerVolumeChange > 0.1f) {
-					if (isClicked(window, buttonOptionsVolPlus)) changeVolume(bgm, 1);
-					else if (isClicked(window, buttonOptionsVolMinus)) changeVolume(bgm, 0);
+					if (isClicked(window, buttonOptionsVolPlus))
+					{
+						sfSound_play(songUI);
+						changeVolume(bgm, 1);
+
+					}
+					else if (isClicked(window, buttonOptionsVolMinus))
+					{
+					sfSound_play(songUI);
+					changeVolume(bgm, 0);
 					timerVolumeChange = 0;
+					}
 				}
 				if (isClicked(window, buttonPauseReturn) && flagClick == 0) {
+					sfSound_play(songUI); 
 					flagOption = 0;
 					flagClick = 1;
 				}
@@ -297,6 +324,7 @@ int main() {
 
 			if (sfKeyboard_isKeyPressed(KEY_PAUSE)) {
 				if (!flagPauseMenu) {
+					sfSound_play(songUI);
 					save_map(tilemap, propmap, playerPos, inventory, bgm);
 					flagOption = 0;
 					gameState = GAME;
