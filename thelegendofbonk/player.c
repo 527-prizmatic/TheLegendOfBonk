@@ -73,6 +73,13 @@ void updatePlayer(char _map[H_MAP_T][W_MAP_T]) {
     else if (sfKeyboard_isKeyPressed(KEY_RIGHT)) { if (!checkForCollisions(_map, RIGHT)) movePlayer(RIGHT, sfFalse, _map); }
 
     else isMoving = sfFalse;
+
+    // Loop back when hitting map borders
+    if (sfKeyboard_isKeyPressed(KEY_LEFT) && playerPos.x + 32 <= 0) playerPos.x += W_MAP_PX + 32;
+    else if (sfKeyboard_isKeyPressed(KEY_RIGHT) && playerPos.x + 32 >= W_MAP_PX) playerPos.x -= W_MAP_PX + 32;
+
+    if (sfKeyboard_isKeyPressed(KEY_UP) && playerPos.y + 32 <= 0) playerPos.y += H_MAP_PX + 32;
+    else if (sfKeyboard_isKeyPressed(KEY_DOWN) && playerPos.y + 32 >= H_MAP_PX) playerPos.y -= H_MAP_PX + 32;
     
     if (isMoving) {
         if (animTime > 0.1f) {
@@ -100,6 +107,8 @@ sfBool checkForCollisions(char _map[H_MAP_T][W_MAP_T], moveDir _dir) {
     sfRectangleShape_setSize(playerHitbox, vector2f(hitbox.width, hitbox.height));
     sfRectangleShape_setPosition(playerHitbox, vector2f(hitbox.left, hitbox.top));
 
+
+
     if (_dir == UP) {
         int blockAbove = trunc((hitbox.top - playerSpeed * 2.1 * TICK_TIME) / TILE_PX);
         int cornerTL = trunc(hitbox.left / TILE_PX);
@@ -120,6 +129,8 @@ sfBool checkForCollisions(char _map[H_MAP_T][W_MAP_T], moveDir _dir) {
     }
     else if (_dir == LEFT) {
         int blockLeft = trunc((hitbox.left - playerSpeed * 2.1 * TICK_TIME) / TILE_PX);
+
+        if (blockLeft % W_MAP_T == 0) return sfFalse;
         int cornerTL = trunc(hitbox.top / TILE_PX);
         int cornerBL = trunc((hitbox.top + hitbox.height) / TILE_PX);
         if (isSolidBlock(_map[cornerTL][blockLeft]) || isSolidBlock(_map[cornerBL][blockLeft])) {
@@ -129,6 +140,8 @@ sfBool checkForCollisions(char _map[H_MAP_T][W_MAP_T], moveDir _dir) {
     }
     else if (_dir == RIGHT) {
         int blockRight = trunc((hitbox.left + hitbox.width + playerSpeed * 2.1 * TICK_TIME) / TILE_PX);
+
+        if (blockRight % W_MAP_T == 0) return sfFalse;
         int cornerTR = trunc(hitbox.top / TILE_PX);
         int cornerBR = trunc((hitbox.top + hitbox.height) / TILE_PX);
         if (isSolidBlock(_map[cornerTR][blockRight]) || isSolidBlock(_map[cornerBR][blockRight])) {
