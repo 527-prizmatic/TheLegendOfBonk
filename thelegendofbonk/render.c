@@ -49,7 +49,7 @@ void updateView(sfRenderWindow* _w, sfView* _v, sfVector2f _pos) {
 	sfRenderWindow_setView(_w, _v);
 }
 
-void renderMap(char _map[H_MAP_T][W_MAP_T], sfRenderWindow* _w, sfVector2f _pos) {
+void renderMap(char _map[H_MAP_T][W_MAP_T], sfRenderWindow* _w, sfVector2f _pos, char _fg) {
 	sfSprite_setTexture(tile, tilesheet, sfFalse);
 
 	int render_top = 0;
@@ -72,7 +72,8 @@ void renderMap(char _map[H_MAP_T][W_MAP_T], sfRenderWindow* _w, sfVector2f _pos)
 
 	for (int i = render_left; i <= render_right; i++) {
 		for (int j = render_top; j <= render_bottom; j++) {
-			sfSprite_setPosition(tile, (sfVector2f) { i * TILE_PX, j * TILE_PX});
+			if (_map[j][i] >= 64) { if (_fg != -1 && ((isForeground(_map[j][i]) && _fg == 0) || (!isForeground(_map[j][i]) && _fg == 1))) continue; }
+			sfSprite_setPosition(tile, (sfVector2f) { i * TILE_PX, j * TILE_PX });
 			sfSprite_setTextureRect(tile, textureFromId(_map[j][i]));
 			sfRenderWindow_drawSprite(_w, tile, NULL);
 		}
@@ -95,12 +96,10 @@ void renderEditorUI(sfRenderWindow* _w, sfView* _v, int _mode, sfFont* _font) {
 	sfRenderWindow_drawText(_w, textEditorInfo, NULL);
 
 	// Renders all available tiles
-	int id = 0;
 	for (int i = 0; i < 12; i++) {
 		for (int j = 0; j < 5; j++) {
-			id = 2;
 			sfSprite_setPosition(tile, (sfVector2f) { i * TILE_PX + 16, j * TILE_PX + 64 });
-			if (textureFromId(j * 12 + i).width == 0 && j * 12 + i != 0) break;
+			if (textureFromId(j * 12 + i + 64 * _mode).width == 0 && (j * 12 + i) != 0 && (j * 12 + i) != 64) break;
 			sfSprite_setTextureRect(tile, textureFromId(j * 12 + i + 64 * _mode));
 			sfRenderWindow_drawSprite(_w, tile, NULL);
 		}

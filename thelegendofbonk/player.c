@@ -166,25 +166,10 @@ sfBool isInWater(char _map[H_MAP_T][W_MAP_T]) {
     else return sfFalse;
 }
 
-sfBool isInGrass(char _map[H_MAP_T][W_MAP_T]) {
-    sfFloatRect hitbox = sfSprite_getGlobalBounds(player);
-    hitbox.left += hitbox.width * 0.2;
-    hitbox.top += hitbox.height * 0.5;
-    hitbox.width *= 0.6;
-    hitbox.height *= 0.4;
-
-    int x = trunc((hitbox.top + hitbox.height / 2) / TILE_PX);
-    int y = trunc((hitbox.left + hitbox.width / 2) / TILE_PX);
-
-    if (_map[x][y] == 14) return sfTrue;
-    else return sfFalse;
-}
-
 void movePlayer(moveDir _dir, sfBool _isDiag, char _map[H_MAP_T][W_MAP_T]) {
     float move = playerSpeed * TICK_TIME;
     if (_isDiag) move /= sqrt(2);
-    if (isInGrass(_map)) move *= 0.75;
-    if (isInWater(_map)) move *= 0.25;
+    if (isInWater(_map)) move *= 0.25f;
     if (sfKeyboard_isKeyPressed(sfKeyLShift)) move *= 2;
     isMoving = sfTrue;
     switch (_dir) {

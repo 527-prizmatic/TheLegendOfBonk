@@ -28,7 +28,9 @@ void updateView(sfRenderWindow* _w, sfView* _v, sfVector2f _pos);
 
 /* Renders the map.
 *  \param _map - An initialized tilemap to be displayed
-*  \param _window - The window to display the map on */
-void renderMap(char _map[H_MAP_T][W_MAP_T], sfRenderWindow* _w, sfVector2f _pos);
+*  \param _window - The window to display the map on
+*  \param _pos - Player position
+*  \param _fg - Whether the propmap should render the foreground */
+void renderMap(char _map[H_MAP_T][W_MAP_T], sfRenderWindow* _w, sfVector2f _pos, char _fg);
 
 void renderEditorUI(sfRenderWindow* _w, sfView* _v, int _mode, sfFont* _font);

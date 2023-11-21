@@ -10,3 +10,6 @@ sfBool isSolidBlock(char _id);
 
 /* Checks whether the given tile ID corresponds to a water tile. */
 sfBool isWater(char _id);
+
+/* Checks whether the given tile ID should render in the foreground. */
+sfBool isForeground(char _id);

@@ -37,7 +37,7 @@ const sfIntRect t_cobble_corner_tr	= { TS * 4, TS * 10, 48, 48 };
 const sfIntRect t_cobble_corner_bl	= { TS * 3, TS * 11, 48, 48 };
 const sfIntRect t_cobble_corner_br	= { TS * 4, TS * 11, 48, 48 };
 
-const sfIntRect t_stairs	= { TS * 4, TS * 5, 48, 48 };
+const sfIntRect t_stairs			= { TS * 4, TS * 5, 48, 48 };
 
 
 const sfIntRect p_ledge_tl			= { TS * 0, TS * 3, 48, 48 };
@@ -74,6 +74,14 @@ const sfIntRect p_sign				= { TS * 6, TS * 7, 48, 48 };
 const sfIntRect p_chest             = { TS * 5, TS * 7, 48, 48 };
 
 const sfIntRect p_bush   	        = { TS * 7, TS * 2, 48, 48 };
+const sfIntRect p_sapling_b	        = { TS * 6, TS * 2, 48, 48 };
+const sfIntRect p_sapling_t	        = { TS * 6, TS * 1, 48, 48 };
+const sfIntRect p_tree_bl	        = { TS * 4, TS * 2, 48, 48 };
+const sfIntRect p_tree_br	        = { TS * 5, TS * 2, 48, 48 };
+const sfIntRect p_tree_ml	        = { TS * 4, TS * 1, 48, 48 };
+const sfIntRect p_tree_mr	        = { TS * 5, TS * 1, 48, 48 };
+const sfIntRect p_tree_tl	        = { TS * 4, TS * 0, 48, 48 };
+const sfIntRect p_tree_tr	        = { TS * 5, TS * 0, 48, 48 };
 
 sfIntRect textureFromId(int _id) {
 	switch (_id) {
@@ -146,6 +154,14 @@ sfIntRect textureFromId(int _id) {
 	case 91: return p_chest;
 
 	case 92: return p_bush;
+	case 93: return p_sapling_b;
+	case 94: return p_sapling_t;
+	case 95: return p_tree_bl;
+	case 96: return p_tree_br;
+	case 97: return p_tree_ml;
+	case 98: return p_tree_mr;
+	case 99: return p_tree_tl;
+	case 100: return p_tree_tr;
 
 	default: return t_none;
 	}
@@ -153,7 +169,7 @@ sfIntRect textureFromId(int _id) {
 
 
 sfBool isSolidBlock(char _id) {
-	if (_id >= 65 && _id <= 76) return sfTrue;
+	if (_id >= 65 && _id <= 74) return sfTrue;
 	if (_id >= 83 && _id <= 89) return sfTrue;
 	switch (_id) {
 		case 79: return sfTrue;
@@ -162,6 +178,9 @@ sfBool isSolidBlock(char _id) {
 		case 90: return sfTrue;
         case 91: return sfTrue;
         case 92: return sfTrue;
+        case 93: return sfTrue;
+        case 95: return sfTrue;
+        case 96: return sfTrue;
 		default: return sfFalse;
 	}
 }
@@ -170,5 +189,15 @@ sfBool isWater(char _id) {
 	switch (_id) {
 		// case 1: return sfTrue;
 	default: return sfFalse;
+	}
+}
+
+sfBool isForeground(char _id) {
+	if (_id >= 93 && _id <= 100) return sfTrue;
+	switch (_id) {
+		case 81: return sfTrue;
+		case 82: return sfTrue;
+		case 94: return sfTrue;
+		default: return sfFalse;
 	}
 }
