@@ -1,19 +1,17 @@
 #include "dialogBox.h"
 
-/*
-* FONCTION : initDialogBox
-* PARAM : sfText*, sfFont*, sfRectangleShape*
-* Initialise la boite de dialogue
-*/
-void initDialogBox(sfText* _txt, sfFont* _font, int _police, sfRectangleShape* _dialogBox)
-{
+sfRectangleShape* initDialogBox(sfText* _txt, sfFont* _font, int _police) {
+	sfRectangleShape* dialogBox = sfRectangleShape_create();
+
 	sfText_setFont(_txt, _font);
 	sfText_setCharacterSize(_txt, _police);
 	sfText_setFillColor(_txt, sfBlack);
 
-	sfRectangleShape_setFillColor(_dialogBox, sfWhite);
-	sfRectangleShape_setOutlineColor(_dialogBox, sfBlack);
-	sfRectangleShape_setOutlineThickness(_dialogBox, 2);
+	sfRectangleShape_setFillColor(dialogBox, sfWhite);
+	sfRectangleShape_setOutlineColor(dialogBox, sfBlack);
+	sfRectangleShape_setOutlineThickness(dialogBox, 2);
+
+	return dialogBox;
 }
 
 void updateDialogBox(char* _str, int _sizeStr, sfText* _txt, sfRectangleShape* _dialogBox, sfVector2f _pos, sfVector2f _size)
@@ -64,16 +62,16 @@ void updateDialogBox(char* _str, int _sizeStr, sfText* _txt, sfRectangleShape* _
 * PARAM : sfRenderWindow*, sfText*, sfRectangleShape*
 * Draw la boite de dialogue
 */
-void displayDialogBox(sfRenderWindow* _window, sfText* _txt, sfRectangleShape* _dialogBox, sfBool _static)
+void displayDialogBox(sfRenderWindow* _w, sfText* _txt, sfRectangleShape* _dialogBox, sfBool _fixed)
 {
 	// Display
-	if(_static == sfTrue) sfRenderWindow_setView(_window, sfRenderWindow_getDefaultView(_window));
-	sfRenderWindow_drawRectangleShape(_window, _dialogBox, sfFalse);
-	sfRenderWindow_drawText(_window, _txt, sfFalse);
+	if(_fixed == sfTrue) sfRenderWindow_setView(_w, sfRenderWindow_getDefaultView(_w));
+	sfRenderWindow_drawRectangleShape(_w, _dialogBox, sfFalse);
+	sfRenderWindow_drawText(_w, _txt, sfFalse);
 }
 
-sfBool isClicked(sfRenderWindow* _w, sfRectangleShape* _dialogBox) {
-	sfFloatRect hitbox = sfRectangleShape_getGlobalBounds(_dialogBox);  
+sfBool isClicked(sfRenderWindow* _w, sfSprite* _button) {
+	sfFloatRect hitbox = sfSprite_getGlobalBounds(_button);
 	sfVector2i mousePos = sfMouse_getPositionRenderWindow(_w); 
 	if (sfMouse_isButtonPressed(sfMouseLeft) && sfFloatRect_contains(&hitbox, mousePos.x, mousePos.y)) return sfTrue;
 	else return sfFalse;

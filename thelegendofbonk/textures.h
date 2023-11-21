@@ -8,5 +8,5 @@ sfIntRect textureFromId(int _id);
 /* Checks whether the given tile ID corresponds to solid terrain. */
 sfBool isSolidBlock(char _id);
 
-/* Checks whether the given tile ID corresponds to water tiles. */
+/* Checks whether the given tile ID corresponds to a water tile. */
 sfBool isWater(char _id);

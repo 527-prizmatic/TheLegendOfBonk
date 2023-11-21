@@ -14,6 +14,8 @@
 #define KEY_DOWN sfKeyS
 #define KEY_LEFT sfKeyQ
 #define KEY_RIGHT sfKeyD
+#define KEY_PAUSE sfKeyEscape
+#define KEY_EDITOR_UI sfKeyEnter
 
 typedef enum GameState {
 	MENU,
@@ -34,6 +36,22 @@ void restartClock();
 /* \return Time elapsed since last restartClock() call */
 float getDeltaTime();
 
+/* Quick sfVector2f constructor */
 sfVector2f vector2f(float _x, float _y);
 
+/* \return Whether the mouse pointer is currently within the display window */
 sfBool isMouseWithinWindow(sfRenderWindow* _w);
+
+/* Utility function to quickly initialize sprite objects.
+*  \param _texture_path - Path to sprite texture file
+*  \param _scale - Sprite scale
+*  \param _pos - Where to display the sprite on screen
+*  \return Pointer to an initialized sprite object */
+sfSprite* initSprite(char* _texture_path, sfVector2f _scale, sfVector2f _pos);
+
+/* Utility function to quickly initialize text objects.
+*  \param _font - Font object to use
+*  \param _size - Text size
+*  \param _pos - Where to display the sprite on screen
+*  \return Pointer to an initialized text object */
+sfSprite* initText(sfFont* _font, int _size, sfVector2f _pos);
