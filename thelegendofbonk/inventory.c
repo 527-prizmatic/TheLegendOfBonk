@@ -14,14 +14,13 @@ void initInventory(sfSprite* _inventorySprite, sfSprite* _keySprite){
 
     keyTexture = sfTexture_createFromFile(TEXTURE_PATH"key.png", NULL);
     sfSprite_setTexture(_keySprite, keyTexture, sfTrue);
-    sfSprite_setScale(_keySprite, (sfVector2f) { 1.0f, 1.0f });
-    sfSprite_setTextureRect(_keySprite, (sfIntRect) { 0, 0, 50, 50 });
-    sfSprite_setPosition(_keySprite, (sfVector2f) { 680.0f, 500.0f });
+    sfSprite_setScale(_keySprite, (sfVector2f) { 2.0f, 2.0f });
+    sfSprite_setPosition(_keySprite, (sfVector2f) { 650.0f, 500.0f });
 }
 
 void displayInventory(sfRenderWindow* _window, int* _inventory, sfSprite* _inventorySprite, sfSprite* _keySprite)
 {
-    sfIntRect rect = { 0, 0, 50, 50 };
+    sfIntRect rect = { 0, 0, 32, 32 };
 
     sfRenderWindow_setView(_window, sfRenderWindow_getDefaultView(_window));
     sfRenderWindow_drawSprite(_window, _inventorySprite, NULL);
@@ -48,28 +47,28 @@ void displayInventory(sfRenderWindow* _window, int* _inventory, sfSprite* _inven
     {
         rect.left = 0;
         sfSprite_setTextureRect(_keySprite, rect);
-        sfSprite_setPosition(_keySprite, (sfVector2f) { 440.0f, 500.0f });
+        sfSprite_setPosition(_keySprite, (sfVector2f) { 450.0f, 520.0f });
         sfRenderWindow_drawSprite(_window, _keySprite, NULL);
     }
     if (_inventory[1])
     {
-        rect.left = 50;
+        rect.left = rect.width*1;
         sfSprite_setTextureRect(_keySprite, rect);
-        sfSprite_setPosition(_keySprite, (sfVector2f) { 530.0f, 500.0f });
+        sfSprite_setPosition(_keySprite, (sfVector2f) { 500.0f, 520.0f });
         sfRenderWindow_drawSprite(_window, _keySprite, NULL);
     }
     if (_inventory[2])
     {
-        rect.left = 100;
+        rect.left = rect.width * 2;
         sfSprite_setTextureRect(_keySprite, rect);
-        sfSprite_setPosition(_keySprite, (sfVector2f) { 620.0f, 500.0f });
+        sfSprite_setPosition(_keySprite, (sfVector2f) { 585.0f, 495.0f });
         sfRenderWindow_drawSprite(_window, _keySprite, NULL);
     }
     if (_inventory[3])
     {
-        rect.left = 150;
+        rect.left = rect.width * 3;
         sfSprite_setTextureRect(_keySprite, rect);
-        sfSprite_setPosition(_keySprite, (sfVector2f) { 700.0f, 500.0f });
+        sfSprite_setPosition(_keySprite, (sfVector2f) { 695.0f, 495.0f });
         sfRenderWindow_drawSprite(_window, _keySprite, NULL);
     }
 }
