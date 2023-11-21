@@ -60,7 +60,7 @@ int main() {
 	sfSprite* buttonOptionsVolMinus = initSprite(TEXTURE_PATH"vol_minus.png", vector2f(3.5f, 3.5f), vector2f(450.0f, 190.0f));
 	sfColor hoverColor = sfColor_fromRGBA(128, 128, 128, 128); // Color when hovering on buttons
 
-	sfSprite* buttonsUI[] = {
+	sfSprite* UIButtons[] = {
 		buttonMainPlay,
 		buttonMainEdit,
 		buttonMainQuit,
@@ -126,8 +126,8 @@ int main() {
 
 		// Makes it so that buttons are greyed out when hovering the mouse on them
 		sfVector2i mousePos = sfMouse_getPositionRenderWindow(window);
-		for (int i = 0; i < 8; i++) {
-			sfSprite* button = buttonsUI[i];
+		for (int i = 0; i < sizeof(UIButtons) / sizeof(sfSprite*); i++) {
+			sfSprite* button = UIButtons[i];
 			sfFloatRect spriteBounds = sfSprite_getGlobalBounds(button);
 			if (sfFloatRect_contains(&spriteBounds, mousePos.x, mousePos.y)) sfSprite_setColor(button, hoverColor);
 			else sfSprite_setColor(button, sfWhite);
