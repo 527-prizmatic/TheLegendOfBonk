@@ -169,8 +169,6 @@ int main() {
 
 				if (canInteract()) sfRenderWindow_drawText(window, sfTxt_interact, sfFalse);
 				if (sfKeyboard_isKeyPressed(sfKeyE) && canInteract() != -1) printf("Interaction ! %d\n", canInteract());
-				if (sfKeyboard_isKeyPressed(sfKeyK) && sfKeyboard_isKeyPressed(sfKeyLControl)) save_map(tilemap, propmap, playerPos, inventory, music);
-				if (sfKeyboard_isKeyPressed(sfKeyL) && sfKeyboard_isKeyPressed(sfKeyLControl)) load_map(tilemap, propmap, &playerPos, inventory, music);
 
 				// Crafts the key when clicking on the "Craft" button with all key pieces in inventory.
 				if (isClicked(window, buttonCraft)) {
