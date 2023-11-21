@@ -167,7 +167,7 @@ int main() {
 				displayInventory(window, inventory, inventorySprite, keySprite);
 				if (hasAllKeyPieces(inventory)) displayDialogBox(window, sfTxt_c, buttonCraft, sfTrue);
 
-				if (canInteract()) sfRenderWindow_drawText(window, sfTxt_interact, sfFalse);
+				if (canInteract() != -1) sfRenderWindow_drawText(window, sfTxt_interact, sfFalse);
 				if (sfKeyboard_isKeyPressed(sfKeyE) && canInteract() != -1) printf("Interaction ! %d\n", canInteract());
 
 				// Crafts the key when clicking on the "Craft" button with all key pieces in inventory.
