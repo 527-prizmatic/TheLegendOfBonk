@@ -33,6 +33,7 @@ void interactTilePos(char _map[H_MAP_T][W_MAP_T])
 					printf("CHEST : Position Y : %f, Position X : %f\n", chestArray[chestCpt].chestPosition.y, chestArray[chestCpt].chestPosition.x);
 					chestCpt++;
 					break;
+
 				default:
 					break;
 			}
@@ -44,10 +45,14 @@ void interactTilePos(char _map[H_MAP_T][W_MAP_T])
 int canInteract() {
     int playerRadius = 60;
     int interactRadius = 20;
+
     int sqrPosChestX = 0;
     int sqrPosChestY = 0;
+
 	int sqrPosPnjX = 0;
 	int sqrPosPnjY = 0;
+
+
     int sqrRadius = (playerRadius + interactRadius) * (playerRadius + interactRadius);
 
 	for (int i = 0; i < 5; i++)
@@ -62,5 +67,6 @@ int canInteract() {
 		sqrPosPnjY = (playerPos.y - pnjArray[j].pnjPosition.y) * (playerPos.y - pnjArray[j].pnjPosition.y);
 		if (sqrPosPnjX + sqrPosPnjY < sqrRadius) return pnjArray[j].id + 20;
 	}
+
 	return -1;
 }
