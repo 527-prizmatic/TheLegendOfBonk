@@ -40,7 +40,7 @@ int main() {
 	sfText_setFont(sfTxt_interact, font);
 	sfText_setCharacterSize(sfTxt_interact, 30);
 	sfText_setOutlineThickness(sfTxt_interact, 2.0f);
-    sfText_setOutlineColor(sfTxt_interact, sfBlack);
+	sfText_setOutlineColor(sfTxt_interact, sfBlack);
 	sfText_setPosition(sfTxt_interact, vector2f(440.0f, 465.0f));
 	sfText_setString(sfTxt_interact, "Press E !\0");
 
@@ -61,6 +61,7 @@ int main() {
 	sfSprite* buttonPauseQuit = initSprite(TEXTURE_PATH"quit2.png", vector2f(3.5f, 3.5f), vector2f(350.0f, 320.0f));
 	sfSprite* buttonOptionsVolPlus = initSprite(TEXTURE_PATH"vol_plus.png", vector2f(3.5f, 3.5f), vector2f(250.0f, 190.0f));
 	sfSprite* buttonOptionsVolMinus = initSprite(TEXTURE_PATH"vol_minus.png", vector2f(3.5f, 3.5f), vector2f(450.0f, 190.0f));
+	sfSprite* buttonUICraft = initSprite(TEXTURE_PATH"craft.png", vector2f(2.0f, 2.0f), vector2f(420.0, 465.0f));
 	sfColor hoverColor = sfColor_fromRGBA(128, 128, 128, 128); // Color when hovering on buttons
 
 	sfSprite* UIButtons[] = {
@@ -71,14 +72,13 @@ int main() {
 		buttonPauseOptions,
 		buttonPauseQuit,
 		buttonOptionsVolPlus,
-		buttonOptionsVolMinus
+		buttonOptionsVolMinus,
+		buttonUICraft
 	};
 
 	/* == INVENTORY == */
 	int inventory[4] = { 0, 0, 0, 0 };
 	sfText* sfTxt_c = sfText_create();
-	char craft[7] = "CRAFT!\0";
-	sfRectangleShape* buttonCraft = initDialogBox(sfTxt_c, font, 20);
 	sfSprite* inventorySprite = sfSprite_create();
 	sfSprite* keySprite = sfSprite_create();
 	initInventory(inventorySprite, keySprite);
@@ -112,10 +112,10 @@ int main() {
 	sfEvent event;
 	float tick = 0.0f;
 
-	/* == SONG UI == */
+	/* == BUTTON CLICK SOUND == */
 	sfSound* sndButtonClick = sfSound_create();
-    sfSoundBuffer* bufferUI = sfSoundBuffer_createFromFile(AUDIO_PATH"Ui_song.wav");
-    sfSound_setBuffer(sndButtonClick, bufferUI);
+	sfSoundBuffer* bufferUI = sfSoundBuffer_createFromFile(AUDIO_PATH"click.wav");
+	sfSound_setBuffer(sndButtonClick, bufferUI);
 
 	/* == BONK == */
 	sfSprite* bonk = sfSprite_create();
@@ -131,20 +131,13 @@ int main() {
 
 	/* == CHEESE NPC == */
 	sfSprite* npcCheese = sfSprite_create();
-    sfTexture* textureNpcCheese = sfTexture_createFromFile(TEXTURE_PATH"pnj.png", NULL);
-    sfSprite_setTexture(npcCheese, textureNpcCheese, sfFalse);
-    sfSprite_setScale(npcCheese, vector2f(2.0f, 2.0f));
+	sfTexture* textureNpcCheese = sfTexture_createFromFile(TEXTURE_PATH"pnj.png", NULL);
+	sfSprite_setTexture(npcCheese, textureNpcCheese, sfFalse);
+	sfSprite_setScale(npcCheese, vector2f(2.0f, 2.0f));
 	float npcAnimTimer = 0.0f;
 	char frameNpc = 0; 
-    sfSprite_setTextureRect(npcCheese, (sfIntRect) { 0, 0, 32, 32 });
+	sfSprite_setTextureRect(npcCheese, (sfIntRect) { 0, 0, 32, 32 });
 	sfSprite_setPosition(npcCheese, vector2f(544.0f, 512.0f));
-
-	//Button Craft
-	sfSprite* CraftButton = sfSprite_create();
-    sfTexture* textureCraftButton = sfTexture_createFromFile(TEXTURE_PATH"craft.png", NULL);
-    sfSprite_setTexture(CraftButton, textureCraftButton, sfFalse);
-    sfSprite_setScale(CraftButton, vector2f(2.0f, 2.0f));
-    sfSprite_setPosition(CraftButton, vector2f(420.0f, 465.0f));
 	
 	/* == GAME LOOP == */
 	while (sfRenderWindow_isOpen(window)) {
@@ -209,9 +202,7 @@ int main() {
 
 				// Does some inventory trickeries when key crafted
 				if (flagCraft == 1) {
-					for (int i = 0; i < 4; i++) {
-						inventory[i] = 0;
-					}
+					for (int i = 0; i < 4; i++) inventory[i] = 0;
 					inventory[0] = 2;
 					flagCraft = 0;
 				}
@@ -220,14 +211,6 @@ int main() {
 				updatePlayer(propmap, window);
 				updateEnemy();
 				updateView(window, viewGame, playerPos);
-
-				// Crafts the key when hitting "Craft" button
-				if (isClicked(window, buttonCraft)) {
-					sfSound_play(sndButtonClick); 
-					if (inventory[0] && inventory[1] && inventory[2] && inventory[3]) {
-						flagCraft = 1;
-					}
-				}
 
 				// Rendering
 				sfRenderWindow_setView(window, viewGame);
@@ -240,38 +223,21 @@ int main() {
 				sfSprite_setPosition(bonk, vector2f(500.0f, 500.0f));
 				sfRenderWindow_drawSprite(window, bonk, NULL);
 				displayInventory(window, inventory, inventorySprite, keySprite);
-				if (hasAllDogecoinPieces(inventory)) displayDialogBox(window, sfTxt_c, buttonCraft, sfTrue);
-				if (canInteract() == -1) flagPnj = 0;
-				if (hasAllDogecoinPieces(inventory))
-				{
-					
-                    sfRenderWindow_drawSprite(window, CraftButton, NULL);
 
-				}
+				if (canInteract() == -1) flagPnj = 0;
+				if (hasAllDogecoinPieces(inventory)) sfRenderWindow_drawSprite(window, buttonUICraft, NULL);
+
 				if (canInteract() > 19){
 					int idPnj = canInteract() - 20;
 					updateDialogBox(pnjArray[idPnj].txt, sizeof(pnjArray[idPnj].txt), sfTxt_pnj, pnjDialogBox, (sfVector2f) { 0.0f, 450.0f }, (sfVector2f) { 425.0f, 150.0f }, 0);
 					sfRenderWindow_drawText(window, sfTxt_interact, sfFalse);
-					if (testKeyPress(KEY_INTERACT, window)){
-						flagPnj = 1;
-					}
-					if (flagPnj == 1) {
-						displayDialogBox(window, sfTxt_pnj, pnjDialogBox, sfFalse);
-					}
+					if (testKeyPress(KEY_INTERACT, window)) flagPnj = 1;
+					if (flagPnj == 1) displayDialogBox(window, sfTxt_pnj, pnjDialogBox, sfFalse);
 				}
 
 				if (canInteract() !=-1 && !hasAllDogecoinPieces(inventory) && inventory[0] !=2) sfRenderWindow_drawText(window, sfTxt_interact, sfFalse);
-				if (testKeyPress(KEY_INTERACT, window) && canInteract() != -1 && inventory[0] != 2) {
-					inventory[canInteract()] = 1;
-				}
 
-				// Crafts the key when clicking on the "Craft" button with all key pieces in inventory.
-				if (isClicked(window, buttonCraft)) {
-					if (inventory[0] && inventory[1] && inventory[2] && inventory[3]) {
-						for (int i = 0; i < 4; i++) inventory[i] = 0;
-						inventory[0] = 2;
-					}
-				}
+				if (testKeyPress(KEY_INTERACT, window) && canInteract() != -1 && inventory[0] != 2) inventory[canInteract()] = 1;
 
 				// Pulls out the game menu when pressing the bound key
 				if (testKeyPress(KEY_PAUSE, window)) {
@@ -298,7 +264,7 @@ int main() {
 			}
 
 			//Animation PNJ
-            npcAnimTimer += getDeltaTime();
+			npcAnimTimer += getDeltaTime();
 			if(npcAnimTimer >= 0.1f) {
 				npcAnimTimer = 0.0f;
 				frameNpc++;

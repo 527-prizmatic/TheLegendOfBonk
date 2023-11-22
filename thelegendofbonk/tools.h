@@ -56,7 +56,7 @@ sfSprite* initSprite(char* _texture_path, sfVector2f _scale, sfVector2f _pos);
 *  \param _size - Text size
 *  \param _pos - Where to display the sprite on screen
 *  \return Pointer to an initialized text object */
-sfSprite* initText(sfFont* _font, int _size, sfVector2f _pos);
+sfText* initText(sfFont* _font, int _size, sfVector2f _pos);
 
 /* Checks if the given key has been pressed. If a non-NULL object is passed as argument, the function also checks for focus. */
 sfBool testKeyPress(sfKeyCode _key, sfRenderWindow* _w);
