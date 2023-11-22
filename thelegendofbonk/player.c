@@ -8,6 +8,7 @@
 
 #define DISPLAY_HITBOX sfFalse
 
+moveDir direction;
 sfSprite* player;
 sfTexture* spriteSheet;
 sfIntRect irect = { 0, 0, 32, 32 };
@@ -68,11 +69,10 @@ void updatePlayer(char _map[H_MAP_T][W_MAP_T], sfRenderWindow* _w) {
         }
 
         // Orthonormal movement
-        else if (sfKeyboard_isKeyPressed(KEY_UP)) { if (!checkForCollisions(_map, UP)) movePlayer(UP, sfFalse, _map, _w); }
-        else if (sfKeyboard_isKeyPressed(KEY_DOWN)) { if (!checkForCollisions(_map, DOWN)) movePlayer(DOWN, sfFalse, _map, _w); }
-        else if (sfKeyboard_isKeyPressed(KEY_LEFT)) { if (!checkForCollisions(_map, LEFT)) movePlayer(LEFT, sfFalse, _map, _w); }
-        else if (sfKeyboard_isKeyPressed(KEY_RIGHT)) { if (!checkForCollisions(_map, RIGHT)) movePlayer(RIGHT, sfFalse, _map, _w); }
-
+        else if (sfKeyboard_isKeyPressed(KEY_UP)) { direction = UP; if (!checkForCollisions(_map, direction)) movePlayer(direction, sfFalse, _map, _w); }
+        else if (sfKeyboard_isKeyPressed(KEY_DOWN)) { direction = DOWN; if (!checkForCollisions(_map, direction)) movePlayer(direction, sfFalse, _map, _w); }
+        else if (sfKeyboard_isKeyPressed(KEY_LEFT)) { direction = LEFT; if (!checkForCollisions(_map, direction)) movePlayer(direction, sfFalse, _map, _w); }
+        else if (sfKeyboard_isKeyPressed(KEY_RIGHT)) { direction = RIGHT; if (!checkForCollisions(_map, direction)) movePlayer(direction, sfFalse, _map, _w); }
         else isMoving = sfFalse;
     }
     else isMoving = sfFalse;

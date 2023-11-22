@@ -11,6 +11,8 @@ typedef enum moveDir {
 	RIGHT
 } moveDir;
 
+moveDir direction;
+
 /* Initializes the player character's sprite, stats and inventory. */
 void initPlayer();
 

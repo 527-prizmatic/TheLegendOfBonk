@@ -18,6 +18,7 @@
 #include "editor.h"
 #include "music.h"
 #include "interact.h"
+#include "enemy.h"
 
 int main() {
 	/* == RENDERING ENGINE CORE */
@@ -125,6 +126,9 @@ int main() {
 	char frameBonk = 0;
 	sfSprite_setTextureRect(bonk, (sfIntRect) { 0, 0, 32, 32 });
 
+	/* == ENEMY == */
+	initEnemy();
+
 	/* == CHEESE NPC == */
 	sfSprite* npcCheese = sfSprite_create();
     sfTexture* textureNpcCheese = sfTexture_createFromFile(TEXTURE_PATH"pnj.png", NULL);
@@ -141,8 +145,6 @@ int main() {
     sfSprite_setTexture(CraftButton, textureCraftButton, sfFalse);
     sfSprite_setScale(CraftButton, vector2f(2.0f, 2.0f));
     sfSprite_setPosition(CraftButton, vector2f(420.0f, 465.0f));
-
-
 	
 	/* == GAME LOOP == */
 	while (sfRenderWindow_isOpen(window)) {
@@ -216,6 +218,7 @@ int main() {
 
 				// Updates
 				updatePlayer(propmap, window);
+				updateEnemy();
 				updateView(window, viewGame, playerPos);
 
 				// Crafts the key when hitting "Craft" button
@@ -231,14 +234,15 @@ int main() {
 				renderMap(tilemap, window, sfView_getCenter(viewGame), -1, 0);
 				renderMap(propmap, window, sfView_getCenter(viewGame), 0, 0);
 				displayPlayer(window);
+				displayEnemy(window);
 				sfRenderWindow_drawSprite(window, npcCheese, NULL);
 				renderMap(propmap, window, sfView_getCenter(viewGame), 1, 0);
 				sfSprite_setPosition(bonk, vector2f(500.0f, 500.0f));
 				sfRenderWindow_drawSprite(window, bonk, NULL);
 				displayInventory(window, inventory, inventorySprite, keySprite);
-				if (hasAllKeyPieces(inventory)) displayDialogBox(window, sfTxt_c, buttonCraft, sfTrue);
+				if (hasAllDogecoinPieces(inventory)) displayDialogBox(window, sfTxt_c, buttonCraft, sfTrue);
 				if (canInteract() == -1) flagPnj = 0;
-				if (hasAllKeyPieces(inventory))
+				if (hasAllDogecoinPieces(inventory))
 				{
 					
                     sfRenderWindow_drawSprite(window, CraftButton, NULL);
@@ -256,7 +260,7 @@ int main() {
 					}
 				}
 
-				if (canInteract() !=-1 && !hasAllKeyPieces(inventory) && inventory[0] !=2) sfRenderWindow_drawText(window, sfTxt_interact, sfFalse);
+				if (canInteract() !=-1 && !hasAllDogecoinPieces(inventory) && inventory[0] !=2) sfRenderWindow_drawText(window, sfTxt_interact, sfFalse);
 				if (testKeyPress(KEY_INTERACT, window) && canInteract() != -1 && inventory[0] != 2) {
 					inventory[canInteract()] = 1;
 				}
