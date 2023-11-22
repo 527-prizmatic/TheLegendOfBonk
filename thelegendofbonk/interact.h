@@ -14,9 +14,12 @@ typedef struct {
 	int id;
 }PNJ;
 
+
 PNJ pnjArray[10];
 Chest chestArray[16];
 int chestCpt;
+
+
 
 void interactTilePos(char _map[H_MAP_T][W_MAP_T]);
 int canInteract();

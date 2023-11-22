@@ -26,7 +26,6 @@ int main() {
 	sfView* viewEditor = initEditorView(); // Editor mode view
 	sfView* viewMinimap = initMinimapView(); // Editor mode view
 
-
 	/* == MAIN MENU ==  */
 	sfFont* font = sfFont_createFromFile(TEXTURE_PATH"FontGame.ttf");
 	sfVector2f logoPos = vector2f(400.0f, 200.0f);
@@ -63,6 +62,7 @@ int main() {
 	sfSprite* buttonUICraft = initSprite(TEXTURE_PATH"craft.png", vector2f(2.0f, 2.0f), vector2f(420.0, 465.0f));
 	sfColor hoverColor = sfColor_fromRGBA(128, 128, 128, 128); // Color when hovering on buttons
 
+	/* == FOR EFFECTS ON BUTTONS == */
 	sfSprite* UIButtons[] = {
 		buttonMainPlay,
 		buttonMainEdit,
@@ -124,6 +124,7 @@ int main() {
 	float bonkAnimTimer = 0.0f;
 	char frameBonk = 0;
 	sfSprite_setTextureRect(bonk, (sfIntRect) { 0, 0, 32, 32 });
+	sfSprite_setPosition(bonk, vector2f(4000.0f, 65.0f));
 
 	/* == CHEESE NPC == */
 	sfSprite* npcCheese = sfSprite_create();
@@ -134,7 +135,15 @@ int main() {
 	char frameNpc = 0; 
 	sfSprite_setTextureRect(npcCheese, (sfIntRect) { 0, 0, 32, 32 });
 	sfSprite_setPosition(npcCheese, vector2f(544.0f, 512.0f));
-	
+
+	/* == CAGE == */
+	sfSprite* cage = sfSprite_create(); 
+	sfTexture* textureCage = sfTexture_createFromFile(TEXTURE_PATH"cage.png", NULL); 
+	sfSprite_setTexture(cage, textureCage, sfFalse); 
+	sfSprite_setScale(cage, vector2f(0.3f, 0.3f)); 
+	sfSprite_setPosition(cage, vector2f(3970.0f, 20.0f));
+
+
 	/* == GAME LOOP == */
 	while (sfRenderWindow_isOpen(window)) {
 		// Some core functions
@@ -155,19 +164,13 @@ int main() {
 			}
 		}
 
+
 		/* == MAIN MENU == */
 		if (gameState == MENU) {
-			// Logo animation
-			logoAnimTimer += getDeltaTime();
-			logoPos.y = 200.0f + cos(logoAnimTimer / 2) * 30.0f;
-			logoPos.x = 400.0f + sin(logoAnimTimer / 3.3) * 70.0f;
-			sfSprite_setRotation(logo, cos(logoAnimTimer * 4.6) * 3.0f);
-			sfSprite_setPosition(logo, logoPos);
-
-			// Rendering functions
+			/* == RENDERING ENGINE == */
+			sfRenderWindow_setView(window, sfRenderWindow_getDefaultView(window));
 			if (tick >= TICK_TIME) {
 				tick = 0.0f;
-				sfRenderWindow_setView(window, sfRenderWindow_getDefaultView(window));
 
 				// Main menu UI
 				sfRenderWindow_drawSprite(window, spriteMenuBackground, NULL);
@@ -175,38 +178,49 @@ int main() {
 				sfRenderWindow_drawSprite(window, buttonMainPlay, NULL);
 				sfRenderWindow_drawSprite(window, buttonMainEdit, NULL);
 				sfRenderWindow_drawSprite(window, buttonMainQuit, NULL);
+				
 				sfRenderWindow_display(window);
 			}
-
-			if (isClicked(window, buttonMainPlay)) { // When clicking on the GAME button
+			
+			
+			/* == LOGO ANIMATIONS == */
+			logoAnimTimer += getDeltaTime();
+			logoPos.y = 200.0f + cos(logoAnimTimer / 2) * 30.0f;
+			logoPos.x = 400.0f + sin(logoAnimTimer / 3.3) * 70.0f;
+			sfSprite_setRotation(logo, cos(logoAnimTimer * 4.6) * 3.0f);
+			sfSprite_setPosition(logo, logoPos);
+			
+			
+			/* == USER INPUT == */
+			// When clicking on the GAME button
+			if (isClicked(window, buttonMainPlay)) {
 				sfSound_play(sndButtonClick);
 				flagInteraction = 0;
 				gameState = GAME;
 				interactTilePos(propmap);
 			}
-			else if (isClicked(window, buttonMainEdit)) { // When clicking on the EDIT button
+			// When clicking on the EDIT button
+			else if (isClicked(window, buttonMainEdit)) {
 				sfSound_play(sndButtonClick);
 				gameState = EDITOR;
 				flagClick = 1;
 			}
-			else if (isClicked(window, buttonMainQuit)) gameState = QUIT; // When clicking on the QUIT button
+			// When clicking on the QUIT button
+			else if (isClicked(window, buttonMainQuit)) gameState = QUIT;
 		}
 
 		/* == GAME == */
 		else if (gameState == GAME) {
+			/* == RENDERING ENGINE == */
 			if (tick >= TICK_TIME) {
 				tick = 0.0f;
 
-				// Does some inventory trickeries when key crafted
-				if (flagCraft == 1) {
-					for (int i = 0; i < 4; i++) inventory[i] = 0;
-					inventory[0] = 2;
-					flagCraft = 0;
-				}
-
-				// Updates
+				// Regularly updating a few game variables
 				updatePlayer(propmap, window);
 				updateView(window, viewGame, playerPos);
+				
+				// Displays "PRESS E" pop-up above inventory bar
+				if (canInteract() !=-1 && !hasAllDogecoinPieces(inventory) && inventory[0] !=2) sfRenderWindow_drawText(window, sfTxt_interact, sfFalse);
 
 				// Rendering
 				sfRenderWindow_setView(window, viewGame);
@@ -215,85 +229,92 @@ int main() {
 				displayPlayer(window);
 				sfRenderWindow_drawSprite(window, npcCheese, NULL);
 				renderMap(propmap, window, sfView_getCenter(viewGame), 1, 0);
-				sfSprite_setPosition(bonk, vector2f(500.0f, 500.0f));
 				sfRenderWindow_drawSprite(window, bonk, NULL);
-				displayInventory(window, inventory, inventorySprite, keySprite);
+				sfRenderWindow_drawSprite(window, cage, NULL); 
+				displayInventory(window, inventory, inventorySprite, keySprite); // Displays inventory HUD
 				if (hasAllDogecoinPieces(inventory)) sfRenderWindow_drawSprite(window, buttonUICraft, NULL); // Renders craft button (but only if the dogecoin can be crafted)
-
-				// 
-				if (canInteract() == -1) flagInteraction = 0;
-
-				if (canInteract() > 19 && !hasAllDogecoinPieces(inventory)){
-					int idNpc = canInteract() - 20;
-					updateDialogBox(pnjArray[idNpc].txt, sizeof(pnjArray[idNpc].txt), sfTxt_pnj, pnjDialogBox, (sfVector2f) { 10.0f, 450.0f }, (sfVector2f) { 380.0f, 140.0f }, 0);
-					sfRenderWindow_drawText(window, sfTxt_interact, sfFalse);
-					if (testKeyPress(KEY_INTERACT, window)) flagInteraction = 1;
-					if (flagInteraction == 1) displayDialogBox(window, sfTxt_pnj, pnjDialogBox, sfFalse);
-				}
-
-				if (testKeyPress(KEY_INTERACT, window) && canInteract() != -1 && inventory[0] != 2) inventory[canInteract()] = 1;
-
-				if (isClicked(window, buttonUICraft) && hasAllDogecoinPieces(inventory) && inventory[0] != 2) flagCraft = 1;
-
-				// Pulls out the game menu when pressing the bound key
-				if (testKeyPress(KEY_PAUSE, window)) {
-					if (!flagPauseMenu) {
-						sfSound_play(sndButtonClick); 
-						save_map(tilemap, propmap, playerPos, inventory, bgm);
-						gameState = BREAK;
-					}
-					flagPauseMenu = 1;
-				}
-				else flagPauseMenu = 0;
-
-				// Renders minimap
-				renderMinimap(window, viewMinimap, tilemap, propmap);
+				renderMinimap(window, viewMinimap, tilemap, propmap); // Renders minimap
+				
 				sfRenderWindow_display(window);
 			}
+			
 
-			// Animates Bonk
+			/* == ANIMATIONS == */
 			bonkAnimTimer += getDeltaTime();
 			if (bonkAnimTimer >= 0.1f) {
 				bonkAnimTimer = 0.0f;
+				
+				// Bonk animation
 				frameBonk++;
 				frameBonk %= 8;
 				sfSprite_setTextureRect(bonk, (sfIntRect) { 32 * frameBonk, 0, 32, 32 });
-			}
-
-			//Animation PNJ
-			npcAnimTimer += getDeltaTime();
-			if(npcAnimTimer >= 0.1f) {
-				npcAnimTimer = 0.0f;
+				
+				// NPC animation
 				frameNpc++;
 				frameNpc %= 7; 
 				sfSprite_setTextureRect(npcCheese, (sfIntRect) { 32 * frameNpc, 0, 32, 32 }); 
 			}
+			
+			
+			/* == WORLD INTERACTIONS == */
+			if (canInteract() == -1) flagInteraction = 0;
+			
+			// When opening a chest, check if the player already got the associated dogecoin piece, and gives it to them if not
+			if (canInteract() > 19 && !hasAllDogecoinPieces(inventory)){
+				int idNpc = canInteract() - 20;
+				updateDialogBox(pnjArray[idNpc].txt, sizeof(pnjArray[idNpc].txt), sfTxt_pnj, pnjDialogBox, (sfVector2f) { 10.0f, 450.0f }, (sfVector2f) { 380.0f, 140.0f }, 0);
+				sfRenderWindow_drawText(window, sfTxt_interact, sfFalse);
+				if (testKeyPress(KEY_INTERACT, window)) flagInteraction = 1;
+				if (flagInteraction == 1) displayDialogBox(window, sfTxt_pnj, pnjDialogBox, sfFalse);
+			}
+			
+			// Crafting the dogecoin
+			if (isClicked(window, buttonUICraft) && hasAllDogecoinPieces(inventory) && inventory[0] != 2) flagCraft = 1;
+			// Does some inventory trickeries when key crafted
+			if (flagCraft == 1) {
+				for (int i = 0; i < 4; i++) inventory[i] = 0;
+				inventory[0] = 2;
+				flagCraft = 0;
+			}
+			
+			
+			/* == USER INPUT == */
+			// Check for interactions when pressing the bound key
+			if (testKeyPress(KEY_INTERACT, window) && canInteract() != -1 && inventory[0] != 2) inventory[canInteract()] = 1;
 
 			// Secret debug keybind (ALT+R) which returns the player at the spawn point
 			if (sfKeyboard_isKeyPressed(sfKeyLAlt) && testKeyPress(sfKeyR, window)) {
 				playerPos.x = 544;
 				playerPos.y = 512;
 			}
+			
+			// Pulls out the game menu when pressing the bound key
+			if (testKeyPress(KEY_PAUSE, window)) {
+				if (!flagPauseMenu) {
+					sfSound_play(sndButtonClick); 
+					save_map(tilemap, propmap, playerPos, inventory, bgm);
+					gameState = BREAK;
+				}
+				flagPauseMenu = 1;
+			}
+			else flagPauseMenu = 0;
 		}
 
 		/* == LEVEL EDITOR == */
 		else if (gameState == EDITOR) {
 			sfMusic_stop(bgm);
+			/* == RENDERING ENGINE == */
 			if (tick >= TICK_TIME) {
 				tick = 0.0f;
 
-				// Place tile on click
+				// Places tiles on click
 				if (testLClick(window) && !flagClick) {
 					if (tileSelection == 91) interactTilePos(propmap);
 					changeTile(window, viewEditor, tilemap, propmap, tileSelection);
 					flagClick = 0;
 				}
 
-				// Toggle editor mode - press 1 for terrain, 2 for props
-				if (testKeyPress(sfKeyNum1, window)) flagEditorMode = 0;
-				else if (testKeyPress(sfKeyNum2, window)) flagEditorMode = 1;
-
-				// Core rendering functions
+				// Rendering
 				sfRenderWindow_setView(window, viewEditor);
 				updateEditorView(window, viewEditor);
 				renderMap(tilemap, window, sfView_getCenter(viewEditor), -1, 0);
@@ -301,6 +322,11 @@ int main() {
 				if (flagEditorUI) renderEditorUI(window, sfRenderWindow_getDefaultView(window), flagEditorMode, font);
 				sfRenderWindow_display(window);
 			}
+			
+			/* == USER INPUT == */
+			// Toggle editor mode - press 1 for terrain, 2 for props
+			if (testKeyPress(sfKeyNum1, window)) flagEditorMode = 0;
+			else if (testKeyPress(sfKeyNum2, window)) flagEditorMode = 1;
 
 			// Opens map editor UI
 			if (testKeyPress(KEY_EDITOR_UI, window)) flagEditorUI = 1;
@@ -333,33 +359,39 @@ int main() {
 		/* == PAUSE MENU == */
 		else if (gameState == BREAK) { // When pause menu open
 			sfRenderWindow_setView(window, sfRenderWindow_getDefaultView(window));
-			sfRenderWindow_drawSprite(window, spriteMenuBackground, NULL);
 
 			/* == MAIN SCREEN == */
 			if (!flagOptions){
 				// Moves the return button to a new position to avoid having to re-declare it
 				sfSprite_setPosition(buttonPauseReturn, (sfVector2f) { 350.0f, 180.0f });
 
-				// Renders pause menu UI
+				/* == RENDERING ENGINE == */
 				if (tick >= TICK_TIME) {
 					tick = 0.0f;
+					sfRenderWindow_drawSprite(window, spriteMenuBackground, NULL);
 					sfRenderWindow_drawSprite(window, buttonPauseReturn, NULL);
 					sfRenderWindow_drawSprite(window, buttonPauseOptions, NULL);
 					sfRenderWindow_drawSprite(window, buttonPauseQuit, NULL);
+					
 					sfRenderWindow_display(window);
 				}
 
-				if (isClicked(window, buttonPauseReturn)) { // Go back to main menu when return button pressed
+
+				/* == USER INPUT == */
+				// Returns to the main menu
+				if (isClicked(window, buttonPauseReturn)) {
 					sfSound_play(sndButtonClick);
 					save_map(tilemap, propmap, playerPos, inventory, bgm);
 					gameState = MENU;
 				}
-				else if (isClicked(window, buttonPauseOptions) && flagClick == 0) { // Open options UI when options button pressed
+				// Opens options menu
+				else if (isClicked(window, buttonPauseOptions) && flagClick == 0) {
 					sfSound_play(sndButtonClick);
 					flagOptions = 1;
 					flagClick == 1;
 				}
-				else if (isClicked(window, buttonPauseQuit) && flagClick == 0) { // Quit game when quit button pressed
+				// Quits game
+				else if (isClicked(window, buttonPauseQuit) && flagClick == 0) {
 					sfSound_play(sndButtonClick);
 					gameState = QUIT;
 				}
@@ -370,9 +402,10 @@ int main() {
 				// Moves the return button to a new position to avoid having to re-declare it
 				sfSprite_setPosition(buttonPauseReturn, vector2f(250.0f, 300.0f));
 
-				// Renders options menu UI
+				/* == RENDERING ENGINE == */
 				if (tick >= TICK_TIME) {
 					tick = 0.0f;
+					
 					sfRenderWindow_drawSprite(window, buttonOptionsVolPlus, NULL);
 					sfRenderWindow_drawSprite(window, buttonOptionsVolMinus, NULL);
 					sfRenderWindow_drawSprite(window, buttonPauseReturn, NULL);
@@ -381,17 +414,22 @@ int main() {
 					sfText_setOutlineThickness(textVolume, 2.0f);
 					sfText_setOutlineColor(textVolume, sfBlack);
 					sfRenderWindow_drawText(window, textVolume, NULL);
+					
 					sfRenderWindow_display(window);
 				}
 
-				// Volume control buttons
+
+				/* == USER INPUT == */
+				// Volume control buttons, placed within a timer to allow for slowly lowering volume when holding down the button
 				timerVolumeChange += getDeltaTime();
 				if (timerVolumeChange > 0.1f) {
+					// Volume up
 					if (isClicked(window, buttonOptionsVolPlus)) {
 						sfSound_play(sndButtonClick);
 						changeVolume(bgm, 1);
 						timerVolumeChange = 0;
 					}
+					// Volume down
 					else if (isClicked(window, buttonOptionsVolMinus)) {
 						sfSound_play(sndButtonClick);
 						changeVolume(bgm, 0);
@@ -399,7 +437,7 @@ int main() {
 					}
 				}
 
-				// Goes back to pause menu when return button pressed
+				// Goes back to pause menu
 				if (isClicked(window, buttonPauseReturn) && flagClick == 0) {
 					sfSound_play(sndButtonClick); 
 					flagOptions = 0;
@@ -407,7 +445,8 @@ int main() {
 				}
 			}
 
-			// Goes back to the game when hitting the bound key
+			/* == USER INPUT == */
+			// Goes back to game when pressing the bound key
 			if (testKeyPress(KEY_PAUSE, window)) {
 				if (!flagPauseMenu) {
 					sfSound_play(sndButtonClick);
@@ -420,6 +459,8 @@ int main() {
 			}
 			else flagPauseMenu = 0;
 		}
+		
+		/* == MUCH SAD QUIMT GAME == */
 		else if (gameState == QUIT) break;
 	}
 
