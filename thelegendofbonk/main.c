@@ -235,14 +235,14 @@ int main() {
 				sfRenderWindow_drawSprite(window, bonk, NULL); // Rendering Bonk
 				sfRenderWindow_drawSprite(window, cage, NULL); // Rendering cage
 
-				sfRenderWindow_setView(window, sfRenderWindow_getDefaultView(window)); // Rendering on HUD
+				sfRenderWindow_setView(window, sfRenderWindow_getDefaultView(window)); // Now rendering on HUD
+				sfRenderWindow_drawRectangleShape(window, nightOverlay, NULL); // Renders nighttime overlay
 				displayInventory(window, inventory, spriteInventory, spriteDogecoin); // Rendering inventory HUD
 				if (hasAllDogecoinPieces(inventory)) sfRenderWindow_drawSprite(window, buttonUICraft, NULL); // Renders craft button (but only if the dogecoin can be crafted)
-				sfRenderWindow_drawRectangleShape(window, nightOverlay, NULL); // Renders nighttime overlay
 				renderMinimap(window, viewMinimap, tilemap, propmap); // Renders minimap
 
 				// Displays "PRESS E" pop-up above inventory bar
-				sfRenderWindow_setView(window, sfRenderWindow_getDefaultView(window)); // Rendering on HUD
+				sfRenderWindow_setView(window, sfRenderWindow_getDefaultView(window)); // Now rendering on HUD
 				if (checkInteract != -1) sfRenderWindow_drawText(window, sfTxt_interact, sfFalse);
 				if (flagInteraction == 1) displayDialogBox(window, sfTxt_npc, dialogBoxNpc, sfFalse); // Displays dialog box if need be
 
