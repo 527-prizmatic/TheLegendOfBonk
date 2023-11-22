@@ -10,7 +10,7 @@ typedef struct {
 
 typedef struct {
 	sfVector2f pnjPosition;
-	char* txt;
+	char txt[256];
 	int id;
 }PNJ;
 

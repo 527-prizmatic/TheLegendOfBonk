@@ -29,9 +29,6 @@ int main() {
 
 	/* == MAIN MENU ==  */
 	sfFont* font = sfFont_createFromFile(TEXTURE_PATH"FontGame.ttf");
-	sfText* textTitle = sfText_create();
-	sfRectangleShape* titleBox = initDialogBox(textTitle, font, 30);
-	char title[] = "The\nLegend\nof\nBonk"; // Main menu dialog box text
 	sfVector2f logoPos = vector2f(400.0f, 200.0f);
 	sfSprite* logo = initSprite(TEXTURE_PATH"logo.png", vector2f(0.7f, 0.7f), logoPos);
 	sfSprite_setOrigin(logo, vector2f(400.0f, 200.0f));
@@ -96,6 +93,7 @@ int main() {
 	sfText* sfTxt_pnj = sfText_create();
 	char pnjTxt[] = "";
 	sfRectangleShape* pnjDialogBox = initDialogBox(sfTxt_pnj, font, 20);
+	char flagPnj = 0;
 
 	/* == BGM == */
 	sfMusic* bgm = sfMusic_createFromFile(AUDIO_PATH"01_main_screen_trailer.wav");
@@ -179,7 +177,6 @@ int main() {
 			if (tick >= TICK_TIME) {
 				tick = 0.0f;
 				sfRenderWindow_setView(window, sfRenderWindow_getDefaultView(window));
-				updateDialogBox(title, sizeof(title), textTitle, titleBox, (sfVector2f) { 50.0f, 50.0f }, DEFAULT_DIALOG_SIZE);
 
 				// Main menu UI
 				sfRenderWindow_drawSprite(window, spriteMenuBackground, NULL);
@@ -220,7 +217,6 @@ int main() {
 				// Updates
 				updatePlayer(propmap, window);
 				updateView(window, viewGame, playerPos);
-				updateDialogBox(craft, sizeof(craft), sfTxt_c, buttonCraft, (sfVector2f) { 430.0f, 420.0f }, (sfVector2f) { 0.0f, 30.0f });
 
 				// Crafts the key when hitting "Craft" button
 				if (isClicked(window, buttonCraft)) {
@@ -240,19 +236,22 @@ int main() {
 				sfSprite_setPosition(bonk, vector2f(500.0f, 500.0f));
 				sfRenderWindow_drawSprite(window, bonk, NULL);
 				displayInventory(window, inventory, inventorySprite, keySprite);
-
+				if (hasAllKeyPieces(inventory)) displayDialogBox(window, sfTxt_c, buttonCraft, sfTrue);
+				if (canInteract() == -1) flagPnj = 0;
 				if (hasAllKeyPieces(inventory))
 				{
 					
                     sfRenderWindow_drawSprite(window, CraftButton, NULL);
 
 				}
-
 				if (canInteract() > 19){
 					int idPnj = canInteract() - 20;
+					updateDialogBox(pnjArray[idPnj].txt, sizeof(pnjArray[idPnj].txt), sfTxt_pnj, pnjDialogBox, (sfVector2f) { 0.0f, 450.0f }, (sfVector2f) { 425.0f, 150.0f }, 0);
 					sfRenderWindow_drawText(window, sfTxt_interact, sfFalse);
 					if (testKeyPress(KEY_INTERACT, window)){
-						updateDialogBox(pnjTxt, sizeof(pnjTxt), sfTxt_pnj, pnjDialogBox, (sfVector2f) { pnjArray[idPnj].pnjPosition.x, pnjArray[idPnj].pnjPosition.y }, DEFAULT_DIALOG_SIZE);
+						flagPnj = 1;
+					}
+					if (flagPnj == 1) {
 						displayDialogBox(window, sfTxt_pnj, pnjDialogBox, sfFalse);
 					}
 				}

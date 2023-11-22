@@ -8,7 +8,7 @@
 *  \param _dialogBox - A display area object */
 sfRectangleShape* initDialogBox(sfText* _txt, sfFont* _font, int _police);
 
-void updateDialogBox(char* _str, int _sizeStr, sfText* _txt, sfRectangleShape* _dialogBox, sfVector2f _pos, sfVector2f _size);
+void updateDialogBox(char* _str, int _sizeStr, sfText* _txt, sfRectangleShape* _dialogBox, sfVector2f _pos, sfVector2f _size, char _flagStretch);
 
 /* Displays the given dialog box.
 *  \param _w - Render window object
