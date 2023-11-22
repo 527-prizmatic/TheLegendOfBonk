@@ -18,6 +18,9 @@
 #include "editor.h"
 #include "music.h"
 #include "interact.h"
+#include "enemy.h"
+
+#define PI (double)3.1415926535
 
 int main() {
 	/* == RENDERING ENGINE CORE */
@@ -126,6 +129,15 @@ int main() {
 	sfSprite_setTextureRect(bonk, (sfIntRect) { 0, 0, 32, 32 });
 	sfSprite_setPosition(bonk, vector2f(4000.0f, 65.0f));
 
+	/* == ENEMY == */
+	initEnemy();
+
+	/* == DAY/NIGHT CYCLE == */
+	sfRectangleShape* nightFilter = sfRectangleShape_create();
+	sfRectangleShape_setPosition(nightFilter, vector2f(0.0f, 0.0f));
+	sfRectangleShape_setSize(nightFilter, vector2f(800.0f, 600.0f));
+	float timeNight = 0;
+
 	/* == CHEESE NPC == */
 	sfSprite* npcCheese = sfSprite_create();
 	sfTexture* textureNpcCheese = sfTexture_createFromFile(TEXTURE_PATH"pnj.png", NULL);
@@ -146,6 +158,8 @@ int main() {
 
 	/* == GAME LOOP == */
 	while (sfRenderWindow_isOpen(window)) {
+
+		timeNight += getDeltaTime();
 		// Some core functions
 		while (sfRenderWindow_pollEvent(window, &event)) if (event.type == sfEvtClosed) sfRenderWindow_close(window); // Check if window is closed via the WIndows UI
 		restartClock();
@@ -215,8 +229,23 @@ int main() {
 			if (tick >= TICK_TIME) {
 				tick = 0.0f;
 
+				// Does some inventory trickeries when key crafted
+				if (flagCraft == 1) {
+					for (int i = 0; i < 4; i++) inventory[i] = 0;
+					inventory[0] = 2;
+					flagCraft = 0;
+				}
+
+				int periodSecs = 120.f;
+				int nightFilterAlpha = 96.0f - sin((timeNight / periodSecs) * PI * 2) * 1000.f;
+				nightFilterAlpha = max(0.f, min(192.0f, nightFilterAlpha));
+
+				if (nightFilterAlpha < 96.0f)swapLamp(propmap, 0); // Lamp posts go lit
+				else swapLamp(propmap, 1); // Lamp posts go dark
+
 				// Regularly updating a few game variables
 				updatePlayer(propmap, window);
+				updateEnemy();
 				updateView(window, viewGame, playerPos);
 				
 				// Displays "PRESS E" pop-up above inventory bar
@@ -227,6 +256,7 @@ int main() {
 				renderMap(tilemap, window, sfView_getCenter(viewGame), -1, 0);
 				renderMap(propmap, window, sfView_getCenter(viewGame), 0, 0);
 				displayPlayer(window);
+				displayEnemy(window);
 				sfRenderWindow_drawSprite(window, npcCheese, NULL);
 				renderMap(propmap, window, sfView_getCenter(viewGame), 1, 0);
 				sfRenderWindow_drawSprite(window, bonk, NULL);
@@ -234,7 +264,13 @@ int main() {
 				displayInventory(window, inventory, inventorySprite, keySprite); // Displays inventory HUD
 				if (hasAllDogecoinPieces(inventory)) sfRenderWindow_drawSprite(window, buttonUICraft, NULL); // Renders craft button (but only if the dogecoin can be crafted)
 				renderMinimap(window, viewMinimap, tilemap, propmap); // Renders minimap
-				
+
+				/// #FIXME
+				sfVector2f vPos = sfView_getCenter(viewGame);
+				sfRectangleShape_setPosition(nightFilter, vector2f(vPos.x - 400, vPos.y - 300));
+				sfRectangleShape_setFillColor(nightFilter, sfColor_fromRGBA(8.0f, 8.0f, 32.0f, nightFilterAlpha));
+				sfRenderWindow_drawRectangleShape(window, nightFilter, NULL);
+
 				sfRenderWindow_display(window);
 			}
 			

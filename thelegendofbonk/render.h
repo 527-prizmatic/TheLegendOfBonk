@@ -39,3 +39,5 @@ void renderMinimap(sfRenderWindow* _w, sfView* _v, char _map[H_MAP_T][W_MAP_T], 
 void renderEditorUI(sfRenderWindow* _w, sfView* _v, int _mode, sfFont* _font);
 
 void renderPlayerOnMinimap(sfRenderWindow* _w);
+
+void swapLamp(char _map[H_MAP_T][W_MAP_T], char _flagNight);

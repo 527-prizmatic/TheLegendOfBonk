@@ -9,6 +9,12 @@ typedef struct {
 }Chest;
 
 typedef struct {
+	sfVector2f lampPosition;
+	int id;
+}Lamp;
+
+
+typedef struct {
 	sfVector2f pnjPosition;
 	char txt[256];
 	int id;
@@ -18,6 +24,8 @@ typedef struct {
 PNJ pnjArray[10];
 Chest chestArray[16];
 int chestCpt;
+Lamp lampArray[50];
+int lampCpt;
 
 
 

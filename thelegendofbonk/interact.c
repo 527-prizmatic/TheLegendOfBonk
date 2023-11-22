@@ -5,6 +5,7 @@
 void interactTilePos(char _map[H_MAP_T][W_MAP_T]) {
 	system("cls");
 	chestCpt = 0;
+	lampCpt = 0;
 	int counterNpc = 0;
 	char _txt[256] = "";
 
@@ -12,6 +13,12 @@ void interactTilePos(char _map[H_MAP_T][W_MAP_T]) {
 		for (int j = 0; j < W_MAP_T; j++) {
 			switch (_map[i][j]) {
 				// Sign
+				case 81:
+					lampArray[lampCpt].id = lampCpt;
+					lampArray[lampCpt].lampPosition.y = TILE_PX * i;
+					lampArray[lampCpt].lampPosition.x = TILE_PX * j;
+					lampCpt++;
+					break;
 				case 90:
 					pnjArray[counterNpc].id = counterNpc;
 					if (counterNpc == 1) sprintf_s(_txt, 256, "Z-Q-S-D to move\nLeft Shift to sprint\nE to interact with the world\n...but you already knew that,\nof course.\nDon't lie to me, you couldn't\nbe reading this otherwise.");
@@ -32,8 +39,6 @@ void interactTilePos(char _map[H_MAP_T][W_MAP_T]) {
 					sprintf(pnjArray[counterNpc].txt, "%s", _txt);
 					pnjArray[counterNpc].pnjPosition.y = TILE_PX * i;
 					pnjArray[counterNpc].pnjPosition.x = TILE_PX * j;
-					printf("PNJ : Position Y : %f, Position X : %f \n", pnjArray[counterNpc].pnjPosition.y, pnjArray[counterNpc].pnjPosition.x);
-					printf("PNJ : txt : %s\n", pnjArray[counterNpc].txt);
 					counterNpc++;
 					break;
 				// Chest
@@ -41,14 +46,12 @@ void interactTilePos(char _map[H_MAP_T][W_MAP_T]) {
 					chestArray[chestCpt].id = chestCpt;
 					chestArray[chestCpt].chestPosition.y = TILE_PX * i;
 					chestArray[chestCpt].chestPosition.x = TILE_PX * j;
-					printf("CHEST : Position Y : %f, Position X : %f\n", chestArray[chestCpt].chestPosition.y, chestArray[chestCpt].chestPosition.x);
 					chestCpt++;
 					break;
 				default: break;
 			}
 		}
 	}
-	printf("Nb chest : %d\nNb pnj : %d\n", chestCpt, counterNpc);
 }
 
 int canInteract() {
@@ -64,14 +67,12 @@ int canInteract() {
 
     int sqrRadius = (playerRadius + interactRadius) * (playerRadius + interactRadius);
 
-	for (int i = 0; i < 5; i++)
-	{
+	for (int i = 0; i < 5; i++) {
 		sqrPosChestX = (playerPos.x - chestArray[i].chestPosition.x) * (playerPos.x - chestArray[i].chestPosition.x);
 		sqrPosChestY = (playerPos.y - chestArray[i].chestPosition.y) * (playerPos.y - chestArray[i].chestPosition.y);
 		if (sqrPosChestX + sqrPosChestY < sqrRadius) return chestArray[i].id;
 	}
-	for (int j = 0; j < 10; j++)
-	{
+	for (int j = 0; j < 10; j++) {
 		sqrPosPnjX = (playerPos.x - pnjArray[j].pnjPosition.x) * (playerPos.x - pnjArray[j].pnjPosition.x);
 		sqrPosPnjY = (playerPos.y - pnjArray[j].pnjPosition.y) * (playerPos.y - pnjArray[j].pnjPosition.y);
 		if (sqrPosPnjX + sqrPosPnjY < sqrRadius) return pnjArray[j].id + 20;

@@ -60,6 +60,7 @@ const sfIntRect p_rock_s			= { TS * 5, TS * 4, 48, 48 };
 const sfIntRect p_rock_m			= { TS * 6, TS * 4, 48, 48 };
 
 const sfIntRect p_lamppost_top		= { TS * 7, TS * 3, 48, 48 };
+const sfIntRect p_lamppost_top_night= { TS * 2, TS * 11, 48, 48 };
 const sfIntRect p_lamppost_bottom	= { TS * 7, TS * 4, 48, 48 };
 
 const sfIntRect p_fence_l			= { TS * 5, TS * 5, 48, 48 };
@@ -162,6 +163,8 @@ sfIntRect textureFromId(int _id) {
 	case 98: return p_tree_mr;
 	case 99: return p_tree_tl;
 	case 100: return p_tree_tr;
+	
+	case 101: return p_lamppost_top_night;
 
 	default: return t_none;
 	}
@@ -198,6 +201,7 @@ sfBool isForeground(char _id) {
 		case 81: return sfTrue;
 		case 82: return sfTrue;
 		case 94: return sfTrue;
+		case 101: return sfTrue;
 		default: return sfFalse;
 	}
 }
