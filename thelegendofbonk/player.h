@@ -15,8 +15,9 @@ typedef enum moveDir {
 void initPlayer();
 
 /* Input tracking and movement functions.
-*  \param _map - An initialized tilemap */
-void updatePlayer(char _map[H_MAP_T][W_MAP_T]);
+*  \param _map - An initialized tilemap
+*  \param _w - A render window object (to check for focus) */
+void updatePlayer(char _map[H_MAP_T][W_MAP_T], sfRenderWindow* _w);
 
 /* Checks the player's surroundings for a potential collision with a solid block.
 *  \param _map - An initialized tilemap
@@ -29,8 +30,10 @@ sfBool isInWater(char _map[H_MAP_T][W_MAP_T]);
 
 /* Handles player movement.
 *  \param _dir - Movement direction
-*  \param _isDiag - Should we divide speed by the square root of two for the sake of keeping diagonal movement balanced? */
-void movePlayer(moveDir _dir, sfBool _isDiag, char _map[H_MAP_T][W_MAP_T]);
+*  \param _isDiag - Should we divide speed by the square root of two for the sake of keeping diagonal movement balanced?
+*  \param _map - An initialized tilemap
+*  \param _w - A render window object (to check for focus) */
+void movePlayer(moveDir _dir, sfBool _isDiag, char _map[H_MAP_T][W_MAP_T], sfRenderWindow* _w);
 
 /* Renders player character's sprite in the game window.
 *  \param _window - The window to display the sprite on */

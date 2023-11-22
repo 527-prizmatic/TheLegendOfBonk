@@ -48,3 +48,15 @@ sfSprite* initText(sfFont* _font, int _size, sfVector2f _pos) {
 	return txt;
 }
 
+sfBool testKeyPress(sfKeyCode _key, sfRenderWindow* _w) {
+	if (_w != NULL && !sfRenderWindow_hasFocus(_w)) return sfFalse;
+	if (!sfKeyboard_isKeyPressed(_key)) return sfFalse;
+	return sfTrue;
+}
+
+sfBool testLClick(sfRenderWindow* _w) {
+	if (_w != NULL && !sfRenderWindow_hasFocus(_w)) return sfFalse;
+	if (!sfMouse_isButtonPressed(sfMouseLeft)) return sfFalse;
+	return sfTrue;
+}
+
