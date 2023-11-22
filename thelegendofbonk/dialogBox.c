@@ -28,7 +28,7 @@ void updateDialogBox(char* _str, int _sizeStr, sfText* _txt, sfRectangleShape* _
 		if (_str[i] == 10)
 		{
 			// Calcul de la taille en y de la boite de dialogue
-			newSize.y += 30;
+			if (_flagStretch) newSize.y += 30;
 			dialogBoxWidth = 0;
 		}
 
@@ -39,11 +39,8 @@ void updateDialogBox(char* _str, int _sizeStr, sfText* _txt, sfRectangleShape* _
 		}
 	}
 	// Calcul de la taille en x de la boite de dialogue
-	if (strcmp(_str, "CRAFT !") == 0)
-	{
-		newSize.x = 12.0f * (float)dialogBoxWidthMax;
-	}
-	if(_flagStretch) newSize.x = 19.0f * (dialogBoxWidthMax + 1.0f);
+	if (strcmp(_str, "CRAFT !") == 0) newSize.x = 12.0f * (float)dialogBoxWidthMax;
+	if (_flagStretch) newSize.x = 19.0f * (dialogBoxWidthMax + 1.0f);
 		
 	// Change le texte
 	sfText_setString(_txt, _str);
