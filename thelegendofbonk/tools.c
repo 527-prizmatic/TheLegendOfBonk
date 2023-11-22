@@ -39,7 +39,7 @@ sfSprite* initSprite(char* _texture_path, sfVector2f _scale, sfVector2f _pos) {
 	return spr;
 }
 
-sfSprite* initText(sfFont* _font, int _size, sfVector2f _pos) {
+sfText* initText(sfFont* _font, int _size, sfVector2f _pos) {
 	sfText* txt = sfText_create();
 	sfText_setFont(txt, _font);
 	sfText_setCharacterSize(txt, _size);
