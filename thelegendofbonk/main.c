@@ -24,6 +24,7 @@ int main() {
 	sfRenderWindow* window = initRender(); // Main window
 	sfView* viewGame = initGameView(); // Game mode view
 	sfView* viewEditor = initEditorView(); // Editor mode view
+	sfView* viewMinimap = initMinimapView(); // Editor mode view
 
 
 	/* == MAIN MENU ==  */
@@ -223,11 +224,11 @@ int main() {
 
 				// Rendering
 				sfRenderWindow_setView(window, viewGame);
-				renderMap(tilemap, window, sfView_getCenter(viewGame), -1);
-				renderMap(propmap, window, sfView_getCenter(viewGame), 0);
+				renderMap(tilemap, window, sfView_getCenter(viewGame), -1, 0);
+				renderMap(propmap, window, sfView_getCenter(viewGame), 0, 0);
 				displayPlayer(window);
 				sfRenderWindow_drawSprite(window, npcCheese, NULL);
-				renderMap(propmap, window, sfView_getCenter(viewGame), 1);
+				renderMap(propmap, window, sfView_getCenter(viewGame), 1, 0);
 				sfSprite_setPosition(bonk, vector2f(500.0f, 500.0f));
 				sfRenderWindow_drawSprite(window, bonk, NULL);
 				displayInventory(window, inventory, inventorySprite, keySprite);
@@ -267,6 +268,7 @@ int main() {
 				}
 				else flagPauseMenu = 0;
 
+				renderMinimap(window, viewMinimap, tilemap, propmap);
 				sfRenderWindow_display(window);
 			}
 
@@ -315,8 +317,8 @@ int main() {
 				// Core rendering functions
 				sfRenderWindow_setView(window, viewEditor);
 				updateEditorView(window, viewEditor);
-				renderMap(tilemap, window, sfView_getCenter(viewEditor), -1);
-				renderMap(propmap, window, sfView_getCenter(viewEditor), -1);
+				renderMap(tilemap, window, sfView_getCenter(viewEditor), -1, 0);
+				renderMap(propmap, window, sfView_getCenter(viewEditor), -1, 0);
 				if (flagEditorUI) renderEditorUI(window, sfRenderWindow_getDefaultView(window), flagEditorMode, font);
 				sfRenderWindow_display(window);
 			}
