@@ -91,6 +91,11 @@ int main() {
 	char flagEditorMode = 0; // Whether the map editor UI currently shows terrain or props
 	char flagEditorLeave = 0; // Toggled when ESC is pressed for timing purposes
 
+	/* == PNJ TXT == */
+	sfText* sfTxt_pnj = sfText_create();
+	char pnjTxt[] = "";
+	sfRectangleShape* pnjDialogBox = initDialogBox(sfTxt_pnj, font, 20);
+
 	/* == BGM == */
 	sfMusic* bgm = sfMusic_createFromFile(AUDIO_PATH"01_main_screen_trailer.wav");
 	char flagMusic = 0; // Whether the music is currently playing
@@ -118,17 +123,18 @@ int main() {
 	sfSprite_setTexture(bonk, textureBonk, sfFalse);
 	sfSprite_setScale(bonk, vector2f(2.0f, 2.0f));
 	float bonkAnimTimer = 0.0f;
-	char frame = 0;
+	char frameBonk = 0;
 	sfSprite_setTextureRect(bonk, (sfIntRect) { 0, 0, 32, 32 });
 
-	/* == PNJ == */
-	sfSprite* pnj = sfSprite_create();
-    sfTexture* texturePnj = sfTexture_createFromFile(TEXTURE_PATH"pnj.png", NULL);
-    sfSprite_setTexture(pnj, texturePnj, sfFalse);
-    sfSprite_setScale(pnj, vector2f(2.0f, 2.0f));
-	float pnjAnimTimer = 0.0f;
-	char framePnj = 0; 
-    sfSprite_setTextureRect(pnj, (sfIntRect) { 0, 0, 32, 32 }); 
+	/* == CHEESE NPC == */
+	sfSprite* npcCheese = sfSprite_create();
+    sfTexture* textureNpcCheese = sfTexture_createFromFile(TEXTURE_PATH"pnj.png", NULL);
+    sfSprite_setTexture(npcCheese, textureNpcCheese, sfFalse);
+    sfSprite_setScale(npcCheese, vector2f(2.0f, 2.0f));
+	float npcAnimTimer = 0.0f;
+	char frameNpc = 0; 
+    sfSprite_setTextureRect(npcCheese, (sfIntRect) { 0, 0, 32, 32 });
+	sfSprite_setPosition(npcCheese, vector2f(544.0f, 512.0f));
 
 	
 	/* == GAME LOOP == */
@@ -150,7 +156,6 @@ int main() {
 				else sfSprite_setColor(button, sfWhite);
 			}
 		}
-
 
 		/* == MAIN MENU == */
 		if (gameState == MENU) {
@@ -221,33 +226,27 @@ int main() {
 				renderMap(tilemap, window, sfView_getCenter(viewGame), -1);
 				renderMap(propmap, window, sfView_getCenter(viewGame), 0);
 				displayPlayer(window);
-
-
-
-
-				//DISPLAY PNJ
-
-				sfSprite_setPosition(pnj, vector2f(544.0f, 512.0f)); 
-				sfRenderWindow_drawSprite(window, pnj, NULL); 
-
-
-
-
-
+				sfRenderWindow_drawSprite(window, npcCheese, NULL);
 				renderMap(propmap, window, sfView_getCenter(viewGame), 1);
 				sfSprite_setPosition(bonk, vector2f(500.0f, 500.0f));
 				sfRenderWindow_drawSprite(window, bonk, NULL);
 				displayInventory(window, inventory, inventorySprite, keySprite);
 
-				
-
-
 				if (hasAllKeyPieces(inventory)) displayDialogBox(window, sfTxt_c, buttonCraft, sfTrue);
 
-				if (canInteract() != -1) sfRenderWindow_drawText(window, sfTxt_interact, sfFalse);
+				if (canInteract() > 19){
+					int idPnj = canInteract() - 20;
+					sfRenderWindow_drawText(window, sfTxt_interact, sfFalse);
+					if (testKeyPress(KEY_INTERACT, window)){
+						updateDialogBox(pnjTxt, sizeof(pnjTxt), sfTxt_pnj, pnjDialogBox, (sfVector2f) { pnjArray[idPnj].pnjPosition.x, pnjArray[idPnj].pnjPosition.y }, DEFAULT_DIALOG_SIZE);
+						displayDialogBox(window, sfTxt_pnj, pnjDialogBox, sfFalse);
+					}
+				}
 
-				// DEBUG FUNCTION - DELETE THIS WHEN DONE
-				if (testKeyPress(KEY_INTERACT, window) && canInteract() != -1) printf("Interaction ! %d\n", canInteract());
+				if (canInteract() !=-1 && !hasAllKeyPieces(inventory) && inventory[0] !=2) sfRenderWindow_drawText(window, sfTxt_interact, sfFalse);
+				if (testKeyPress(KEY_INTERACT, window) && canInteract() != -1 && inventory[0] != 2) {
+					inventory[canInteract()] = 1;
+				}
 
 				// Crafts the key when clicking on the "Craft" button with all key pieces in inventory.
 				if (isClicked(window, buttonCraft)) {
@@ -275,18 +274,18 @@ int main() {
 			bonkAnimTimer += getDeltaTime();
 			if (bonkAnimTimer >= 0.1f) {
 				bonkAnimTimer = 0.0f;
-				frame++;
-				frame %= 8;
-				sfSprite_setTextureRect(bonk, (sfIntRect) { 32 * frame, 0, 32, 32 });
+				frameBonk++;
+				frameBonk %= 8;
+				sfSprite_setTextureRect(bonk, (sfIntRect) { 32 * frameBonk, 0, 32, 32 });
 			}
 
 			//Animation PNJ
-            pnjAnimTimer += getDeltaTime();
-			if(pnjAnimTimer >= 0.1f) {
-				pnjAnimTimer = 0.0f;
-				framePnj++;
-				framePnj %= 7; 
-				sfSprite_setTextureRect(pnj, (sfIntRect) { 32 * framePnj, 0, 32, 32 }); 
+            npcAnimTimer += getDeltaTime();
+			if(npcAnimTimer >= 0.1f) {
+				npcAnimTimer = 0.0f;
+				frameNpc++;
+				frameNpc %= 7; 
+				sfSprite_setTextureRect(npcCheese, (sfIntRect) { 32 * frameNpc, 0, 32, 32 }); 
 			}
 
 			// Secret debug keybind (ALT+R) which returns the player at the spawn point
@@ -304,6 +303,7 @@ int main() {
 
 				// Place tile on click
 				if (testLClick(window) && !flagClick) {
+					if (tileSelection == 91) interactTilePos(propmap);
 					changeTile(window, viewEditor, tilemap, propmap, tileSelection);
 					flagClick = 0;
 				}
@@ -420,7 +420,8 @@ int main() {
 				}
 
 				
-				if (isClicked(window, buttonPauseReturn) && flagClick == 0) { // Goes back to pause menu when return button pressed
+				// Goes back to pause menu when return button pressed
+				if (isClicked(window, buttonPauseReturn) && flagClick == 0) {
 					sfSound_play(sndButtonClick); 
 					flagOption = 0;
 					flagClick = 1;
