@@ -134,7 +134,15 @@ int main() {
 	char frameNpc = 0; 
 	sfSprite_setTextureRect(npcCheese, (sfIntRect) { 0, 0, 32, 32 });
 	sfSprite_setPosition(npcCheese, vector2f(544.0f, 512.0f));
-	
+
+	/* == CAGE == */
+	sfSprite* cage = sfSprite_create(); 
+sfTexture* textureCage = sfTexture_createFromFile(TEXTURE_PATH"cage.png", NULL); 
+sfSprite_setTexture(cage, textureCage, sfFalse); 
+sfSprite_setScale(cage, vector2f(0.3f, 0.3f)); 
+sfSprite_setPosition(cage, vector2f(3970.0f, 20.0f));
+
+
 	/* == GAME LOOP == */
 	while (sfRenderWindow_isOpen(window)) {
 		// Some core functions
@@ -214,9 +222,16 @@ int main() {
 				displayPlayer(window);
 				sfRenderWindow_drawSprite(window, npcCheese, NULL);
 				renderMap(propmap, window, sfView_getCenter(viewGame), 1, 0);
-				sfSprite_setPosition(bonk, vector2f(500.0f, 500.0f));
+				sfSprite_setPosition(bonk, vector2f(4000.0f, 65.0f));
 				sfRenderWindow_drawSprite(window, bonk, NULL);
+				sfRenderWindow_drawSprite(window, cage, NULL); 
 				displayInventory(window, inventory, inventorySprite, keySprite);
+
+				// Init cage 
+				
+               
+
+				
 
 				if (canInteract() == -1) flagPnj = 0;
 				if (hasAllDogecoinPieces(inventory)) sfRenderWindow_drawSprite(window, buttonUICraft, NULL);
@@ -228,6 +243,8 @@ int main() {
 					if (testKeyPress(KEY_INTERACT, window)) flagPnj = 1;
 					if (flagPnj == 1) displayDialogBox(window, sfTxt_pnj, pnjDialogBox, sfFalse);
 				}
+
+				if (isClicked(window, buttonUICraft) && hasAllDogecoinPieces(inventory) && inventory[0] != 2) flagCraft = 1; 
 
 				if (canInteract() !=-1 && !hasAllDogecoinPieces(inventory) && inventory[0] !=2) sfRenderWindow_drawText(window, sfTxt_interact, sfFalse);
 
@@ -243,6 +260,8 @@ int main() {
 					flagPauseMenu = 1;
 				}
 				else flagPauseMenu = 0;
+
+
 
 				renderMinimap(window, viewMinimap, tilemap, propmap);
 				sfRenderWindow_display(window);
