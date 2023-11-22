@@ -225,6 +225,8 @@ int main() {
 
 		/* == GAME == */
 		else if (gameState == GAME) {
+			int isNearObject = canInteract();
+
 			/* == RENDERING ENGINE == */
 			if (tick >= TICK_TIME) {
 				tick = 0.0f;
@@ -248,10 +250,8 @@ int main() {
 				updateEnemy();
 				updateView(window, viewGame, playerPos);
 				
-				// Displays "PRESS E" pop-up above inventory bar
-				if (canInteract() !=-1 && !hasAllDogecoinPieces(inventory) && inventory[0] !=2) sfRenderWindow_drawText(window, sfTxt_interact, sfFalse);
 
-				// Rendering
+				// Rendering map
 				sfRenderWindow_setView(window, viewGame);
 				renderMap(tilemap, window, sfView_getCenter(viewGame), -1, 0);
 				renderMap(propmap, window, sfView_getCenter(viewGame), 0, 0);
@@ -261,9 +261,18 @@ int main() {
 				renderMap(propmap, window, sfView_getCenter(viewGame), 1, 0);
 				sfRenderWindow_drawSprite(window, bonk, NULL);
 				sfRenderWindow_drawSprite(window, cage, NULL); 
-				displayInventory(window, inventory, inventorySprite, keySprite); // Displays inventory HUD
-				if (hasAllDogecoinPieces(inventory)) sfRenderWindow_drawSprite(window, buttonUICraft, NULL); // Renders craft button (but only if the dogecoin can be crafted)
+
+				// Rendering UI
+				displayInventory(window, inventory, inventorySprite, keySprite);
+				// Displays "PRESS E" pop-up above inventory bar
+				if (isNearObject != -1 && !hasAllDogecoinPieces(inventory) && inventory[0] != 2) sfRenderWindow_drawText(window, sfTxt_interact, sfFalse);
+				else if (hasAllDogecoinPieces(inventory)) sfRenderWindow_drawSprite(window, buttonUICraft, NULL); // Renders craft button (but only if the dogecoin can be crafted)
 				renderMinimap(window, viewMinimap, tilemap, propmap); // Renders minimap
+				if (flagInteraction == 1) {
+					updateDialogBox(pnjArray[isNearObject - 20].txt, sizeof(pnjArray[isNearObject - 20].txt), sfTxt_pnj, pnjDialogBox, vector2f(10.0f, 450.0f), vector2f(380.0f, 140.0f), 0);
+					sfRenderWindow_drawText(window, sfTxt_interact, sfFalse);
+					displayDialogBox(window, sfTxt_pnj, pnjDialogBox, sfFalse);
+				}
 
 				/// #FIXME
 				sfVector2f vPos = sfView_getCenter(viewGame);
@@ -293,16 +302,10 @@ int main() {
 			
 			
 			/* == WORLD INTERACTIONS == */
-			if (canInteract() == -1) flagInteraction = 0;
+			if (isNearObject == -1) flagInteraction = 0;
 			
-			// When opening a chest, check if the player already got the associated dogecoin piece, and gives it to them if not
-			if (canInteract() > 19 && !hasAllDogecoinPieces(inventory)){
-				int idNpc = canInteract() - 20;
-				updateDialogBox(pnjArray[idNpc].txt, sizeof(pnjArray[idNpc].txt), sfTxt_pnj, pnjDialogBox, (sfVector2f) { 10.0f, 450.0f }, (sfVector2f) { 380.0f, 140.0f }, 0);
-				sfRenderWindow_drawText(window, sfTxt_interact, sfFalse);
-				if (testKeyPress(KEY_INTERACT, window)) flagInteraction = 1;
-				if (flagInteraction == 1) displayDialogBox(window, sfTxt_pnj, pnjDialogBox, sfFalse);
-			}
+			// Asks to display dialox box when interacting with a sign
+			if (isNearObject > 19 && testKeyPress(KEY_INTERACT, window)) flagInteraction = 1;
 			
 			// Crafting the dogecoin
 			if (isClicked(window, buttonUICraft) && hasAllDogecoinPieces(inventory) && inventory[0] != 2) flagCraft = 1;
@@ -316,7 +319,7 @@ int main() {
 			
 			/* == USER INPUT == */
 			// Check for interactions when pressing the bound key
-			if (testKeyPress(KEY_INTERACT, window) && canInteract() != -1 && inventory[0] != 2) inventory[canInteract()] = 1;
+			if (testKeyPress(KEY_INTERACT, window) && isNearObject != -1 && inventory[0] != 2) inventory[isNearObject] = 1;
 
 			// Secret debug keybind (ALT+R) which returns the player at the spawn point
 			if (sfKeyboard_isKeyPressed(sfKeyLAlt) && testKeyPress(sfKeyR, window)) {

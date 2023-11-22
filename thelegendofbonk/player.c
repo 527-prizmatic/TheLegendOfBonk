@@ -171,8 +171,7 @@ void movePlayer(moveDir _dir, sfBool _isDiag, char _map[H_MAP_T][W_MAP_T], sfRen
     float move = playerSpeed * TICK_TIME;
     if (_isDiag) move /= sqrt(2);
     if (isInWater(_map)) move *= 0.25f;
-    if (
-        (sfKeyLShift)) move *= 2;
+    if (testKeyPress(sfKeyLShift, _w)) move *= 2;
     isMoving = sfTrue;
     switch (_dir) {
         case UP: frameY = DOWN; playerPos.y -= move; break;
