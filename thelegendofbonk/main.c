@@ -27,7 +27,7 @@ int main() {
 
 
 	/* == MAIN MENU ==  */
-	sfFont* font = sfFont_createFromFile(TEXTURE_PATH"3Dventure.ttf");
+	sfFont* font = sfFont_createFromFile(TEXTURE_PATH"FontGame.ttf");
 	sfText* textTitle = sfText_create();
 	sfRectangleShape* titleBox = initDialogBox(textTitle, font, 30);
 	char title[] = "The\nLegend\nof\nBonk"; // Main menu dialog box text
@@ -40,8 +40,10 @@ int main() {
 	sfText* sfTxt_interact = sfText_create();
 	sfText_setFont(sfTxt_interact, font);
 	sfText_setCharacterSize(sfTxt_interact, 30);
-	sfText_setPosition(sfTxt_interact, vector2f(440.0f, 470.0f));
-	sfText_setString(sfTxt_interact, "Press E!\0");
+	sfText_setOutlineThickness(sfTxt_interact, 2.0f);
+    sfText_setOutlineColor(sfTxt_interact, sfBlack);
+	sfText_setPosition(sfTxt_interact, vector2f(440.0f, 465.0f));
+	sfText_setString(sfTxt_interact, "Press E !\0");
 
 	/* == PAUSE MENU == */
 	char txtVolume[16] = "Volume -"; // For volume display in the options screen
@@ -395,6 +397,8 @@ int main() {
 					// Renders volume info text
 					sprintf_s(txtVolume, 16, "Volume : %.f", sfMusic_getVolume(bgm));
 					sfText_setString(textVolume, txtVolume);
+					sfText_setOutlineThickness(textVolume, 2.0f);
+					sfText_setOutlineColor(textVolume, sfBlack);
 					sfRenderWindow_drawText(window, textVolume, NULL);
 
 					sfRenderWindow_display(window);
