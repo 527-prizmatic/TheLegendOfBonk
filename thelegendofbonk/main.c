@@ -236,14 +236,10 @@ int main() {
 				sfSprite_setPosition(bonk, vector2f(500.0f, 500.0f));
 				sfRenderWindow_drawSprite(window, bonk, NULL);
 				displayInventory(window, inventory, inventorySprite, keySprite);
-				if (hasAllKeyPieces(inventory)) displayDialogBox(window, sfTxt_c, buttonCraft, sfTrue);
+				updateDialogBox(craft, sizeof(craft), sfTxt_c, buttonCraft, (sfVector2f) { 425.0f, 450.0f }, (sfVector2f) { 100.0f, 50.0f }, 0);
+				
 				if (canInteract() == -1) flagPnj = 0;
-				if (hasAllKeyPieces(inventory))
-				{
-					
-                    sfRenderWindow_drawSprite(window, CraftButton, NULL);
-
-				}
+				if (hasAllDogecoinPieces(inventory)) sfRenderWindow_drawSprite(window, CraftButton, NULL);
 				if (canInteract() > 19){
 					int idPnj = canInteract() - 20;
 					updateDialogBox(pnjArray[idPnj].txt, sizeof(pnjArray[idPnj].txt), sfTxt_pnj, pnjDialogBox, (sfVector2f) { 0.0f, 450.0f }, (sfVector2f) { 425.0f, 150.0f }, 0);
@@ -256,7 +252,7 @@ int main() {
 					}
 				}
 
-				if (canInteract() !=-1 && !hasAllKeyPieces(inventory) && inventory[0] !=2) sfRenderWindow_drawText(window, sfTxt_interact, sfFalse);
+				if (canInteract() !=-1 && !hasAllDogecoinPieces(inventory) && inventory[0] !=2) sfRenderWindow_drawText(window, sfTxt_interact, sfFalse);
 				if (testKeyPress(KEY_INTERACT, window) && canInteract() != -1 && inventory[0] != 2) {
 					inventory[canInteract()] = 1;
 				}
