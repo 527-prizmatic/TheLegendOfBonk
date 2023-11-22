@@ -135,6 +135,14 @@ int main() {
     sfSprite_setTextureRect(npcCheese, (sfIntRect) { 0, 0, 32, 32 });
 	sfSprite_setPosition(npcCheese, vector2f(544.0f, 512.0f));
 
+	//Button Craft
+	sfSprite* CraftButton = sfSprite_create();
+    sfTexture* textureCraftButton = sfTexture_createFromFile(TEXTURE_PATH"craft.png", NULL);
+    sfSprite_setTexture(CraftButton, textureCraftButton, sfFalse);
+    sfSprite_setScale(CraftButton, vector2f(2.0f, 2.0f));
+    sfSprite_setPosition(CraftButton, vector2f(420.0f, 465.0f));
+
+
 	
 	/* == GAME LOOP == */
 	while (sfRenderWindow_isOpen(window)) {
@@ -209,7 +217,6 @@ int main() {
 				// Updates
 				updatePlayer(propmap, window);
 				updateView(window, viewGame, playerPos);
-				updateDialogBox(craft, sizeof(craft), sfTxt_c, buttonCraft, (sfVector2f) { 430.0f, 480.0f }, (sfVector2f) { 90.0f, 30.0f }, 0);
 
 				// Crafts the key when hitting "Craft" button
 				if (isClicked(window, buttonCraft)) {
@@ -229,9 +236,14 @@ int main() {
 				sfSprite_setPosition(bonk, vector2f(500.0f, 500.0f));
 				sfRenderWindow_drawSprite(window, bonk, NULL);
 				displayInventory(window, inventory, inventorySprite, keySprite);
-				printf("%d", flagPnj);
 				if (hasAllKeyPieces(inventory)) displayDialogBox(window, sfTxt_c, buttonCraft, sfTrue);
 				if (canInteract() == -1) flagPnj = 0;
+				if (hasAllKeyPieces(inventory))
+				{
+					
+                    sfRenderWindow_drawSprite(window, CraftButton, NULL);
+
+				}
 				if (canInteract() > 19){
 					int idPnj = canInteract() - 20;
 					updateDialogBox(pnjArray[idPnj].txt, sizeof(pnjArray[idPnj].txt), sfTxt_pnj, pnjDialogBox, (sfVector2f) { 0.0f, 450.0f }, (sfVector2f) { 425.0f, 150.0f }, 0);
