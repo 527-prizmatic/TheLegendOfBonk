@@ -12,10 +12,12 @@ void updateEditorView(sfRenderWindow* _w, sfView* _v) {
 	float camMoveSpeed = 700.0f;
 	sfVector2f viewPos = sfView_getCenter(_v);
 
-	if (sfKeyboard_isKeyPressed(KEY_UP)) viewPos.y -= camMoveSpeed * TICK_TIME;
-	if (sfKeyboard_isKeyPressed(KEY_DOWN)) viewPos.y += camMoveSpeed * TICK_TIME;
-	if (sfKeyboard_isKeyPressed(KEY_LEFT)) viewPos.x -= camMoveSpeed * TICK_TIME;
-	if (sfKeyboard_isKeyPressed(KEY_RIGHT)) viewPos.x += camMoveSpeed * TICK_TIME;
+	if (sfRenderWindow_hasFocus(_w)) {
+		if (sfKeyboard_isKeyPressed(KEY_UP)) viewPos.y -= camMoveSpeed * TICK_TIME;
+		if (sfKeyboard_isKeyPressed(KEY_DOWN)) viewPos.y += camMoveSpeed * TICK_TIME;
+		if (sfKeyboard_isKeyPressed(KEY_LEFT)) viewPos.x -= camMoveSpeed * TICK_TIME;
+		if (sfKeyboard_isKeyPressed(KEY_RIGHT)) viewPos.x += camMoveSpeed * TICK_TIME;
+	}
 
 	if (viewPos.x < 600) viewPos.x = 600;
 	if (viewPos.y < 450) viewPos.y = 450;
