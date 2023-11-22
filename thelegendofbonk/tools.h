@@ -11,6 +11,8 @@
 #define TICKSPEED 120
 #define TICK_TIME 1 / (float)TICKSPEED
 
+#define DEBUG 0
+
 #define KEY_UP sfKeyZ
 #define KEY_DOWN sfKeyS
 #define KEY_LEFT sfKeyQ

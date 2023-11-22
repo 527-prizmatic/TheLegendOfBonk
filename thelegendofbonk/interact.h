@@ -15,7 +15,6 @@ typedef struct {
 }PNJ;
 
 PNJ pnjArray[10];
-int pnjCpt;
 Chest chestArray[16];
 int chestCpt;
 
