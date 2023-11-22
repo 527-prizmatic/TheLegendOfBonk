@@ -19,6 +19,7 @@ sfRenderWindow* initRender();
 *  \return A pointed to a newly created sfView */
 sfView* initGameView();
 sfView* initEditorView();
+sfView* initMinimapView();
 
 /* Updates the given viewport's location to keep it centered on the player character as much as possible.
 *  \param _w - A render window
@@ -31,6 +32,10 @@ void updateView(sfRenderWindow* _w, sfView* _v, sfVector2f _pos);
 *  \param _window - The window to display the map on
 *  \param _pos - Player position
 *  \param _fg - Whether the propmap should render the foreground */
-void renderMap(char _map[H_MAP_T][W_MAP_T], sfRenderWindow* _w, sfVector2f _pos, char _fg);
+void renderMap(char _map[H_MAP_T][W_MAP_T], sfRenderWindow* _w, sfVector2f _pos, char _fg, char _minimap);
+
+void renderMinimap(sfRenderWindow* _w, sfView* _v, char _map[H_MAP_T][W_MAP_T], char _props[H_MAP_T][W_MAP_T]);
 
 void renderEditorUI(sfRenderWindow* _w, sfView* _v, int _mode, sfFont* _font);
+
+void renderPlayerOnMinimap(sfRenderWindow* _w);
