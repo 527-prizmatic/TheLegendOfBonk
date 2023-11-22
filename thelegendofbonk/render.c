@@ -36,6 +36,16 @@ sfView* initEditorView() {
 	return _v;
 }
 
+sfView* initMinimapView() {
+	sfView* _v = sfView_create();
+	sfFloatRect rectView = { 0.f, 0.f, W_MAP_PX, H_MAP_PX };
+	sfView_setSize(_v, vector2f(W_MAP_PX, H_MAP_PX));
+	sfView_reset(_v, rectView);
+	sfView_setCenter(_v, vector2f(W_MAP_PX / 2, H_MAP_PX / 2));
+	sfView_setViewport(_v, (sfFloatRect) { 0.025f, 0.025f, 0.25f, 0.25f });
+	return _v;
+}
+
 void updateView(sfRenderWindow* _w, sfView* _v, sfVector2f _pos) {
 	_pos.x += 32;
 	_pos.y += 40;
@@ -49,7 +59,7 @@ void updateView(sfRenderWindow* _w, sfView* _v, sfVector2f _pos) {
 	sfRenderWindow_setView(_w, _v);
 }
 
-void renderMap(char _map[H_MAP_T][W_MAP_T], sfRenderWindow* _w, sfVector2f _pos, char _fg) {
+void renderMap(char _map[H_MAP_T][W_MAP_T], sfRenderWindow* _w, sfVector2f _pos, char _fg, char _minimap) {
 	sfSprite_setTexture(tile, tilesheet, sfFalse);
 
 	int render_top = 0;
@@ -57,7 +67,13 @@ void renderMap(char _map[H_MAP_T][W_MAP_T], sfRenderWindow* _w, sfVector2f _pos,
 	int render_left = 0;
 	int render_right = 0;
 
-	if (gameState == GAME) {
+	if (_minimap == 1) {
+		render_top = 0;
+		render_bottom = H_MAP_T;
+		render_left = 0;
+		render_right = W_MAP_T;
+	}
+	else if (gameState == GAME) {
 		render_top = max(0, trunc((_pos.y - 400) / TILE_PX));
 		render_bottom = min(H_MAP_T - 1, trunc((_pos.y + 400) / TILE_PX));
 		render_left = max(0, trunc((_pos.x - 500) / TILE_PX));
@@ -78,6 +94,22 @@ void renderMap(char _map[H_MAP_T][W_MAP_T], sfRenderWindow* _w, sfVector2f _pos,
 			sfRenderWindow_drawSprite(_w, tile, NULL);
 		}
 	}
+}
+
+void renderMinimap(sfRenderWindow* _w, sfView* _v, char _map[H_MAP_T][W_MAP_T], char _props[H_MAP_T][W_MAP_T]) {
+	sfView* v_origin = sfRenderWindow_getDefaultView(_w);
+
+	sfRectangleShape* minimapFrame = sfRectangleShape_create();
+	sfRectangleShape_setSize(minimapFrame, vector2f(.25f * 800 + 10, .25f * 600 + 10));
+	sfRectangleShape_setPosition(minimapFrame, vector2f(.025f * 800 - 5, .025f * 600 - 5));
+	sfRectangleShape_setFillColor(minimapFrame, sfColor_fromRGBA(0, 0, 0, 128));
+
+	sfRenderWindow_setView(_w, sfRenderWindow_getDefaultView(_w));
+	sfRenderWindow_drawRectangleShape(_w, minimapFrame, NULL);
+	sfRenderWindow_setView(_w, _v);
+	renderMap(_map, _w, sfView_getCenter(_v), 1, 1);
+	renderMap(_props, _w, sfView_getCenter(_v), -1, 1);
+	renderPlayerOnMinimap(_w);
 }
 
 void renderEditorUI(sfRenderWindow* _w, sfView* _v, int _mode, sfFont* _font) {
@@ -105,4 +137,12 @@ void renderEditorUI(sfRenderWindow* _w, sfView* _v, int _mode, sfFont* _font) {
 		}
 	}
 	sfRenderWindow_setView(_w, _v);
+}
+
+void renderPlayerOnMinimap(sfRenderWindow* _w) {
+	sfRectangleShape* marker = sfRectangleShape_create();
+	sfRectangleShape_setSize(marker, vector2f(64, 64));
+	sfRectangleShape_setPosition(marker, playerPos);
+	sfRectangleShape_setFillColor(marker, sfRed);
+	sfRenderWindow_drawRectangleShape(_w, marker, NULL);
 }
