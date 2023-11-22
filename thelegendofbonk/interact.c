@@ -6,6 +6,7 @@ void interactTilePos(char _map[H_MAP_T][W_MAP_T])
 	system("cls");
 	chestCpt = 0;
 	pnjCpt = 0;
+	lampCpt = 0;
 	char _txt[256] = "";
 
 	for (int i = 0; i < H_MAP_T; i++)
@@ -15,6 +16,13 @@ void interactTilePos(char _map[H_MAP_T][W_MAP_T])
 			switch (_map[i][j])
 			{
 				// Sign
+				case 81:
+					lampArray[lampCpt].id = lampCpt;
+					lampArray[lampCpt].lampPosition.y = TILE_PX * i;
+					lampArray[lampCpt].lampPosition.x = TILE_PX * j;
+					printf("LAMP : Position Y : %f, Position X : %f\n", lampArray[lampCpt].lampPosition.y, lampArray[lampCpt].lampPosition.x);
+					lampCpt++;
+					break;
 				case 90:
 					pnjArray[pnjCpt].id = pnjCpt;
 					sprintf_s(_txt, 256, "Je suis le pnj n %d\nJe raconte n'importe quoi\npour tester si l'affichage est correct\nprout", pnjCpt);
@@ -38,7 +46,7 @@ void interactTilePos(char _map[H_MAP_T][W_MAP_T])
 			}
 		}
 	}
-	printf("Nb chest : %d\nNb pnj : %d\n", chestCpt, pnjCpt);
+	printf("Nb chest : %d\nNb pnj : %d\nNb lamp : %d\n", chestCpt, pnjCpt, lampCpt);
 }
 
 int canInteract() {

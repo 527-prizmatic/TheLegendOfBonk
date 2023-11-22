@@ -12,7 +12,7 @@ sfSprite* tile;
 sfRenderWindow* initRender() {
 	sfVideoMode mode = { 800, 600, 32 };
     sfRenderWindow* _w = sfRenderWindow_create(mode, "TheLegendOfBonk", sfResize | sfClose, NULL);
-	tilesheet = sfTexture_createFromFile(TEXTURE_PATH"tilesheet.png", NULL);
+	tilesheet = sfTexture_createFromFile(TEXTURE_PATH"tilesheetv2.png", NULL);
 	tile = sfSprite_create();
 	sfSprite_setScale(tile, (sfVector2f){ SCALE, SCALE });
 	return _w;
@@ -145,4 +145,14 @@ void renderPlayerOnMinimap(sfRenderWindow* _w) {
 	sfRectangleShape_setPosition(marker, playerPos);
 	sfRectangleShape_setFillColor(marker, sfRed);
 	sfRenderWindow_drawRectangleShape(_w, marker, NULL);
+}
+
+void swapLamp(char _map[H_MAP_T][W_MAP_T], char _flagNight)
+{
+	for (int i = 0; i < H_MAP_T; i++) {
+		for (int j = 0; j < W_MAP_T; j++) {
+			if (_map[i][j] == 81 && _flagNight) _map[i][j] = 101;
+			else if (_map[i][j] == 101 && !_flagNight) _map[i][j] = 81;
+		}
+	}
 }

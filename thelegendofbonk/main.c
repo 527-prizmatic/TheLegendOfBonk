@@ -129,6 +129,13 @@ int main() {
 	/* == ENEMY == */
 	initEnemy();
 
+	/* == DAY/NIGHT CYCLE == */
+	sfRectangleShape* nightFilter = sfRectangleShape_create();
+	sfRectangleShape_setPosition(nightFilter, vector2f(0.0f, 0.0f));
+	sfRectangleShape_setSize(nightFilter, vector2f(800.0f, 600.0f));
+	sfRectangleShape_setFillColor(nightFilter, sfColor_fromRGBA(8.0f, 8.0f, 32.0f, 192.0f));
+	float timeNight = 0;
+
 	/* == CHEESE NPC == */
 	sfSprite* npcCheese = sfSprite_create();
 	sfTexture* textureNpcCheese = sfTexture_createFromFile(TEXTURE_PATH"pnj.png", NULL);
@@ -141,6 +148,8 @@ int main() {
 	
 	/* == GAME LOOP == */
 	while (sfRenderWindow_isOpen(window)) {
+
+		timeNight += getDeltaTime();
 		// Some core functions
 		while (sfRenderWindow_pollEvent(window, &event)) if (event.type == sfEvtClosed) sfRenderWindow_close(window); // Check if window is closed via the WIndows UI
 		restartClock();
@@ -238,6 +247,16 @@ int main() {
 				if (canInteract() !=-1 && !hasAllDogecoinPieces(inventory) && inventory[0] !=2) sfRenderWindow_drawText(window, sfTxt_interact, sfFalse);
 
 				if (testKeyPress(KEY_INTERACT, window) && canInteract() != -1 && inventory[0] != 2) inventory[canInteract()] = 1;
+
+				if (timeNight > 30.0f)
+				{
+					swapLamp(propmap, 1);
+					sfRenderWindow_drawRectangleShape(window, nightFilter, NULL);
+				}
+				if (timeNight > 60.0f) {
+					swapLamp(propmap, 0);
+					timeNight = 0;
+				}
 
 				// Pulls out the game menu when pressing the bound key
 				if (testKeyPress(KEY_PAUSE, window)) {
