@@ -44,7 +44,7 @@ int main() {
 	sfText_setOutlineThickness(sfTxt_interact, 2.0f);
     sfText_setOutlineColor(sfTxt_interact, sfBlack);
 	sfText_setPosition(sfTxt_interact, vector2f(440.0f, 465.0f));
-	sfText_setString(sfTxt_interact, "Press E !\0");
+	sfText_setString(sfTxt_interact, "Press E!\0");
 
 	/* == PAUSE MENU == */
 	char txtVolume[16] = "Volume -"; // For volume display in the options screen
@@ -115,7 +115,7 @@ int main() {
 
 	/* == SONG UI == */
 	sfSound* sndButtonClick = sfSound_create();
-    sfSoundBuffer* bufferUI = sfSoundBuffer_createFromFile(AUDIO_PATH"Ui_song.wav");
+    sfSoundBuffer* bufferUI = sfSoundBuffer_createFromFile(AUDIO_PATH"click.wav");
     sfSound_setBuffer(sndButtonClick, bufferUI);
 
 	/* == BONK == */
@@ -233,7 +233,9 @@ int main() {
 				sfRenderWindow_drawSprite(window, bonk, NULL);
 				displayInventory(window, inventory, inventorySprite, keySprite);
 
-				if (hasAllKeyPieces(inventory)) displayDialogBox(window, sfTxt_c, buttonCraft, sfTrue);
+				// Renders the craft button if the player's inventory is full of dogecoin pieces
+				if (hasAllDogecoinPieces(inventory)) displayDialogBox(window, sfTxt_c, buttonCraft, sfTrue);
+
 
 				if (canInteract() > 19){
 					int idPnj = canInteract() - 20;
@@ -244,7 +246,8 @@ int main() {
 					}
 				}
 
-				if (canInteract() !=-1 && !hasAllKeyPieces(inventory) && inventory[0] !=2) sfRenderWindow_drawText(window, sfTxt_interact, sfFalse);
+				// Renders a bit of text to indicate the player can interact with a world object
+				if (canInteract() != -1 && !hasAllDogecoinPieces(inventory) && inventory[0] != 2) sfRenderWindow_drawText(window, sfTxt_interact, sfFalse);
 				if (testKeyPress(KEY_INTERACT, window) && canInteract() != -1 && inventory[0] != 2) {
 					inventory[canInteract()] = 1;
 				}
@@ -281,7 +284,7 @@ int main() {
 				sfSprite_setTextureRect(bonk, (sfIntRect) { 32 * frameBonk, 0, 32, 32 });
 			}
 
-			//Animation PNJ
+			//Animatees NPC
             npcAnimTimer += getDeltaTime();
 			if(npcAnimTimer >= 0.1f) {
 				npcAnimTimer = 0.0f;
