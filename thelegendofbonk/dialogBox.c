@@ -14,7 +14,7 @@ sfRectangleShape* initDialogBox(sfText* _txt, sfFont* _font, int _police) {
 	return dialogBox;
 }
 
-void updateDialogBox(char* _str, int _sizeStr, sfText* _txt, sfRectangleShape* _dialogBox, sfVector2f _pos, sfVector2f _size)
+void updateDialogBox(char* _str, int _sizeStr, sfText* _txt, sfRectangleShape* _dialogBox, sfVector2f _pos, sfVector2f _size, char _flagStretch)
 {
 	sfVector2f newSize = _size;
 	int dialogBoxWidth = 0;
@@ -43,11 +43,8 @@ void updateDialogBox(char* _str, int _sizeStr, sfText* _txt, sfRectangleShape* _
 	{
 		newSize.x = 12.0f * (float)dialogBoxWidthMax;
 	}
-	else
-	{
-		newSize.x = 19.0f * (dialogBoxWidthMax + 1.0f);
-	}
-
+	if(_flagStretch) newSize.x = 19.0f * (dialogBoxWidthMax + 1.0f);
+		
 	// Change le texte
 	sfText_setString(_txt, _str);
 

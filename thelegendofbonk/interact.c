@@ -6,7 +6,7 @@ void interactTilePos(char _map[H_MAP_T][W_MAP_T])
 	system("cls");
 	chestCpt = 0;
 	pnjCpt = 0;
-	char _txt[100] = "";
+	char _txt[256] = "";
 
 	for (int i = 0; i < H_MAP_T; i++)
 	{
@@ -17,11 +17,12 @@ void interactTilePos(char _map[H_MAP_T][W_MAP_T])
 				// Sign
 				case 90:
 					pnjArray[pnjCpt].id = pnjCpt;
-					sprintf_s(_txt, 25, "Je suis le pnj n %d", pnjCpt);
-					pnjArray[pnjCpt].txt = _txt;
+					sprintf_s(_txt, 256, "Je suis le pnj n %d\nJe raconte n'importe quoi\npour tester si l'affichage est correct\nprout", pnjCpt);
+					sprintf(pnjArray[pnjCpt].txt, "%s", _txt);
 					pnjArray[pnjCpt].pnjPosition.y = TILE_PX * i;
 					pnjArray[pnjCpt].pnjPosition.x = TILE_PX * j;
 					printf("PNJ : Position Y : %f, Position X : %f \n", pnjArray[pnjCpt].pnjPosition.y, pnjArray[pnjCpt].pnjPosition.x);
+					printf("PNJ : txt : %s\n", pnjArray[pnjCpt].txt);
 					pnjCpt++;
 					break;
 				// Chest
