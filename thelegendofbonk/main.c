@@ -20,6 +20,8 @@
 #include "interact.h"
 #include "enemy.h"
 
+#define PI (double)3.1415926535
+
 int main() {
 	/* == RENDERING ENGINE CORE */
 	sfRenderWindow* window = initRender(); // Main window
@@ -133,7 +135,6 @@ int main() {
 	sfRectangleShape* nightFilter = sfRectangleShape_create();
 	sfRectangleShape_setPosition(nightFilter, vector2f(0.0f, 0.0f));
 	sfRectangleShape_setSize(nightFilter, vector2f(800.0f, 600.0f));
-	sfRectangleShape_setFillColor(nightFilter, sfColor_fromRGBA(8.0f, 8.0f, 32.0f, 192.0f));
 	float timeNight = 0;
 
 	/* == CHEESE NPC == */
@@ -216,6 +217,13 @@ int main() {
 					flagCraft = 0;
 				}
 
+				int periodSecs = 120.f;
+				int nightFilterAlpha = 96.0f - sin((timeNight / periodSecs) * PI * 2) * 1000.f;
+				nightFilterAlpha = max(0.f, min(192.0f, nightFilterAlpha));
+
+				if (nightFilterAlpha < 96.0f)swapLamp(propmap, 0); // Lamp posts go lit
+				else swapLamp(propmap, 1);; // Lamp posts go dark
+
 				// Updates
 				updatePlayer(propmap, window);
 				updateEnemy();
@@ -231,6 +239,10 @@ int main() {
 				renderMap(propmap, window, sfView_getCenter(viewGame), 1, 0);
 				sfSprite_setPosition(bonk, vector2f(500.0f, 500.0f));
 				sfRenderWindow_drawSprite(window, bonk, NULL);
+				sfVector2f vPos = sfView_getCenter(viewGame);
+				sfRectangleShape_setPosition(nightFilter, vector2f(vPos.x - 400, vPos.y - 300));
+				sfRectangleShape_setFillColor(nightFilter, sfColor_fromRGBA(8.0f, 8.0f, 32.0f, nightFilterAlpha));
+				sfRenderWindow_drawRectangleShape(window, nightFilter, NULL);
 				displayInventory(window, inventory, inventorySprite, keySprite);
 
 				if (canInteract() == -1) flagPnj = 0;
@@ -247,17 +259,7 @@ int main() {
 				if (canInteract() !=-1 && !hasAllDogecoinPieces(inventory) && inventory[0] !=2) sfRenderWindow_drawText(window, sfTxt_interact, sfFalse);
 
 				if (testKeyPress(KEY_INTERACT, window) && canInteract() != -1 && inventory[0] != 2) inventory[canInteract()] = 1;
-
-				if (timeNight > 30.0f)
-				{
-					swapLamp(propmap, 1);
-					sfRenderWindow_drawRectangleShape(window, nightFilter, NULL);
-				}
-				if (timeNight > 60.0f) {
-					swapLamp(propmap, 0);
-					timeNight = 0;
-				}
-
+				
 				// Pulls out the game menu when pressing the bound key
 				if (testKeyPress(KEY_PAUSE, window)) {
 					if (!flagPauseMenu) {
