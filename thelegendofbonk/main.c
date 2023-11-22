@@ -28,6 +28,7 @@ int main() {
 	sfView* viewGame = initGameView(); // Game mode view
 	sfView* viewEditor = initEditorView(); // Editor mode view
 	sfView* viewMinimap = initMinimapView(); // Editor mode view
+	sfView* viewCredits = initCreditsView(); // Credits mode view
 
 	/* == MAIN MENU ==  */
 	sfFont* font = sfFont_createFromFile(TEXTURE_PATH"FontGame.ttf");
@@ -56,6 +57,7 @@ int main() {
 	sfSprite* buttonMainPlay = initSprite(TEXTURE_PATH"play.png", vector2f(3.5f, 3.5f), vector2f(175.0f, 400.0f));
 	sfSprite* buttonMainEdit = initSprite(TEXTURE_PATH"edit.png", vector2f(3.5f, 3.5f), vector2f(454.0f, 400.0f));
 	sfSprite* buttonMainQuit = initSprite(TEXTURE_PATH"quit.png", vector2f(3.5f, 3.5f), vector2f(314.0f, 485.0f));
+	sfSprite* buttonMainQuit2 = initSprite(TEXTURE_PATH"quit2.png", vector2f(3.5f, 3.5f), vector2f(50.0f, 50.0f)); 
 	sfSprite* spriteMenuBackground = initSprite(TEXTURE_PATH"background.png", vector2f(1.0f, 1.0f), vector2f(0.0f, 0.0f));
 	sfSprite* buttonPauseReturn = initSprite(TEXTURE_PATH"return.png", vector2f(3.5f, 3.5f), vector2f(350.0f, 180.0f));
 	sfSprite* buttonPauseOptions = initSprite(TEXTURE_PATH"option.png", vector2f(3.5f, 3.5f), vector2f(350.0f, 250.0f));
@@ -70,6 +72,7 @@ int main() {
 		buttonMainPlay,
 		buttonMainEdit,
 		buttonMainQuit,
+		buttonMainQuit2, 
 		buttonPauseReturn,
 		buttonPauseOptions,
 		buttonPauseQuit,
@@ -192,6 +195,8 @@ int main() {
 				sfRenderWindow_drawSprite(window, buttonMainPlay, NULL);
 				sfRenderWindow_drawSprite(window, buttonMainEdit, NULL);
 				sfRenderWindow_drawSprite(window, buttonMainQuit, NULL);
+
+				sfRenderWindow_drawSprite(window, buttonMainQuit2, NULL);
 				
 				sfRenderWindow_display(window);
 			}
@@ -219,9 +224,32 @@ int main() {
 				gameState = EDITOR;
 				flagClick = 1;
 			}
+
+			else if (isClicked(window, buttonMainQuit2)) {
+				sfSound_play(sndButtonClick);
+				gameState = CREDITS;
+				flagClick = 1;
+			}
 			// When clicking on the QUIT button
-			else if (isClicked(window, buttonMainQuit)) gameState = QUIT;
+            else if(isClicked(window, buttonMainQuit)) gameState = QUIT;
+
+		/*CREDIT BOUTON */ 
+		
+
+
 		}
+		    else if (gameState == CREDITS) 
+		    {
+				sfRenderWindow_setView(window, sfRenderWindow_getDefaultView(window)); 
+				if (tick >= TICK_TIME) { 
+					tick = 0.0f;
+					sfRenderWindow_drawSprite(window, spriteMenuBackground, NULL); 
+					sfRenderWindow_display(window); 
+				}
+				if (testKeyPress(KEY_PAUSE, window)) { 
+					gameState = MENU; 
+				} 
+			}
 
 		/* == GAME == */
 		else if (gameState == GAME) {
@@ -392,6 +420,7 @@ int main() {
 			else flagEditorLeave = 0;
 		}
 
+
 		/* == PAUSE MENU == */
 		else if (gameState == BREAK) { // When pause menu open
 			sfRenderWindow_setView(window, sfRenderWindow_getDefaultView(window));
@@ -441,7 +470,7 @@ int main() {
 				/* == RENDERING ENGINE == */
 				if (tick >= TICK_TIME) {
 					tick = 0.0f;
-					
+					sfRenderWindow_drawSprite(window, spriteMenuBackground, NULL);
 					sfRenderWindow_drawSprite(window, buttonOptionsVolPlus, NULL);
 					sfRenderWindow_drawSprite(window, buttonOptionsVolMinus, NULL);
 					sfRenderWindow_drawSprite(window, buttonPauseReturn, NULL);
@@ -453,7 +482,6 @@ int main() {
 					
 					sfRenderWindow_display(window);
 				}
-
 
 				/* == USER INPUT == */
 				// Volume control buttons, placed within a timer to allow for slowly lowering volume when holding down the button
