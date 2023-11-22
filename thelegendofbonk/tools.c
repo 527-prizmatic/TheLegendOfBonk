@@ -2,6 +2,7 @@
 
 sfTime sf_time;
 sfClock* sf_clock;
+sfBool isRunning = sfTrue;
 
 void initTools() {
 	sf_clock = sfClock_create();
@@ -15,6 +16,7 @@ void restartClock() {
 
 float getDeltaTime() {
 	return sfTime_asSeconds(sf_time);
+	
 }
 
 sfVector2f vector2f(float _x, float _y) {
@@ -42,7 +44,7 @@ sfSprite* initText(sfFont* _font, int _size, sfVector2f _pos) {
 	sfText_setFont(txt, _font);
 	sfText_setCharacterSize(txt, _size);
 	sfText_setPosition(txt, _pos);
-
+	
 	return txt;
 }
 
@@ -57,3 +59,4 @@ sfBool testLClick(sfRenderWindow* _w) {
 	if (!sfMouse_isButtonPressed(sfMouseLeft)) return sfFalse;
 	return sfTrue;
 }
+

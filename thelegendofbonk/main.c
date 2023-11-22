@@ -123,6 +123,16 @@ int main() {
 	float bonkAnimTimer = 0.0f;
 	char frame = 0;
 	sfSprite_setTextureRect(bonk, (sfIntRect) { 0, 0, 32, 32 });
+
+	/* == PNJ == */
+	sfSprite* pnj = sfSprite_create();
+    sfTexture* texturePnj = sfTexture_createFromFile(TEXTURE_PATH"pnj.png", NULL);
+    sfSprite_setTexture(pnj, texturePnj, sfFalse);
+    sfSprite_setScale(pnj, vector2f(2.0f, 2.0f));
+	float pnjAnimTimer = 0.0f;
+	char framePnj = 0; 
+    sfSprite_setTextureRect(pnj, (sfIntRect) { 0, 0, 32, 32 }); 
+
 	
 	/* == GAME LOOP == */
 	while (sfRenderWindow_isOpen(window)) {
@@ -214,10 +224,27 @@ int main() {
 				renderMap(tilemap, window, sfView_getCenter(viewGame), -1);
 				renderMap(propmap, window, sfView_getCenter(viewGame), 0);
 				displayPlayer(window);
+
+
+
+
+				//DISPLAY PNJ
+
+				sfSprite_setPosition(pnj, vector2f(544.0f, 512.0f)); 
+				sfRenderWindow_drawSprite(window, pnj, NULL); 
+
+
+
+
+
 				renderMap(propmap, window, sfView_getCenter(viewGame), 1);
 				sfSprite_setPosition(bonk, vector2f(500.0f, 500.0f));
 				sfRenderWindow_drawSprite(window, bonk, NULL);
 				displayInventory(window, inventory, inventorySprite, keySprite);
+
+				
+
+
 				if (hasAllKeyPieces(inventory)) displayDialogBox(window, sfTxt_c, buttonCraft, sfTrue);
 
 				if (canInteract() > 19){
@@ -263,6 +290,15 @@ int main() {
 				frame++;
 				frame %= 8;
 				sfSprite_setTextureRect(bonk, (sfIntRect) { 32 * frame, 0, 32, 32 });
+			}
+
+			//Animation PNJ
+            pnjAnimTimer += getDeltaTime();
+			if(pnjAnimTimer >= 0.1f) {
+				pnjAnimTimer = 0.0f;
+				framePnj++;
+				framePnj %= 7; 
+				sfSprite_setTextureRect(pnj, (sfIntRect) { 32 * framePnj, 0, 32, 32 }); 
 			}
 
 			// Secret debug keybind (ALT+R) which returns the player at the spawn point
