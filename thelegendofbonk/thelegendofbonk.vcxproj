@@ -135,7 +135,6 @@
   <ItemGroup>
     <ClCompile Include="dialogBox.c" />
     <ClCompile Include="editor.c" />
-    <ClCompile Include="enemy.c" />
     <ClCompile Include="interact.c" />
     <ClCompile Include="inventory.c" />
     <ClCompile Include="main.c" />
@@ -150,7 +149,6 @@
   <ItemGroup>
     <ClInclude Include="dialogBox.h" />
     <ClInclude Include="editor.h" />
-    <ClInclude Include="enemy.h" />
     <ClInclude Include="interact.h" />
     <ClInclude Include="inventory.h" />
     <ClInclude Include="music.h" />

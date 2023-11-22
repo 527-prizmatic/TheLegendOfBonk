@@ -29,6 +29,14 @@ sfBool isMouseWithinWindow(sfRenderWindow* _w) {
 	else return sfFalse;
 }
 
+sfRectangleShape* initRectangle(sfVector2f _pos, sfVector2f _size) {
+	sfRectangleShape* rect = sfRectangleShape_create();
+	sfRectangleShape_setPosition(rect, _pos);
+	sfRectangleShape_setSize(rect, _size);
+
+	return rect;
+}
+
 sfSprite* initSprite(char* _texture_path, sfVector2f _scale, sfVector2f _pos) {
 	sfSprite* spr = sfSprite_create();
 	sfTexture* texture = sfTexture_createFromFile(_texture_path, NULL);
@@ -46,6 +54,11 @@ sfText* initText(sfFont* _font, int _size, sfVector2f _pos) {
 	sfText_setPosition(txt, _pos);
 	
 	return txt;
+}
+
+void formatTextOutline(sfText* _txt, sfColor _color) {
+	sfText_setOutlineThickness(_txt, 2.0f);
+	sfText_setOutlineColor(_txt, _color);
 }
 
 sfBool testKeyPress(sfKeyCode _key, sfRenderWindow* _w) {
