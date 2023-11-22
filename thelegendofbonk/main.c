@@ -418,6 +418,7 @@ int main() {
 						timerVolumeChange = 0;
 					}
 				}
+
 				
 				if (isClicked(window, buttonPauseReturn) && flagClick == 0) { // Goes back to pause menu when return button pressed
 					sfSound_play(sndButtonClick); 
