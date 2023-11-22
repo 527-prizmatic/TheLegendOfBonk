@@ -230,7 +230,7 @@ int main() {
 				}
 
 				if (canInteract() !=-1 && !hasAllKeyPieces(inventory) && inventory[0] !=2) sfRenderWindow_drawText(window, sfTxt_interact, sfFalse);
-				if (sfKeyboard_isKeyPressed(sfKeyE) && canInteract() != -1) {
+				if (sfKeyboard_isKeyPressed(sfKeyE) && canInteract() != -1 && inventory[0] !=2) {
 					inventory[canInteract()] = 1;
 				}
 
