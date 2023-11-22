@@ -247,7 +247,6 @@ int main() {
                     sfRenderWindow_drawSprite(window, CraftButton, NULL);
 
 				}
-					
 
 				if (canInteract() > 19){
 					int idPnj = canInteract() - 20;

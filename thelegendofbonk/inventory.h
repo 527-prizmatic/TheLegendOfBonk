@@ -14,4 +14,4 @@ void displayInventory(sfRenderWindow* _window, int* _inventory, sfSprite* _inven
 
 /* Checks if the player is carrying all key pieces.
 *  \param _inv - An inventory to scan for key pieces */
-sfBool hasAllKeyPieces(int _inv[4]);
+sfBool hasAllDogecoinPieces(int _inv[4]);
