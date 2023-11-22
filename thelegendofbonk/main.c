@@ -235,14 +235,14 @@ int main() {
 				if (canInteract() > 19){
 					int idPnj = canInteract() - 20;
 					sfRenderWindow_drawText(window, sfTxt_interact, sfFalse);
-					if (sfKeyboard_isKeyPressed(sfKeyE)){
+					if (testKeyPress(KEY_INTERACT, window)){
 						updateDialogBox(pnjTxt, sizeof(pnjTxt), sfTxt_pnj, pnjDialogBox, (sfVector2f) { pnjArray[idPnj].pnjPosition.x, pnjArray[idPnj].pnjPosition.y }, DEFAULT_DIALOG_SIZE);
 						displayDialogBox(window, sfTxt_pnj, pnjDialogBox, sfFalse);
 					}
 				}
 
 				if (canInteract() !=-1 && !hasAllKeyPieces(inventory) && inventory[0] !=2) sfRenderWindow_drawText(window, sfTxt_interact, sfFalse);
-				if (sfKeyboard_isKeyPressed(sfKeyE) && canInteract() != -1 && inventory[0] !=2) {
+				if (testKeyPress(KEY_INTERACT, window) && canInteract() != -1 && inventory[0] != 2) {
 					inventory[canInteract()] = 1;
 				}
 
@@ -301,7 +301,7 @@ int main() {
 
 				// Place tile on click
 				if (testLClick(window) && !flagClick) {
-					interactTilePos(propmap);
+					if (tileSelection == 91) interactTilePos(propmap);
 					changeTile(window, viewEditor, tilemap, propmap, tileSelection);
 					flagClick = 0;
 				}
