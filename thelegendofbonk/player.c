@@ -110,8 +110,6 @@ sfBool checkForCollisions(char _map[H_MAP_T][W_MAP_T], moveDir _dir) {
     sfRectangleShape_setSize(playerHitbox, vector2f(hitbox.width, hitbox.height));
     sfRectangleShape_setPosition(playerHitbox, vector2f(hitbox.left, hitbox.top));
 
-
-
     if (_dir == UP) {
         int blockAbove = trunc((hitbox.top - playerSpeed * 2.1 * TICK_TIME) / TILE_PX);
         int cornerTL = trunc(hitbox.left / TILE_PX);
