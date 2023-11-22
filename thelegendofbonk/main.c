@@ -44,7 +44,7 @@ int main() {
 	sfText_setOutlineThickness(sfTxt_interact, 2.0f);
     sfText_setOutlineColor(sfTxt_interact, sfBlack);
 	sfText_setPosition(sfTxt_interact, vector2f(440.0f, 465.0f));
-	sfText_setString(sfTxt_interact, "Press E!\0");
+	sfText_setString(sfTxt_interact, "Press E !\0");
 
 	/* == PAUSE MENU == */
 	char txtVolume[16] = "Volume -"; // For volume display in the options screen
@@ -115,7 +115,7 @@ int main() {
 
 	/* == SONG UI == */
 	sfSound* sndButtonClick = sfSound_create();
-    sfSoundBuffer* bufferUI = sfSoundBuffer_createFromFile(AUDIO_PATH"click.wav");
+    sfSoundBuffer* bufferUI = sfSoundBuffer_createFromFile(AUDIO_PATH"Ui_song.wav");
     sfSound_setBuffer(sndButtonClick, bufferUI);
 
 	/* == BONK == */
@@ -136,6 +136,14 @@ int main() {
 	char frameNpc = 0; 
     sfSprite_setTextureRect(npcCheese, (sfIntRect) { 0, 0, 32, 32 });
 	sfSprite_setPosition(npcCheese, vector2f(544.0f, 512.0f));
+
+	//Button Craft
+	sfSprite* CraftButton = sfSprite_create();
+    sfTexture* textureCraftButton = sfTexture_createFromFile(TEXTURE_PATH"craft.png", NULL);
+    sfSprite_setTexture(CraftButton, textureCraftButton, sfFalse);
+    sfSprite_setScale(CraftButton, vector2f(2.0f, 2.0f));
+    sfSprite_setPosition(CraftButton, vector2f(420.0f, 465.0f));
+
 
 	
 	/* == GAME LOOP == */
@@ -212,7 +220,7 @@ int main() {
 				// Updates
 				updatePlayer(propmap, window);
 				updateView(window, viewGame, playerPos);
-				updateDialogBox(craft, sizeof(craft), sfTxt_c, buttonCraft, (sfVector2f) { 430.0f, 480.0f }, (sfVector2f) { 0.0f, 30.0f });
+				updateDialogBox(craft, sizeof(craft), sfTxt_c, buttonCraft, (sfVector2f) { 430.0f, 420.0f }, (sfVector2f) { 0.0f, 30.0f });
 
 				// Crafts the key when hitting "Craft" button
 				if (isClicked(window, buttonCraft)) {
@@ -233,9 +241,12 @@ int main() {
 				sfRenderWindow_drawSprite(window, bonk, NULL);
 				displayInventory(window, inventory, inventorySprite, keySprite);
 
-				// Renders the craft button if the player's inventory is full of dogecoin pieces
-				if (hasAllDogecoinPieces(inventory)) displayDialogBox(window, sfTxt_c, buttonCraft, sfTrue);
+				if (hasAllKeyPieces(inventory))
+				{
+					
+                    sfRenderWindow_drawSprite(window, CraftButton, NULL);
 
+				}
 
 				if (canInteract() > 19){
 					int idPnj = canInteract() - 20;
@@ -246,8 +257,7 @@ int main() {
 					}
 				}
 
-				// Renders a bit of text to indicate the player can interact with a world object
-				if (canInteract() != -1 && !hasAllDogecoinPieces(inventory) && inventory[0] != 2) sfRenderWindow_drawText(window, sfTxt_interact, sfFalse);
+				if (canInteract() !=-1 && !hasAllKeyPieces(inventory) && inventory[0] !=2) sfRenderWindow_drawText(window, sfTxt_interact, sfFalse);
 				if (testKeyPress(KEY_INTERACT, window) && canInteract() != -1 && inventory[0] != 2) {
 					inventory[canInteract()] = 1;
 				}
@@ -284,7 +294,7 @@ int main() {
 				sfSprite_setTextureRect(bonk, (sfIntRect) { 32 * frameBonk, 0, 32, 32 });
 			}
 
-			//Animatees NPC
+			//Animation PNJ
             npcAnimTimer += getDeltaTime();
 			if(npcAnimTimer >= 0.1f) {
 				npcAnimTimer = 0.0f;
