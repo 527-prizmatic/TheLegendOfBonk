@@ -268,11 +268,12 @@ int main() {
 				sfSprite_setTextureRect(bonk, (sfIntRect) { 32 * frame, 0, 32, 32 });
 			}
 
+			//Animation PNJ
             pnjAnimTimer += getDeltaTime();
 			if(pnjAnimTimer >= 0.1f) {
 				pnjAnimTimer = 0.0f;
 				framePnj++;
-				framePnj %= 8; 
+				framePnj %= 7; 
 				sfSprite_setTextureRect(pnj, (sfIntRect) { 32 * framePnj, 0, 32, 32 }); 
 			}
 
