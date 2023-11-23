@@ -392,6 +392,7 @@ int main() {
 				/* == RENDERING ENGINE == */
 				if (tick >= TICK_TIME) {
 					tick = 0.0f;
+					sfSprite_setScale (buttonPauseReturn, (sfVector2f) { 3.5f, 3.5f }); 
 					sfRenderWindow_drawSprite(window, spriteMenuBackground, NULL);
 					sfRenderWindow_drawSprite(window, buttonPauseReturn, NULL);
 					sfRenderWindow_drawSprite(window, buttonPauseOptions, NULL);
