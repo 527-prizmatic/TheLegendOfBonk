@@ -21,12 +21,14 @@
 #define KEY_PAUSE sfKeyEscape
 #define KEY_INTERACT sfKeyE
 #define KEY_EDITOR_UI sfKeyEnter
+#define KEY_CREDITS sfKeyC
 
 typedef enum GameState {
 	MENU,
 	GAME,
 	EDITOR,
 	BREAK,
+	CREDITS,
 	ENDING,
 	QUIT
 } GameState;
