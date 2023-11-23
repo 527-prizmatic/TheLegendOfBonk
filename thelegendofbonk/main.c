@@ -44,7 +44,7 @@ int main() {
 	sfText* textVolume = initText(font, 30, vector2f(250.0f, 250.0f));
 
 	/* == INTERACTIONS HEADS-UP ==  */
-	sfText* sfTxt_interact = initText(font, 30, vector2f(600.f, 460.f));
+	sfText* sfTxt_interact = initText(font, 30, vector2f(400.f, 400.f));
 	formatTextOutline(sfTxt_interact, sfBlack);
 	sfText_setString(sfTxt_interact, "Press E !\0");
 
@@ -120,6 +120,10 @@ int main() {
 	sfSound* sndIsHim = sfSound_create();
 	sfSoundBuffer* bufferIsHim = sfSoundBuffer_createFromFile(AUDIO_PATH"this_is_elon_musk.wav");
 	sfSound_setBuffer(sndIsHim, bufferIsHim);
+	sfSound* sndChest = sfSound_create();
+    sfSoundBuffer* bufferChest = sfSoundBuffer_createFromFile(AUDIO_PATH"pickup.wav");
+    sfSound_setBuffer(sndChest, bufferChest);
+	sfSound_setVolume(sndChest, 25);
 
 	/* == CREDITS TEXTS == */
 	sfText* txtCredits = initText(font, 30, vector2f(200.f, 425.f));
@@ -156,7 +160,7 @@ int main() {
 	/* == DAY/NIGHT CYCLE == */
 	sfRectangleShape* nightOverlay = initRectangle(vector2f(0.0f, 0.0f), vector2f(800.0f, 600.0f));
 	float timeNight = 0.f;
-	float nightFilterAlpha = 64.f;
+	float nightFilterAlpha = 96.f;
 	const float dayCycleLengthSecs = 240.f;
 
 	/* == CORE INIT == */
@@ -168,7 +172,7 @@ int main() {
 	initPlayer();
 	sfEvent event;
 	float tick = 0.0f;
-	float tickEnding = 0.0f;
+	float tickEnding = 012.0f;
 
 
 	///***  = = =  GAME LOOP  = = =  ***///
@@ -254,11 +258,12 @@ int main() {
 
 			if (tick >= TICK_TIME) {
 				tick = 0.0f;
-
+                
 				// Regularly updating a few game variables
-				updatePlayer(tilemap, propmap, window, 1);
+				updatePlayer(propmap, window, 1);
 				updateView(window, viewGame, playerPos);
-				
+
+
 				// Sets up a dialog box for when the player interacts with a sign
 				checkInteract = canInteract();
 				if (checkInteract > 19 && checkInteract != 100 && checkInteract != 200) {
@@ -270,10 +275,12 @@ int main() {
 					updateDialogBox(cheeseTxt, sizeof(cheeseTxt), sfTxt_npc, dialogBoxNpc, (sfVector2f) { 10.0f, 450.0f }, (sfVector2f) { 380.0f, 140.0f }, 0);
 					if (testKeyPress(KEY_INTERACT, window)) flagInteraction = 1;
 				}
+				
 				// Check for interaction with chests when pressing the bound key
 				else if (testKeyPress(KEY_INTERACT, window) && checkInteract != -1 && inventory[0] != 2) {
 					inventory[checkInteract] = 1;
 					chestArray[checkInteract].flagOpen = 1;
+                    sfSound_play(sndChest);
 				}
 
 				if (flagCheese) {
@@ -281,6 +288,7 @@ int main() {
 					if (testKeyPress(KEY_INTERACT, window)) flagInteraction = 1;
 					inventory[0] = 3;
 					flagCheese = 0;
+					sfSound_play(sndChest);
 				}
 				
 				// Rendering
@@ -339,10 +347,10 @@ int main() {
 			}
 
 			// Computing day/night cycle & changing lamp post textures accordingly
-			nightFilterAlpha = 64.0f - sinf((timeNight / dayCycleLengthSecs) * PI * 2.f) * 350.f;
-			nightFilterAlpha = max(0.f, min(128.0f, nightFilterAlpha));
+			nightFilterAlpha = 96.0f - sinf((timeNight / dayCycleLengthSecs) * PI * 2.f) * 1000.f;
+			nightFilterAlpha = max(0.f, min(192.0f, nightFilterAlpha));
 			sfRectangleShape_setFillColor(nightOverlay, sfColor_fromRGBA(8, 8, 32, (int)nightFilterAlpha));
-			if (nightFilterAlpha > 64.0f) selectTexture_lampPost(1); // Lamp posts turn on at night
+			if (nightFilterAlpha > 96.0f) selectTexture_lampPost(1); // Lamp posts turn on at night
 			else selectTexture_lampPost(0); // Lamp posts turn off at day
 			
 			// Check for world interactions
@@ -401,6 +409,7 @@ int main() {
 				renderMap(tilemap, window, sfView_getCenter(viewEditor), -1, 0);
 				renderMap(propmap, window, sfView_getCenter(viewEditor), -1, 0);
 				if (flagEditorUI) renderEditorUI(window, sfRenderWindow_getDefaultView(window), flagEditorMode, font);
+
 				sfRenderWindow_display(window);
 			}
 			
@@ -618,9 +627,15 @@ int main() {
 				if (tickEnding > 34.f && tickEnding <= 37.f) sfText_setString(txtCredits, credits[7]);
 				if (tickEnding > 37.f && tickEnding <= 46.f) sfText_setString(txtCredits, credits[8]);
 				if (tickEnding > 46.f && tickEnding <= 48.f) sfText_setString(txtCredits, credits[9]);
+				if (tickEnding > 50.f) {
+					sfMusic_stop(musicCybertruck);
+					sfMusic_play(bgm);
+					sfMusic_setLoop(bgm, sfTrue);
+					gameState = MENU;
+				}
 
 				// Updates
-				updatePlayer(tilemap, propmap, window, 0);
+				updatePlayer(propmap, window, 0);
 				sfSprite_setPosition(bonk, bonkPos);
 				sfSprite_setPosition(cage, cagePos);
 				sfSprite_setPosition(cybertruck, ctPos);
@@ -656,13 +671,6 @@ int main() {
 				else {}
 
 				sfRenderWindow_display(window);
-
-				if (tickEnding > 50.f) {
-					sfMusic_stop(musicCybertruck);
-					sfMusic_play(bgm);
-					sfMusic_setLoop(bgm, sfTrue);
-					gameState = MENU;
-				}
 			}
 		}
 

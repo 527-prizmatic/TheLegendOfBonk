@@ -32,9 +32,11 @@ void initPlayer() {
     sfSprite_setScale(player, vector2f(2.0f, 2.0f));
     sfSprite_setPosition(player, playerPos);
 
+    // Walk sound
     sndWalk = sfSound_create();
 	sndWalkBuffer = sfSoundBuffer_createFromFile(AUDIO_PATH"walk.wav");
 	sfSound_setBuffer(sndWalk, sndWalkBuffer);
+
 	
     animTime = 0.0f;
     frameX = 0;
@@ -49,7 +51,7 @@ void initPlayer() {
     }
 }
 
-void updatePlayer(char _map[H_MAP_T][W_MAP_T], char _prop[H_MAP_T][W_MAP_T], sfRenderWindow* _w, char _canMove) {
+void updatePlayer(char _map[H_MAP_T][W_MAP_T], sfRenderWindow* _w, char _canMove) {
     // Ticking animation
     animTime += TICK_TIME;
     if (testKeyPress(sfKeyLShift, _w)) animTime += TICK_TIME / 2.f;
@@ -58,27 +60,27 @@ void updatePlayer(char _map[H_MAP_T][W_MAP_T], char _prop[H_MAP_T][W_MAP_T], sfR
         // Diagonal movement
         if (sfRenderWindow_hasFocus(_w)) {
             if (sfKeyboard_isKeyPressed(KEY_UP) && sfKeyboard_isKeyPressed(KEY_LEFT)) {
-                if (!checkForCollisions(_prop, UP)) movePlayer(UP, sfTrue, _map, _w);
-                if (!checkForCollisions(_prop, LEFT)) movePlayer(LEFT, sfTrue, _map, _w);
+                if (!checkForCollisions(_map, UP)) movePlayer(UP, sfTrue, _map, _w);
+                if (!checkForCollisions(_map, LEFT)) movePlayer(LEFT, sfTrue, _map, _w);
             }
             else if (sfKeyboard_isKeyPressed(KEY_DOWN) && sfKeyboard_isKeyPressed(KEY_LEFT)) {
-                if (!checkForCollisions(_prop, DOWN)) movePlayer(DOWN, sfTrue, _map, _w);
-                if (!checkForCollisions(_prop, LEFT)) movePlayer(LEFT, sfTrue, _map, _w);
+                if (!checkForCollisions(_map, DOWN)) movePlayer(DOWN, sfTrue, _map, _w);
+                if (!checkForCollisions(_map, LEFT)) movePlayer(LEFT, sfTrue, _map, _w);
             }
             else if (sfKeyboard_isKeyPressed(KEY_DOWN) && sfKeyboard_isKeyPressed(KEY_RIGHT)) {
-                if (!checkForCollisions(_prop, DOWN)) movePlayer(DOWN, sfTrue, _map, _w);
-                if (!checkForCollisions(_prop, RIGHT)) movePlayer(RIGHT, sfTrue, _map, _w);
+                if (!checkForCollisions(_map, DOWN)) movePlayer(DOWN, sfTrue, _map, _w);
+                if (!checkForCollisions(_map, RIGHT)) movePlayer(RIGHT, sfTrue, _map, _w);
             }
             else if (sfKeyboard_isKeyPressed(KEY_UP) && sfKeyboard_isKeyPressed(KEY_RIGHT)) {
-                if (!checkForCollisions(_prop, UP)) movePlayer(UP, sfTrue, _map, _w);
-                if (!checkForCollisions(_prop, RIGHT)) movePlayer(RIGHT, sfTrue, _map, _w);
+                if (!checkForCollisions(_map, UP)) movePlayer(UP, sfTrue, _map, _w);
+                if (!checkForCollisions(_map, RIGHT)) movePlayer(RIGHT, sfTrue, _map, _w);
             }
 
             // Orthogonal movement
-            else if (sfKeyboard_isKeyPressed(KEY_UP)) { direction = UP; if (!checkForCollisions(_prop, direction)) movePlayer(direction, sfFalse, _map, _w); }
-            else if (sfKeyboard_isKeyPressed(KEY_DOWN)) { direction = DOWN; if (!checkForCollisions(_prop, direction)) movePlayer(direction, sfFalse, _map, _w); }
-            else if (sfKeyboard_isKeyPressed(KEY_LEFT)) { direction = LEFT; if (!checkForCollisions(_prop, direction)) movePlayer(direction, sfFalse, _map, _w); }
-            else if (sfKeyboard_isKeyPressed(KEY_RIGHT)) { direction = RIGHT; if (!checkForCollisions(_prop, direction)) movePlayer(direction, sfFalse, _map, _w); }
+            else if (sfKeyboard_isKeyPressed(KEY_UP)) { direction = UP; if (!checkForCollisions(_map, direction)) movePlayer(direction, sfFalse, _map, _w); }
+            else if (sfKeyboard_isKeyPressed(KEY_DOWN)) { direction = DOWN; if (!checkForCollisions(_map, direction)) movePlayer(direction, sfFalse, _map, _w); }
+            else if (sfKeyboard_isKeyPressed(KEY_LEFT)) { direction = LEFT; if (!checkForCollisions(_map, direction)) movePlayer(direction, sfFalse, _map, _w); }
+            else if (sfKeyboard_isKeyPressed(KEY_RIGHT)) { direction = RIGHT; if (!checkForCollisions(_map, direction)) movePlayer(direction, sfFalse, _map, _w); }
             else isMoving = sfFalse;
         }
         else isMoving = sfFalse;
@@ -175,12 +177,11 @@ sfBool isInWater(char _map[H_MAP_T][W_MAP_T]) {
     hitbox.top += hitbox.height * .5f;
     hitbox.width *= .6f;
     hitbox.height *= .4f;
+
     int x = (int) trunc((hitbox.top + hitbox.height / 2) / TILE_PX);
     int y = (int) trunc((hitbox.left + hitbox.width / 2) / TILE_PX);
 
-    char id = _map[x][y];
-    if (isWater(id))
-        return sfTrue;
+    if (isWater(_map[x][y])) return sfTrue;
     else return sfFalse;
 }
 

@@ -22,7 +22,7 @@ void initPlayer();
 /// Input tracking and movement functions.
 /// \param _map - An initialized tilemap
 /// \param _w - A render window object (to check for focus)
-void updatePlayer(char _map[H_MAP_T][W_MAP_T], char _prop[H_MAP_T][W_MAP_T], sfRenderWindow* _w, char _canMove);
+void updatePlayer(char _map[H_MAP_T][W_MAP_T], sfRenderWindow* _w, char _canMove);
 
 /// Checks the player's surroundings for a potential collision with a solid block.
 /// \param _map - An initialized tilemap
