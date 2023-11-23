@@ -64,7 +64,6 @@ int canInteract() {
 	int sqrPosPnjX = 0;
 	int sqrPosPnjY = 0;
 
-
     int sqrRadius = (playerRadius + interactRadius) * (playerRadius + interactRadius);
 
 	for (int i = 0; i < 5; i++) {
