@@ -563,7 +563,7 @@ int main() {
 				sfSprite_setPosition(cage, cagePos);
 				sfSprite_setPosition(cybertruck, ctPos);
 
-				if (tickEnding <= 13.f) {
+				if (tickEnding <= 12.f) {
 					// Rendering
 					sfRenderWindow_setView(window, viewGame); // Rendering on map view
 					renderMap(tilemap, window, sfView_getCenter(viewGame), -1, 1); // Rendering map - terrain layer
@@ -574,6 +574,7 @@ int main() {
 					if (tickEnding > 6.f) sfRenderWindow_drawSprite(window, cybertruck, NULL); // Rendering the cybertruck
 					renderMap(propmap, window, sfView_getCenter(viewGame), 1, 1); // Rendering map - props layer - foreground
 				}
+				else if (tickEnding > 12.f && tickEnding <= 13.f) {}
 				else {
 					sfRenderWindow_setView(window, sfRenderWindow_getDefaultView(window)); // Rendering on window
 					sfRenderWindow_drawSprite(window, logo, NULL);
