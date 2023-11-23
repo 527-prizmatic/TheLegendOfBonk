@@ -6,7 +6,7 @@
 #define H_MAP_T 60 // Map height in tiles
 #define W_MAP_T 80 // Map width in tiles
 #define TILE_PX 64 // Tile size in pixels
-#define SCALE 4.0 / 3.0 // Tile texture scale
+#define SCALE 4.f / 3.f // Tile texture scale
 #define H_MAP_PX H_MAP_T * TILE_PX // Map height in pixels
 #define W_MAP_PX W_MAP_T * TILE_PX // Map height in pixels
 

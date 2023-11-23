@@ -2,17 +2,13 @@
 
 void initInventory(sfSprite* _inventorySprite, sfSprite* _keySprite) {
     // TEXTURE INVENTAIRE
-    sfTexture* inventoryTexture;
-
-    inventoryTexture = sfTexture_createFromFile(TEXTURE_PATH"inventory.png", NULL);
+    sfTexture* inventoryTexture = sfTexture_createFromFile(TEXTURE_PATH"inventory.png", NULL);
     sfSprite_setTexture(_inventorySprite, inventoryTexture, sfTrue);
     sfSprite_setScale(_inventorySprite, (sfVector2f) { 3.0f, 3.0f });
     sfSprite_setPosition(_inventorySprite, (sfVector2f) { 280.0f, 280.0f });
 
     // TEXTURE CLE
-    sfTexture* keyTexture;
-
-    keyTexture = sfTexture_createFromFile(TEXTURE_PATH"key.png", NULL);
+    sfTexture* keyTexture = sfTexture_createFromFile(TEXTURE_PATH"key.png", NULL);
     sfSprite_setTexture(_keySprite, keyTexture, sfTrue);
     sfSprite_setScale(_keySprite, (sfVector2f) { 2.0f, 2.0f });
     sfSprite_setPosition(_keySprite, (sfVector2f) { 650.0f, 500.0f });
@@ -45,18 +41,15 @@ void displayInventory(sfRenderWindow* _window, int* _inventory, sfSprite* _inven
         }
     }
     
-    if (_inventory[0])
-    {
-        if (_inventory[0] == 2)
-        {
+    if (_inventory[0]) {
+        if (_inventory[0] == 2) {
             rect.left = rect.width * 4;
             sfSprite_setTextureRect(_keySprite, rect);
             sfSprite_setPosition(_keySprite, (sfVector2f) { 443.0f, 515.0f });
             sfSprite_setScale(_keySprite, (sfVector2f) { 1.7f, 1.7f });
             sfRenderWindow_drawSprite(_window, _keySprite, NULL);
         }
-        else
-        {
+        else {
             rect.left = 0;
             sfSprite_setTextureRect(_keySprite, rect);
             sfSprite_setPosition(_keySprite, (sfVector2f) { 450.0f, 520.0f });
