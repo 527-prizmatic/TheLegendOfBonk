@@ -465,7 +465,7 @@ int main() {
 					sfRenderWindow_drawSprite(window, buttonPauseOptions, NULL);
 					sfRenderWindow_drawSprite(window, buttonPauseQuit, NULL);
 					
-					sfRenderWindow_display(window);
+					sfRenderWindow_display(window); 
 				}
 
 
