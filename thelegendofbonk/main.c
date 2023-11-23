@@ -279,8 +279,8 @@ int main() {
 				// Check for interaction with chests when pressing the bound key
 				else if (testKeyPress(KEY_INTERACT, window) && checkInteract != -1 && inventory[0] != 2 && inventory[0] != 3) {
 					inventory[checkInteract] = 1;
+					if (chestArray[checkInteract].flagOpen == 0) sfSound_play(sndChest);
 					chestArray[checkInteract].flagOpen = 1;
-                    sfSound_play(sndChest);
 				}
 
 				if (flagCheese) {
@@ -288,7 +288,7 @@ int main() {
 					if (testKeyPress(KEY_INTERACT, window)) flagInteraction = 1;
 					inventory[0] = 3;
 					flagCheese = 0;
-					sfSound_play(sndChest);
+					if (sfSound_getStatus(sndChest) == sfStopped && chestArray[checkInteract].flagOpen == 0) sfSound_play(sndChest);
 				}
 				
 				// Rendering
@@ -344,7 +344,7 @@ int main() {
 				sfSprite_setTextureRect(npcCheese, (sfIntRect) { 32 * frameNpc, 0, 32, 32 }); 
 
 				// Chest animations
-				if (chestArray[checkInteract].spriteId <= 6 && chestArray[checkInteract].flagOpen == 1) chestArray[checkInteract].spriteId++;
+				for (int i = 0; i < 4; i++) if (chestArray[i].spriteId <= 6 && chestArray[i].flagOpen == 1) chestArray[i].spriteId++;
 			}
 
 			// Computing day/night cycle & changing lamp post textures accordingly
@@ -649,6 +649,7 @@ int main() {
 					if (tickEnding > 6.f) sfRenderWindow_drawSprite(window, cybertruck, NULL); // Rendering the cybertruck
 					if (tickEnding > 6.f) sfRenderWindow_drawSprite(window, elongatedMuskrat, NULL); // Rendering Elon
 					renderMap(propmap, window, sfView_getCenter(viewGame), 1, 1); // Rendering map - props layer - foreground
+					sfRenderWindow_drawRectangleShape(window, nightOverlay, NULL); // Renders nighttime overlay
 				}
 				else if (tickEnding > 13.f && tickEnding <= 47.25f) {
 					sfRenderWindow_setView(window, sfRenderWindow_getDefaultView(window)); // Rendering on window
