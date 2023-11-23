@@ -107,6 +107,8 @@ int main() {
 	sfSoundBuffer* bufferUI = sfSoundBuffer_createFromFile(AUDIO_PATH"click.wav");
 	sfSound_setBuffer(sndButtonClick, bufferUI);
 
+	
+
 	/* == NPCS AND WORLD OBJECTS == */
 	sfSprite* bonk = initSprite(TEXTURE_PATH"bonk.png", vector2f(2.0f, 2.0f), vector2f(4000.0f, 68.0f));
 	sfSprite* npcCheese = initSprite(TEXTURE_PATH"pnj.png", vector2f(2.0f, 2.0f), vector2f(1655.0f, 2085.0f));
@@ -225,6 +227,7 @@ int main() {
 				// Regularly updating a few game variables
 				updatePlayer(propmap, window);
 				updateView(window, viewGame, playerPos);
+				
 
 
 				// Sets up a dialog box for when the player interacts with a sign
@@ -237,6 +240,8 @@ int main() {
 				// Check for interaction with chests when pressing the bound key
 				else if (testKeyPress(KEY_INTERACT, window) && checkInteract != -1 && inventory[0] != 2) inventory[checkInteract] = 1;
 				
+				// play walk sound when moving
+                
 
 				// Rendering
 				sfRenderWindow_setView(window, viewGame); // Rendering on map view
@@ -268,7 +273,7 @@ int main() {
 				
 				if (inventory[0] == 2 && testKeyPress(KEY_INTERACT, window) && canInteract() == 100) gameState = ENDING;
 			}
-			
+
 
 			/* == ANIMATIONS == */
 			bonkAnimTimer += getDeltaTime();
@@ -295,7 +300,7 @@ int main() {
 			
 			// Check for world interactions
 			if (canInteract() == -1) flagInteraction = 0;
-			
+		
 			
 			/* == USER INPUT == */
 			// Crafting the dogecoin
