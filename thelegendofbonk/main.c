@@ -256,7 +256,14 @@ int main() {
 					if (testKeyPress(KEY_INTERACT, window)) flagInteraction = 1;
 				}
 				// Check for interaction with chests when pressing the bound key
-				else if (testKeyPress(KEY_INTERACT, window) && checkInteract != -1 && inventory[0] != 2) inventory[checkInteract] = 1;
+				else if (testKeyPress(KEY_INTERACT, window) && checkInteract != -1 && inventory[0] != 2)
+				{
+					inventory[checkInteract] = 1;
+
+
+
+
+				}
 
 				if (flagCheese) {
 					updateDialogBox(cheeseTxt2, sizeof(cheeseTxt2), sfTxt_npc, dialogBoxNpc, (sfVector2f) { 10.0f, 450.0f }, (sfVector2f) { 380.0f, 140.0f }, 0);
