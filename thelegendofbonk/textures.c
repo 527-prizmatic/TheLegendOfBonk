@@ -42,16 +42,6 @@ const sfIntRect t_cobble_corner_br	= { TS * 4, TS * 11, 48, 48 };
 
 const sfIntRect t_stairs			= { TS * 4, TS * 5, 48, 48 };
 
-const sfIntRect t_water_tl			= { TS * 6, TS * 12, 48, 48 };
-const sfIntRect t_water_t			= { TS * 7, TS * 12, 48, 48 };
-const sfIntRect t_water_tr			= { TS * 8, TS * 12, 48, 48 };
-const sfIntRect t_water_l			= { TS * 6, TS * 13, 48, 48 };
-const sfIntRect t_water				= { TS * 7, TS * 13, 48, 48 };
-const sfIntRect t_water_r			= { TS * 8, TS * 13, 48, 48 };
-const sfIntRect t_water_bl			= { TS * 6, TS * 14, 48, 48 };
-const sfIntRect t_water_b			= { TS * 7, TS * 14, 48, 48 };
-const sfIntRect t_water_br			= { TS * 8, TS * 14, 48, 48 };
-
 
 /* == PROPS == */
 const sfIntRect p_ledge_tl			= { TS * 0, TS * 3, 48, 48 };
@@ -94,6 +84,17 @@ const sfIntRect p_chest_5			= { TS * 4, TS * 15, 48, 48 };
 const sfIntRect p_chest_6			= { TS * 5, TS * 15, 48, 48 };
 const sfIntRect p_chest_7			= { TS * 6, TS * 15, 48, 48 };
 const sfIntRect p_chest_8           = { TS * 7, TS * 15, 48, 48 };
+
+const sfIntRect* arr_chest[8] = {
+	&p_chest,
+	&p_chest_2,
+	&p_chest_3,
+	&p_chest_4,
+	&p_chest_5,
+	&p_chest_6,
+	&p_chest_7,
+	&p_chest_8
+};
 
 const sfIntRect p_bush   	        = { TS * 7, TS * 2, 48, 48 };
 const sfIntRect p_sapling_b	        = { TS * 6, TS * 2, 48, 48 };
@@ -160,16 +161,6 @@ sfIntRect textureFromId(int _id) {
 
 	case 28: return t_stairs;
 
-	case 29: return t_water_tl;
-	case 30: return t_water_t;
-	case 31: return t_water_tr;
-	case 32: return t_water_l;
-	case 33: return t_water;
-	case 34: return t_water_r;
-	case 35: return t_water_bl;
-	case 36: return t_water_b;
-	case 37: return t_water_br;
-
 	case 64: return p_none;
 
 	case 65: return p_ledge_tl;
@@ -203,34 +194,34 @@ sfIntRect textureFromId(int _id) {
 	case 89: return p_fence_post;
 
 	case 90: return p_sign;
+	case 91: return p_chest;
 
-	case 91: return p_bush;
-	case 92: return p_sapling_b;
-	case 93: return p_sapling_t;
-	case 94: return p_tree_bl;
-	case 95: return p_tree_br;
-	case 96: return p_tree_ml;
-	case 97: return p_tree_mr;
-	case 98: return p_tree_tl;
-	case 99: return p_tree_tr;
+	case 92: return p_bush;
+	case 93: return p_sapling_b;
+	case 94: return p_sapling_t;
+	case 95: return p_tree_bl;
+	case 96: return p_tree_br;
+	case 97: return p_tree_ml;
+	case 98: return p_tree_mr;
+	case 99: return p_tree_tl;
+	case 100: return p_tree_tr;
 
-	case 100: return p_house_t1;
-	case 101: return p_house_t2;
-	case 102: return p_house_t3;
-	case 103: return p_house_m1;
-	case 104: return p_house_m2;
-	case 105: return p_house_m3;
-	case 106: return p_house_b1;
-	case 107: return p_house_b2;
-	case 108: return p_house_b3;
-	case 109: return p_house_b4;
+	case 101: return p_house_t1;
+	case 102: return p_house_t2;
+	case 103: return p_house_t3;
+	case 104: return p_house_m1;
+	case 105: return p_house_m2;
+	case 106: return p_house_m3;
+	case 107: return p_house_b1;
+	case 108: return p_house_b2;
+	case 109: return p_house_b3;
+	case 110: return p_house_b4;
 
-	case 110: return p_bench_tl;
-	case 111: return p_bench_tr;
-	case 112: return p_bench_bl;
-	case 113: return p_bench_br;
+	case 111: return p_bench_tl;
+	case 112: return p_bench_tr;
+	case 113: return p_bench_bl;
+	case 114: return p_bench_br;
 
-	case 114: return p_chest;
 	case 115: return p_chest_2;
 	case 116: return p_chest_3;
 	case 117: return p_chest_4;
@@ -238,7 +229,6 @@ sfIntRect textureFromId(int _id) {
 	case 119: return p_chest_6;
 	case 120: return p_chest_7;
 	case 121: return p_chest_8;
-
 
 	default: return t_none;
 	}
@@ -260,13 +250,20 @@ sfBool isSolidBlock(char _id) {
         case 93: return sfTrue;
         case 95: return sfTrue;
         case 96: return sfTrue;
+		case 115: return sfTrue;
+		case 116: return sfTrue;
+		case 117: return sfTrue;
+		case 118: return sfTrue;
+		case 119: return sfTrue;
+		case 120: return sfTrue;
+		case 121: return sfTrue;
 		default: return sfFalse;
 	}
 }
 
 sfBool isWater(char _id) {
-	if (_id >= 29 && _id <= 37) return sfTrue;
 	switch (_id) {
+		// case 1: return sfTrue;
 	default: return sfFalse;
 	}
 }

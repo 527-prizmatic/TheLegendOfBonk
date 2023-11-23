@@ -227,6 +227,7 @@ int main() {
 				gameState = GAME;
 				interactTilePos(propmap);
 			}
+
 			// When clicking on the EDIT button
 			else if (isClicked(window, buttonMainEdit)) {
 				sfSound_play(sndButtonClick);
@@ -271,10 +272,9 @@ int main() {
 					if (testKeyPress(KEY_INTERACT, window)) flagInteraction = 1;
 				}
 				// Check for interaction with chests when pressing the bound key
-				else if (testKeyPress(KEY_INTERACT, window) && checkInteract != -1 && inventory[0] != 2)
-				{
+				else if (testKeyPress(KEY_INTERACT, window) && checkInteract != -1 && inventory[0] != 2) {
 					inventory[checkInteract] = 1;
-					chestArray->sprite
+					chestArray[checkInteract].flagOpen = 1;
 				}
 
 				if (flagCheese) {
@@ -334,6 +334,9 @@ int main() {
 				frameNpc++;
 				frameNpc %= 7; 
 				sfSprite_setTextureRect(npcCheese, (sfIntRect) { 32 * frameNpc, 0, 32, 32 }); 
+
+				// Chest animations
+				if (chestArray[checkInteract].spriteId <= 6 && chestArray[checkInteract].flagOpen == 1) chestArray[checkInteract].spriteId++;
 			}
 
 			// Computing day/night cycle & changing lamp post textures accordingly

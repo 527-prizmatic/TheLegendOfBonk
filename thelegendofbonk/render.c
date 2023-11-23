@@ -2,6 +2,7 @@
 #include "tools.h"
 #include "textures.h"
 #include "player.h"
+#include "interact.h"
 
 #include "SFML/Graphics.h"
 
@@ -98,8 +99,17 @@ void renderMap(char _map[H_MAP_T][W_MAP_T], sfRenderWindow* _w, sfVector2f _pos,
 	for (int i = render_left; i <= render_right; i++) {
 		for (int j = render_top; j <= render_bottom; j++) {
 			if (_map[j][i] >= 64) { if (_fg != -1 && ((isForeground(_map[j][i]) && _fg == 0) || (!isForeground(_map[j][i]) && _fg == 1))) continue; }
-			sfSprite_setPosition(tile, (sfVector2f) { (float)i * TILE_PX, (float)j * TILE_PX });
-			sfSprite_setTextureRect(tile, textureFromId(_map[j][i]));
+			sfSprite_setPosition(tile, vector2f((float)i * TILE_PX, (float)j * TILE_PX ));
+			if (_map[j][i] != 91) sfSprite_setTextureRect(tile, textureFromId(_map[j][i]));
+			else {
+				sfVector2f tilePos = vector2f(i * TILE_PX, j * TILE_PX);
+				int chestId = 0;
+				for (int i = 0; i < 4; i++) {
+					if (chestArray[i].chestPosition.x == tilePos.x && chestArray[i].chestPosition.y == tilePos.y) break;
+					chestId++;
+				}
+				sfSprite_setTextureRect(tile, *(arr_chest[chestArray[chestId].spriteId]));
+			}
 			sfRenderWindow_drawSprite(_w, tile, NULL);
 		}
 	}

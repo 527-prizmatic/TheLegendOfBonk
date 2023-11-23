@@ -1,6 +1,7 @@
 ﻿#include <stdlib.h>
 
 #include "interact.h"
+#include "textures.h"
 
 void interactTilePos(char _map[H_MAP_T][W_MAP_T]) {
 	system("cls");
@@ -44,9 +45,10 @@ void interactTilePos(char _map[H_MAP_T][W_MAP_T]) {
 				// Chest
 				case 91:
 					chestArray[chestCpt].id = chestCpt;
-					chestArray[chestCpt].sprite = textureFromId(91);
+					chestArray[chestCpt].spriteId = 0;
 					chestArray[chestCpt].chestPosition.y = TILE_PX * i;
 					chestArray[chestCpt].chestPosition.x = TILE_PX * j;
+					chestArray[chestCpt].flagOpen = 0;
 					chestCpt++;
 					break;
 				default: break;
