@@ -4,8 +4,10 @@
 #include "player.h"
 
 typedef struct {
+	int spriteId;
 	sfVector2f chestPosition;
 	int id;
+	char flagOpen;
 }Chest;
 
 typedef struct {

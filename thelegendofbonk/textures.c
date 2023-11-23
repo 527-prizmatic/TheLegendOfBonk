@@ -42,16 +42,6 @@ const sfIntRect t_cobble_corner_br	= { TS * 4, TS * 11, 48, 48 };
 
 const sfIntRect t_stairs			= { TS * 4, TS * 5, 48, 48 };
 
-const sfIntRect t_water_tl			= { TS * 6, TS * 12, 48, 48 };
-const sfIntRect t_water_t			= { TS * 7, TS * 12, 48, 48 };
-const sfIntRect t_water_tr			= { TS * 8, TS * 12, 48, 48 };
-const sfIntRect t_water_l			= { TS * 6, TS * 13, 48, 48 };
-const sfIntRect t_water				= { TS * 7, TS * 13, 48, 48 };
-const sfIntRect t_water_r			= { TS * 8, TS * 13, 48, 48 };
-const sfIntRect t_water_bl			= { TS * 6, TS * 14, 48, 48 };
-const sfIntRect t_water_b			= { TS * 7, TS * 14, 48, 48 };
-const sfIntRect t_water_br			= { TS * 8, TS * 14, 48, 48 };
-
 
 /* == PROPS == */
 const sfIntRect p_ledge_tl			= { TS * 0, TS * 3, 48, 48 };
@@ -86,7 +76,25 @@ const sfIntRect p_fence_b			= { TS * 7, TS * 8, 48, 48 };
 const sfIntRect p_fence_post		= { TS * 6, TS * 6, 48, 48 };
 
 const sfIntRect p_sign				= { TS * 6, TS * 7, 48, 48 };
-const sfIntRect p_chest             = { TS * 5, TS * 7, 48, 48 };
+const sfIntRect p_chest             = { TS * 0, TS * 15, 48, 48 };
+const sfIntRect p_chest_2			= { TS * 1, TS * 15, 48, 48 };
+const sfIntRect p_chest_3			= { TS * 2, TS * 15, 48, 48 };
+const sfIntRect p_chest_4			= { TS * 3, TS * 15, 48, 48 };
+const sfIntRect p_chest_5			= { TS * 4, TS * 15, 48, 48 };
+const sfIntRect p_chest_6			= { TS * 5, TS * 15, 48, 48 };
+const sfIntRect p_chest_7			= { TS * 6, TS * 15, 48, 48 };
+const sfIntRect p_chest_8           = { TS * 7, TS * 15, 48, 48 };
+
+const sfIntRect* arr_chest[8] = {
+	&p_chest,
+	&p_chest_2,
+	&p_chest_3,
+	&p_chest_4,
+	&p_chest_5,
+	&p_chest_6,
+	&p_chest_7,
+	&p_chest_8
+};
 
 const sfIntRect p_bush   	        = { TS * 7, TS * 2, 48, 48 };
 const sfIntRect p_sapling_b	        = { TS * 6, TS * 2, 48, 48 };
@@ -153,16 +161,6 @@ sfIntRect textureFromId(int _id) {
 
 	case 28: return t_stairs;
 
-	case 29: return t_water_tl;
-	case 30: return t_water_t;
-	case 31: return t_water_tr;
-	case 32: return t_water_l;
-	case 33: return t_water;
-	case 34: return t_water_r;
-	case 35: return t_water_bl;
-	case 36: return t_water_b;
-	case 37: return t_water_br;
-
 	case 64: return p_none;
 
 	case 65: return p_ledge_tl;
@@ -224,6 +222,14 @@ sfIntRect textureFromId(int _id) {
 	case 113: return p_bench_bl;
 	case 114: return p_bench_br;
 
+	case 115: return p_chest_2;
+	case 116: return p_chest_3;
+	case 117: return p_chest_4;
+	case 118: return p_chest_5;
+	case 119: return p_chest_6;
+	case 120: return p_chest_7;
+	case 121: return p_chest_8;
+
 	default: return t_none;
 	}
 }
@@ -244,13 +250,20 @@ sfBool isSolidBlock(char _id) {
         case 93: return sfTrue;
         case 95: return sfTrue;
         case 96: return sfTrue;
+		case 115: return sfTrue;
+		case 116: return sfTrue;
+		case 117: return sfTrue;
+		case 118: return sfTrue;
+		case 119: return sfTrue;
+		case 120: return sfTrue;
+		case 121: return sfTrue;
 		default: return sfFalse;
 	}
 }
 
 sfBool isWater(char _id) {
-	if (_id >= 29 && _id <= 37) return sfTrue;
 	switch (_id) {
+		// case 1: return sfTrue;
 	default: return sfFalse;
 	}
 }
