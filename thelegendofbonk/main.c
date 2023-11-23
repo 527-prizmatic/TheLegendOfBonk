@@ -274,10 +274,7 @@ int main() {
 				else if (testKeyPress(KEY_INTERACT, window) && checkInteract != -1 && inventory[0] != 2)
 				{
 					inventory[checkInteract] = 1;
-
-
-
-
+					chestArray->sprite
 				}
 
 				if (flagCheese) {

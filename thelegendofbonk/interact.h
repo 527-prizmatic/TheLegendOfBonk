@@ -4,6 +4,7 @@
 #include "player.h"
 
 typedef struct {
+	sfSprite* sprite;
 	sfVector2f chestPosition;
 	int id;
 }Chest;

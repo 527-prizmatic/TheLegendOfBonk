@@ -44,6 +44,7 @@ void interactTilePos(char _map[H_MAP_T][W_MAP_T]) {
 				// Chest
 				case 91:
 					chestArray[chestCpt].id = chestCpt;
+					chestArray[chestCpt].sprite = textureFromId(91);
 					chestArray[chestCpt].chestPosition.y = TILE_PX * i;
 					chestArray[chestCpt].chestPosition.x = TILE_PX * j;
 					chestCpt++;
