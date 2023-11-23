@@ -135,6 +135,7 @@ int main() {
 	initPlayer();
 	sfEvent event;
 	float tick = 0.0f;
+	float tickEnding = 0.0f;
 
 
 	///***  = = =  GAME LOOP  = = =  ***///
@@ -255,7 +256,12 @@ int main() {
 
 				// Displays "PRESS E" pop-up above inventory bar
 				sfRenderWindow_setView(window, sfRenderWindow_getDefaultView(window)); // Now rendering on HUD
-				if (checkInteract != -1) sfRenderWindow_drawText(window, sfTxt_interact, sfFalse);
+				if (checkInteract != -1) {
+					if (checkInteract == 100) {
+						if (inventory[0] == 2) sfRenderWindow_drawText(window, sfTxt_interact, sfFalse);
+					}
+					else sfRenderWindow_drawText(window, sfTxt_interact, sfFalse);
+				}
 				if (flagInteraction == 1) displayDialogBox(window, sfTxt_npc, dialogBoxNpc, sfFalse); // Displays dialog box if need be
 				
 				sfRenderWindow_display(window);
