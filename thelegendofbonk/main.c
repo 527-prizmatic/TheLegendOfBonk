@@ -228,7 +228,7 @@ int main() {
 
 				// Sets up a dialog box for when the player interacts with a sign
 				checkInteract = canInteract();
-				if (checkInteract > 19) {
+				if (checkInteract > 19 && checkInteract != 100) {
 					int idNpc = checkInteract - 20;
 					updateDialogBox(pnjArray[idNpc].txt, sizeof(pnjArray[idNpc].txt), sfTxt_npc, dialogBoxNpc, (sfVector2f) { 10.0f, 450.0f }, (sfVector2f) { 380.0f, 140.0f }, 0);
 					if (testKeyPress(KEY_INTERACT, window)) flagInteraction = 1;
@@ -257,8 +257,10 @@ int main() {
 				sfRenderWindow_setView(window, sfRenderWindow_getDefaultView(window)); // Now rendering on HUD
 				if (checkInteract != -1) sfRenderWindow_drawText(window, sfTxt_interact, sfFalse);
 				if (flagInteraction == 1) displayDialogBox(window, sfTxt_npc, dialogBoxNpc, sfFalse); // Displays dialog box if need be
-
+				
 				sfRenderWindow_display(window);
+				
+				if (inventory[0] == 2 && testKeyPress(KEY_INTERACT, window) && canInteract() == 100) gameState = ENDING;
 			}
 			
 
@@ -473,6 +475,11 @@ int main() {
 				flagPauseMenu = 1;
 			}
 			else flagPauseMenu = 0;
+		}
+
+		/* == ENDING SCENE == */ 
+		else if (gameState == ENDING) {
+			printf("BONK");
 		}
 
 		/* == CREDITS == */ 
