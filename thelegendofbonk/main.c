@@ -18,11 +18,10 @@
 #include "editor.h"
 #include "music.h"
 #include "interact.h"
-#include "enemy.h"
-
-#define PI (double)3.1415926535
 
 int main() {
+			///***  = = =  PREINIT  = = =  ***///
+
 	/* == RENDERING ENGINE CORE */
 	sfRenderWindow* window = initRender(); // Main window
 	sfView* viewGame = initGameView(); // Game mode view
@@ -37,21 +36,30 @@ int main() {
 	sfSprite_setOrigin(logo, vector2f(400.0f, 200.0f));
 	float logoAnimTimer = 0.0f;
 
-	/* == INTERACT HEADS-UP ==  */
-	sfText* sfTxt_interact = sfText_create();
-	sfText_setFont(sfTxt_interact, font);
-	sfText_setCharacterSize(sfTxt_interact, 30);
-	sfText_setOutlineThickness(sfTxt_interact, 2.0f);
-	sfText_setOutlineColor(sfTxt_interact, sfBlack);
-	sfText_setPosition(sfTxt_interact, vector2f(440.0f, 465.0f));
-	sfText_setString(sfTxt_interact, "Press E !\0");
-
 	/* == PAUSE MENU == */
 	char txtVolume[16] = "Volume -"; // For volume display in the options screen
 	char flagOptions = 0; // Whether the pause menu should display the root menu or the options screen
 	char flagPauseMenu = 0; // Used for timer purposes when toggling the pause menu
 	char flagClick = 0; // Used for misc timer purposes to check if the left mouse button is being pressed
 	sfText* textVolume = initText(font, 30, vector2f(250.0f, 250.0f));
+
+	/* == INTERACTIONS HEADS-UP ==  */
+	sfText* sfTxt_interact = initText(font, 30, vector2f(600.f, 460.f));
+	formatTextOutline(sfTxt_interact, sfBlack);
+	sfText_setString(sfTxt_interact, "Press E !\0");
+
+	/* == INVENTORY == */
+	int inventory[4] = { 0, 0, 0, 0 };
+	sfSprite* spriteInventory = sfSprite_create();
+	sfSprite* spriteDogecoin = sfSprite_create();
+	initInventory(spriteInventory, spriteDogecoin);
+
+	/* == MAIN DIALOG BOX == */
+	sfText* sfTxt_npc = sfText_create();
+	char textNpc[] = "";
+	sfRectangleShape* dialogBoxNpc = initDialogBox(sfTxt_npc, font, 20);
+	char flagInteraction = 0;
+	int checkInteract = 0;
 
 	/* == MISC UI BUTTONS == */
 	sfSprite* buttonMainPlay = initSprite(TEXTURE_PATH"play.png", vector2f(3.5f, 3.5f), vector2f(175.0f, 400.0f));
@@ -81,25 +89,11 @@ int main() {
 		buttonUICraft
 	};
 
-	/* == INVENTORY == */
-	int inventory[4] = { 0, 0, 0, 0 };
-	sfText* sfTxt_c = sfText_create();
-	sfSprite* inventorySprite = sfSprite_create();
-	sfSprite* keySprite = sfSprite_create();
-	initInventory(inventorySprite, keySprite);
-	char flagCraft = 0; // Indicates whether the key can be crafted yet
-
 	/* == MAP EDITOR == */
 	char tileSelection = 0; // Which tile is currently selected in the editor
 	char flagEditorUI = 0; // Whether the map editor UI is currently up
 	char flagEditorMode = 0; // Whether the map editor UI currently shows terrain or props
 	char flagEditorLeave = 0; // Toggled when ESC is pressed for timing purposes
-
-	/* == PNJ TXT == */
-	sfText* sfTxt_pnj = sfText_create();
-	char pnjTxt[] = "";
-	sfRectangleShape* pnjDialogBox = initDialogBox(sfTxt_pnj, font, 20);
-	char flagInteraction = 0;
 
 	/* == BGM == */
 	sfMusic* bgm = sfMusic_createFromFile(AUDIO_PATH"01_main_screen_trailer.wav");
@@ -108,7 +102,32 @@ int main() {
 	sfMusic_play(bgm);
 	sfMusic_setLoop(bgm, sfTrue);
 
+	/* == BUTTON CLICK SOUND == */
+	sfSound* sndButtonClick = sfSound_create();
+	sfSoundBuffer* bufferUI = sfSoundBuffer_createFromFile(AUDIO_PATH"click.wav");
+	sfSound_setBuffer(sndButtonClick, bufferUI);
+
+	/* == NPCS AND WORLD OBJECTS == */
+	sfSprite* bonk = initSprite(TEXTURE_PATH"bonk.png", vector2f(2.0f, 2.0f), vector2f(4000.0f, 65.0f));
+	sfSprite* npcCheese = initSprite(TEXTURE_PATH"pnj.png", vector2f(2.0f, 2.0f), vector2f(544.0f, 512.0f));
+	sfSprite* cage = initSprite(TEXTURE_PATH"cage.png", vector2f(0.3f, 0.3f), vector2f(3970.0f, 20.0f));
+
+	/* == TIMERS & ANIMATION HANDLERS == */
+	float bonkAnimTimer = 0.0f;
+	char frameBonk = 0;
+	sfSprite_setTextureRect(bonk, (sfIntRect) { 0, 0, 32, 32 });
+	float npcAnimTimer = 0.0f;
+	char frameNpc = 0;
+	sfSprite_setTextureRect(npcCheese, (sfIntRect) { 0, 0, 32, 32 });
+
+	/* == DAY/NIGHT CYCLE == */
+	sfRectangleShape* nightOverlay = initRectangle(vector2f(0.0f, 0.0f), vector2f(800.0f, 600.0f));
+	float timeNight = 0.f;
+	float nightFilterAlpha = 96.f;
+	const float dayCycleLengthSecs = 240.f;
+
 	/* == CORE INIT == */
+	// FOR DEVS - Always keep this at the bottom of the preinit stack
 	initTools();
 	char tilemap[H_MAP_T][W_MAP_T];
 	char propmap[H_MAP_T][W_MAP_T];
@@ -117,52 +136,11 @@ int main() {
 	sfEvent event;
 	float tick = 0.0f;
 
-	/* == BUTTON CLICK SOUND == */
-	sfSound* sndButtonClick = sfSound_create();
-	sfSoundBuffer* bufferUI = sfSoundBuffer_createFromFile(AUDIO_PATH"click.wav");
-	sfSound_setBuffer(sndButtonClick, bufferUI);
 
-	/* == BONK == */
-	sfSprite* bonk = sfSprite_create();
-	sfTexture* textureBonk = sfTexture_createFromFile(TEXTURE_PATH"bonk.png", NULL);
-	sfSprite_setTexture(bonk, textureBonk, sfFalse);
-	sfSprite_setScale(bonk, vector2f(2.0f, 2.0f));
-	float bonkAnimTimer = 0.0f;
-	char frameBonk = 0;
-	sfSprite_setTextureRect(bonk, (sfIntRect) { 0, 0, 32, 32 });
-	sfSprite_setPosition(bonk, vector2f(4000.0f, 65.0f));
+	///***  = = =  GAME LOOP  = = =  ***///
 
-	/* == ENEMY == */
-	initEnemy();
-
-	/* == DAY/NIGHT CYCLE == */
-	sfRectangleShape* nightFilter = sfRectangleShape_create();
-	sfRectangleShape_setPosition(nightFilter, vector2f(0.0f, 0.0f));
-	sfRectangleShape_setSize(nightFilter, vector2f(800.0f, 600.0f));
-	float timeNight = 0;
-
-	/* == CHEESE NPC == */
-	sfSprite* npcCheese = sfSprite_create();
-	sfTexture* textureNpcCheese = sfTexture_createFromFile(TEXTURE_PATH"pnj.png", NULL);
-	sfSprite_setTexture(npcCheese, textureNpcCheese, sfFalse);
-	sfSprite_setScale(npcCheese, vector2f(2.0f, 2.0f));
-	float npcAnimTimer = 0.0f;
-	char frameNpc = 0; 
-	sfSprite_setTextureRect(npcCheese, (sfIntRect) { 0, 0, 32, 32 });
-	sfSprite_setPosition(npcCheese, vector2f(544.0f, 512.0f));
-
-	/* == CAGE == */
-	sfSprite* cage = sfSprite_create(); 
-	sfTexture* textureCage = sfTexture_createFromFile(TEXTURE_PATH"cage.png", NULL); 
-	sfSprite_setTexture(cage, textureCage, sfFalse); 
-	sfSprite_setScale(cage, vector2f(0.3f, 0.3f)); 
-	sfSprite_setPosition(cage, vector2f(3970.0f, 20.0f));
-
-
-	/* == GAME LOOP == */
 	while (sfRenderWindow_isOpen(window)) {
 
-		timeNight += getDeltaTime();
 		// Some core functions
 		while (sfRenderWindow_pollEvent(window, &event)) if (event.type == sfEvtClosed) sfRenderWindow_close(window); // Check if window is closed via the WIndows UI
 		restartClock();
@@ -176,11 +154,10 @@ int main() {
 			for (int i = 0; i < sizeof(UIButtons) / sizeof(sfSprite*); i++) {
 				sfSprite* button = UIButtons[i];
 				sfFloatRect spriteBounds = sfSprite_getGlobalBounds(button);
-				if (sfFloatRect_contains(&spriteBounds, mousePos.x, mousePos.y)) sfSprite_setColor(button, hoverColor);
+				if (sfFloatRect_contains(&spriteBounds, (float) mousePos.x, (float) mousePos.y)) sfSprite_setColor(button, hoverColor);
 				else sfSprite_setColor(button, sfWhite);
 			}
 		}
-
 
 		/* == MAIN MENU == */
 		if (gameState == MENU) {
@@ -202,11 +179,11 @@ int main() {
 			}
 			
 			
-			/* == LOGO ANIMATIONS == */
+			/* == COMPUTING LOGO ANIMATIONS == */
 			logoAnimTimer += getDeltaTime();
-			logoPos.y = 200.0f + cos(logoAnimTimer / 2) * 30.0f;
-			logoPos.x = 400.0f + sin(logoAnimTimer / 3.3) * 70.0f;
-			sfSprite_setRotation(logo, cos(logoAnimTimer * 4.6) * 3.0f);
+			logoPos.y = 200.0f + cosf(logoAnimTimer / 2.f) * 30.0f;
+			logoPos.x = 400.0f + sinf(logoAnimTimer / 3.3f) * 70.0f;
+			sfSprite_setRotation(logo, cosf(logoAnimTimer * 4.6f) * 3.0f);
 			sfSprite_setPosition(logo, logoPos);
 			
 			
@@ -254,50 +231,48 @@ int main() {
 		/* == GAME == */
 		else if (gameState == GAME) {
 			/* == RENDERING ENGINE == */
+			timeNight += getDeltaTime(); // Ticks day / night cycle
+			if (timeNight >= dayCycleLengthSecs) timeNight -= dayCycleLengthSecs;
+
 			if (tick >= TICK_TIME) {
 				tick = 0.0f;
 
-				// Does some inventory trickeries when key crafted
-				if (flagCraft == 1) {
-					for (int i = 0; i < 4; i++) inventory[i] = 0;
-					inventory[0] = 2;
-					flagCraft = 0;
-				}
-
-				int periodSecs = 120.f;
-				int nightFilterAlpha = 96.0f - sin((timeNight / periodSecs) * PI * 2) * 1000.f;
-				nightFilterAlpha = max(0.f, min(192.0f, nightFilterAlpha));
-
-				if (nightFilterAlpha < 96.0f)swapLamp(propmap, 0); // Lamp posts go lit
-				else swapLamp(propmap, 1); // Lamp posts go dark
-
 				// Regularly updating a few game variables
 				updatePlayer(propmap, window);
-				updateEnemy();
 				updateView(window, viewGame, playerPos);
+
+
+				// Sets up a dialog box for when the player interacts with a sign
+				checkInteract = canInteract();
+				if (checkInteract > 19) {
+					int idNpc = checkInteract - 20;
+					updateDialogBox(pnjArray[idNpc].txt, sizeof(pnjArray[idNpc].txt), sfTxt_npc, dialogBoxNpc, (sfVector2f) { 10.0f, 450.0f }, (sfVector2f) { 380.0f, 140.0f }, 0);
+					if (testKeyPress(KEY_INTERACT, window)) flagInteraction = 1;
+				}
+				// Check for interaction with chests when pressing the bound key
+				else if (testKeyPress(KEY_INTERACT, window) && checkInteract != -1 && inventory[0] != 2) inventory[checkInteract] = 1;
 				
-				// Displays "PRESS E" pop-up above inventory bar
-				if (canInteract() !=-1 && !hasAllDogecoinPieces(inventory) && inventory[0] !=2) sfRenderWindow_drawText(window, sfTxt_interact, sfFalse);
 
 				// Rendering
-				sfRenderWindow_setView(window, viewGame);
-				renderMap(tilemap, window, sfView_getCenter(viewGame), -1, 0);
-				renderMap(propmap, window, sfView_getCenter(viewGame), 0, 0);
-				displayPlayer(window);
-				displayEnemy(window);
-				sfRenderWindow_drawSprite(window, npcCheese, NULL);
-				renderMap(propmap, window, sfView_getCenter(viewGame), 1, 0);
-				sfRenderWindow_drawSprite(window, bonk, NULL);
-				sfRenderWindow_drawSprite(window, cage, NULL); 
-				displayInventory(window, inventory, inventorySprite, keySprite); // Displays inventory HUD
+				sfRenderWindow_setView(window, viewGame); // Rendering on map view
+				renderMap(tilemap, window, sfView_getCenter(viewGame), -1, 0); // Rendering map - terrain layer
+				renderMap(propmap, window, sfView_getCenter(viewGame), 0, 0); // Rendering map - props layer - background
+				displayPlayer(window); // Rendering Bingchilling
+				sfRenderWindow_drawSprite(window, npcCheese, NULL); // Rendering cheese NPC
+				renderMap(propmap, window, sfView_getCenter(viewGame), 1, 0); // Rendering map - props layer - foreground
+				sfRenderWindow_drawSprite(window, bonk, NULL); // Rendering Bonk
+				sfRenderWindow_drawSprite(window, cage, NULL); // Rendering cage
+
+				sfRenderWindow_setView(window, sfRenderWindow_getDefaultView(window)); // Now rendering on HUD
+				sfRenderWindow_drawRectangleShape(window, nightOverlay, NULL); // Renders nighttime overlay
+				displayInventory(window, inventory, spriteInventory, spriteDogecoin); // Rendering inventory HUD
 				if (hasAllDogecoinPieces(inventory)) sfRenderWindow_drawSprite(window, buttonUICraft, NULL); // Renders craft button (but only if the dogecoin can be crafted)
 				renderMinimap(window, viewMinimap, tilemap, propmap); // Renders minimap
 
-				/// #FIXME
-				sfVector2f vPos = sfView_getCenter(viewGame);
-				sfRectangleShape_setPosition(nightFilter, vector2f(vPos.x - 400, vPos.y - 300));
-				sfRectangleShape_setFillColor(nightFilter, sfColor_fromRGBA(8.0f, 8.0f, 32.0f, nightFilterAlpha));
-				sfRenderWindow_drawRectangleShape(window, nightFilter, NULL);
+				// Displays "PRESS E" pop-up above inventory bar
+				sfRenderWindow_setView(window, sfRenderWindow_getDefaultView(window)); // Now rendering on HUD
+				if (checkInteract != -1) sfRenderWindow_drawText(window, sfTxt_interact, sfFalse);
+				if (flagInteraction == 1) displayDialogBox(window, sfTxt_npc, dialogBoxNpc, sfFalse); // Displays dialog box if need be
 
 				sfRenderWindow_display(window);
 			}
@@ -318,36 +293,28 @@ int main() {
 				frameNpc %= 7; 
 				sfSprite_setTextureRect(npcCheese, (sfIntRect) { 32 * frameNpc, 0, 32, 32 }); 
 			}
+
+			// Computing day/night cycle & changing lamp post textures accordingly
+			nightFilterAlpha = 96.0f - sinf((timeNight / dayCycleLengthSecs) * PI * 2.f) * 1000.f;
+			nightFilterAlpha = max(0.f, min(192.0f, nightFilterAlpha));
+			sfRectangleShape_setFillColor(nightOverlay, sfColor_fromRGBA(8, 8, 32, (int)nightFilterAlpha));
+			if (nightFilterAlpha > 96.0f) selectTexture_lampPost(1); // Lamp posts turn on at night
+			else selectTexture_lampPost(0); // Lamp posts turn off at day
 			
 			
 			/* == WORLD INTERACTIONS == */
 			if (canInteract() == -1) flagInteraction = 0;
 			
-			// When opening a chest, check if the player already got the associated dogecoin piece, and gives it to them if not
-			if (canInteract() > 19 && !hasAllDogecoinPieces(inventory)){
-				int idNpc = canInteract() - 20;
-				updateDialogBox(pnjArray[idNpc].txt, sizeof(pnjArray[idNpc].txt), sfTxt_pnj, pnjDialogBox, (sfVector2f) { 10.0f, 450.0f }, (sfVector2f) { 380.0f, 140.0f }, 0);
-				sfRenderWindow_drawText(window, sfTxt_interact, sfFalse);
-				if (testKeyPress(KEY_INTERACT, window)) flagInteraction = 1;
-				if (flagInteraction == 1) displayDialogBox(window, sfTxt_pnj, pnjDialogBox, sfFalse);
-			}
-			
-			// Crafting the dogecoin
-			if (isClicked(window, buttonUICraft) && hasAllDogecoinPieces(inventory) && inventory[0] != 2) flagCraft = 1;
-			// Does some inventory trickeries when key crafted
-			if (flagCraft == 1) {
-				for (int i = 0; i < 4; i++) inventory[i] = 0;
-				inventory[0] = 2;
-				flagCraft = 0;
-			}
-			
 			
 			/* == USER INPUT == */
-			// Check for interactions when pressing the bound key
-			if (testKeyPress(KEY_INTERACT, window) && canInteract() != -1 && inventory[0] != 2) inventory[canInteract()] = 1;
+			// Crafting the dogecoin
+			if (isClicked(window, buttonUICraft) && hasAllDogecoinPieces(inventory) && inventory[0] != 2) {
+				for (int i = 0; i < 4; i++) inventory[i] = 0;
+				inventory[0] = 2;
+			}
 
 			// Secret debug keybind (ALT+R) which returns the player at the spawn point
-			if (sfKeyboard_isKeyPressed(sfKeyLAlt) && testKeyPress(sfKeyR, window)) {
+			if (sfKeyboard_isKeyPressed(sfKeyLAlt) && testKeyPress(sfKeyR, window) && DEBUG) {
 				playerPos.x = 544;
 				playerPos.y = 512;
 			}
@@ -453,7 +420,7 @@ int main() {
 				else if (isClicked(window, buttonPauseOptions) && flagClick == 0) {
 					sfSound_play(sndButtonClick);
 					flagOptions = 1;
-					flagClick == 1;
+					flagClick = 1;
 				}
 				// Quits game
 				else if (isClicked(window, buttonPauseQuit) && flagClick == 0) {

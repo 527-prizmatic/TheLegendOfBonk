@@ -12,7 +12,7 @@ sfSprite* tile;
 sfRenderWindow* initRender() {
 	sfVideoMode mode = { 800, 600, 32 };
     sfRenderWindow* _w = sfRenderWindow_create(mode, "TheLegendOfBonk", sfResize | sfClose, NULL);
-	tilesheet = sfTexture_createFromFile(TEXTURE_PATH"tilesheetv2.png", NULL);
+	tilesheet = sfTexture_createFromFile(TEXTURE_PATH"tilesheet_v2.png", NULL);
 	tile = sfSprite_create();
 	sfSprite_setScale(tile, (sfVector2f){ SCALE, SCALE });
 	return _w;
@@ -83,22 +83,22 @@ void renderMap(char _map[H_MAP_T][W_MAP_T], sfRenderWindow* _w, sfVector2f _pos,
 		render_right = W_MAP_T;
 	}
 	else if (gameState == GAME) {
-		render_top = max(0, trunc((_pos.y - 400) / TILE_PX));
-		render_bottom = min(H_MAP_T - 1, trunc((_pos.y + 400) / TILE_PX));
-		render_left = max(0, trunc((_pos.x - 500) / TILE_PX));
-		render_right = min(W_MAP_T - 1, trunc((_pos.x + 500) / TILE_PX));
+		render_top = (int) max(0, trunc((_pos.y - 400) / TILE_PX));
+		render_bottom = (int) min(H_MAP_T - 1, trunc((_pos.y + 400) / TILE_PX));
+		render_left = (int) max(0, trunc((_pos.x - 500) / TILE_PX));
+		render_right = (int) min(W_MAP_T - 1, trunc((_pos.x + 500) / TILE_PX));
 	}
 	else if (gameState == EDITOR) {
-		render_top = max(0, trunc((_pos.y - 550) / TILE_PX));
-		render_bottom = min(H_MAP_T - 1, trunc((_pos.y + 550) / TILE_PX));
-		render_left = max(0, trunc((_pos.x - 700) / TILE_PX));
-		render_right = min(W_MAP_T - 1, trunc((_pos.x + 700) / TILE_PX));
+		render_top = (int) max(0, trunc((_pos.y - 550) / TILE_PX));
+		render_bottom = (int) min(H_MAP_T - 1, trunc((_pos.y + 550) / TILE_PX));
+		render_left = (int) max(0, trunc((_pos.x - 700) / TILE_PX));
+		render_right = (int) min(W_MAP_T - 1, trunc((_pos.x + 700) / TILE_PX));
 	}
 
 	for (int i = render_left; i <= render_right; i++) {
 		for (int j = render_top; j <= render_bottom; j++) {
 			if (_map[j][i] >= 64) { if (_fg != -1 && ((isForeground(_map[j][i]) && _fg == 0) || (!isForeground(_map[j][i]) && _fg == 1))) continue; }
-			sfSprite_setPosition(tile, (sfVector2f) { i * TILE_PX, j * TILE_PX });
+			sfSprite_setPosition(tile, (sfVector2f) { (float)i * TILE_PX, (float)j * TILE_PX });
 			sfSprite_setTextureRect(tile, textureFromId(_map[j][i]));
 			sfRenderWindow_drawSprite(_w, tile, NULL);
 		}
@@ -106,11 +106,9 @@ void renderMap(char _map[H_MAP_T][W_MAP_T], sfRenderWindow* _w, sfVector2f _pos,
 }
 
 void renderMinimap(sfRenderWindow* _w, sfView* _v, char _map[H_MAP_T][W_MAP_T], char _props[H_MAP_T][W_MAP_T]) {
-	sfView* v_origin = sfRenderWindow_getDefaultView(_w);
+	const sfView* v_origin = sfRenderWindow_getDefaultView(_w);
 
-	sfRectangleShape* minimapFrame = sfRectangleShape_create();
-	sfRectangleShape_setSize(minimapFrame, vector2f(.25f * 800 + 10, .25f * 600 + 10));
-	sfRectangleShape_setPosition(minimapFrame, vector2f(.025f * 800 - 5, .025f * 600 - 5));
+	sfRectangleShape* minimapFrame = initRectangle(vector2f(.025f * 800 - 5, .025f * 600 - 5), vector2f(.25f * 800 + 10, .25f * 600 + 10));
 	sfRectangleShape_setFillColor(minimapFrame, sfColor_fromRGBA(0, 0, 0, 128));
 
 	sfRenderWindow_setView(_w, sfRenderWindow_getDefaultView(_w));
@@ -119,6 +117,8 @@ void renderMinimap(sfRenderWindow* _w, sfView* _v, char _map[H_MAP_T][W_MAP_T], 
 	renderMap(_map, _w, sfView_getCenter(_v), 1, 1);
 	renderMap(_props, _w, sfView_getCenter(_v), -1, 1);
 	renderPlayerOnMinimap(_w);
+
+	sfRenderWindow_setView(_w, v_origin);
 }
 
 void renderEditorUI(sfRenderWindow* _w, sfView* _v, int _mode, sfFont* _font) {
@@ -129,8 +129,7 @@ void renderEditorUI(sfRenderWindow* _w, sfView* _v, int _mode, sfFont* _font) {
 	sfRenderWindow_setView(_w, sfRenderWindow_getDefaultView(_w));
 
 	// Displays dark overlay to hide the map while picking a tile
-	sfRectangleShape* overlay = sfRectangleShape_create();
-	sfRectangleShape_setSize(overlay, vector2f(1200, 900));
+	sfRectangleShape* overlay = initRectangle(vector2f(0.f, 0.f), vector2f(1200, 900));
 	sfRectangleShape_setFillColor(overlay, sfColor_fromRGBA(0, 0, 0, 128));
 	sfRenderWindow_drawRectangleShape(_w, overlay, NULL);
 
@@ -140,7 +139,7 @@ void renderEditorUI(sfRenderWindow* _w, sfView* _v, int _mode, sfFont* _font) {
 	// Renders all available tiles
 	for (int i = 0; i < 12; i++) {
 		for (int j = 0; j < 5; j++) {
-			sfSprite_setPosition(tile, (sfVector2f) { i * TILE_PX + 16, j * TILE_PX + 64 });
+			sfSprite_setPosition(tile, (sfVector2f) { i * TILE_PX + 16.f, j * TILE_PX + 64.f });
 			if (textureFromId(j * 12 + i + 64 * _mode).width == 0 && (j * 12 + i) != 0 && (j * 12 + i) != 64) break;
 			sfSprite_setTextureRect(tile, textureFromId(j * 12 + i + 64 * _mode));
 			sfRenderWindow_drawSprite(_w, tile, NULL);
@@ -150,9 +149,7 @@ void renderEditorUI(sfRenderWindow* _w, sfView* _v, int _mode, sfFont* _font) {
 }
 
 void renderPlayerOnMinimap(sfRenderWindow* _w) {
-	sfRectangleShape* marker = sfRectangleShape_create();
-	sfRectangleShape_setSize(marker, vector2f(64, 64));
-	sfRectangleShape_setPosition(marker, playerPos);
+	sfRectangleShape* marker = initRectangle(playerPos, vector2f(64, 64));
 	sfRectangleShape_setFillColor(marker, sfRed);
 	sfRenderWindow_drawRectangleShape(_w, marker, NULL);
 }
