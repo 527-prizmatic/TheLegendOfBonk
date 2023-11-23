@@ -44,7 +44,7 @@ int main() {
 	sfText* textVolume = initText(font, 30, vector2f(250.0f, 250.0f));
 
 	/* == INTERACTIONS HEADS-UP ==  */
-	sfText* sfTxt_interact = initText(font, 30, vector2f(600.f, 460.f));
+	sfText* sfTxt_interact = initText(font, 30, vector2f(400.f, 400.f));
 	formatTextOutline(sfTxt_interact, sfBlack);
 	sfText_setString(sfTxt_interact, "Press E !\0");
 
@@ -99,6 +99,7 @@ int main() {
 	/* == BGM == */
 	sfMusic* bgm = sfMusic_createFromFile(AUDIO_PATH"01_main_screen_trailer.wav");
 	sfMusic* musicCybertruck = sfMusic_createFromFile(AUDIO_PATH"et_cybertruck.wav");
+	sfMusic_setVolume(musicCybertruck, 50);
 	char flagMusic = 0; // Whether the music is currently playing
 	float timerVolumeChange = 0;
 	sfMusic_play(bgm);
@@ -119,6 +120,20 @@ int main() {
 	sfSound* sndIsHim = sfSound_create();
 	sfSoundBuffer* bufferIsHim = sfSoundBuffer_createFromFile(AUDIO_PATH"this_is_elon_musk.wav");
 	sfSound_setBuffer(sndIsHim, bufferIsHim);
+
+	/* == CREDITS TEXTS == */
+	sfText* txtCredits = initText(font, 30, vector2f(200.f, 425.f));
+	char* credits[10] = { "    THE LEGEND OF BONK",
+		"               WITH\n  BINGCHILLING as DOGE",
+		"        LEVEL DESIGN\n        VALETTE EVAN\n TOUSSAINT J.SEBASTIEN",
+		"         PROGRAMMING\n        GELOT MATHIEU\n         VALETTE EVAN\n  TOUSSAINT J.SEBASTIEN",
+		"        GRAPHIC DESIGN\n        GELOT MATHIEU\n          VALETTE EVAN",
+		"         SOUND DESIGN\n         VALETTE EVAN\n  TOUSSAINT J.SEBASTIEN",
+		"            ELON MUSK\n            ELON MUSK",
+		"                BONK\n       BALLTZE \"CHEEMS\"",
+		"       TO BE CONTINUED...",
+		"       TO BE CONTINUED...\n             ...MAYBE"
+	};
 
 	/* == NPCS AND WORLD OBJECTS == */
 	sfSprite* bonk = initSprite(TEXTURE_PATH"bonk.png", vector2f(2.0f, 2.0f), vector2f(4000.0f, 68.0f));
@@ -153,7 +168,7 @@ int main() {
 	initPlayer();
 	sfEvent event;
 	float tick = 0.0f;
-	float tickEnding = 0.0f;
+	float tickEnding = 012.0f;
 
 
 	///***  = = =  GAME LOOP  = = =  ***///
@@ -522,6 +537,7 @@ int main() {
 
 		/* == ENDING SCENE == */ 
 		else if (gameState == ENDING) {
+			sfSound_stop(bgm);
 			sfVector2f cagePos = sfSprite_getPosition(cage);
 			sfVector2f bonkPos = sfSprite_getPosition(bonk);
 			sfVector2f ctPos = sfSprite_getPosition(cybertruck);
@@ -586,6 +602,23 @@ int main() {
 				if (tickEnding > 9.25f && tickEnding <= 9.26f) emScale = 0.1f;
 				if (tickEnding > 12.f && tickEnding <= 12.01f) if (sfMusic_getStatus(musicCybertruck) != sfPlaying) sfMusic_play(musicCybertruck);
 
+				if (tickEnding > 13.f && tickEnding <= 16.f) sfText_setString(txtCredits, credits[0]);
+				if (tickEnding > 16.f && tickEnding <= 19.f) sfText_setString(txtCredits, credits[1]);
+				if (tickEnding > 19.f && tickEnding <= 22.f) sfText_setString(txtCredits, credits[2]);
+				if (tickEnding > 22.f && tickEnding <= 25.f) sfText_setString(txtCredits, credits[3]);
+				if (tickEnding > 25.f && tickEnding <= 28.f) sfText_setString(txtCredits, credits[4]);
+				if (tickEnding > 28.f && tickEnding <= 31.f) sfText_setString(txtCredits, credits[5]);
+				if (tickEnding > 31.f && tickEnding <= 34.f) sfText_setString(txtCredits, credits[6]);
+				if (tickEnding > 34.f && tickEnding <= 37.f) sfText_setString(txtCredits, credits[7]);
+				if (tickEnding > 37.f && tickEnding <= 46.f) sfText_setString(txtCredits, credits[8]);
+				if (tickEnding > 46.f && tickEnding <= 48.f) sfText_setString(txtCredits, credits[9]);
+				if (tickEnding > 50.f) {
+					sfMusic_stop(musicCybertruck);
+					sfMusic_play(bgm);
+					sfMusic_setLoop(bgm, sfTrue);
+					gameState = MENU;
+				}
+
 				// Updates
 				updatePlayer(propmap, window, 0);
 				sfSprite_setPosition(bonk, bonkPos);
@@ -593,6 +626,7 @@ int main() {
 				sfSprite_setPosition(cybertruck, ctPos);
 				sfSprite_setPosition(elongatedMuskrat, emPos);
 				sfSprite_setScale(elongatedMuskrat, vector2f(emScale, emScale));
+				sfText_setColor(txtCredits, sfWhite);
 
 				if (tickEnding <= 12.f) {
 					// Rendering
@@ -606,17 +640,20 @@ int main() {
 					if (tickEnding > 6.f) sfRenderWindow_drawSprite(window, elongatedMuskrat, NULL); // Rendering Elon
 					renderMap(propmap, window, sfView_getCenter(viewGame), 1, 1); // Rendering map - props layer - foreground
 				}
-				else if (tickEnding > 12.f && tickEnding <= 13.f) {}
-				else {
+				else if (tickEnding > 13.f && tickEnding <= 47.25f) {
 					sfRenderWindow_setView(window, sfRenderWindow_getDefaultView(window)); // Rendering on window
 					sfRenderWindow_drawSprite(window, logo, NULL);
+
 					/* == COMPUTING LOGO ANIMATIONS == */
 					logoAnimTimer += getDeltaTime();
 					logoPos.y = 200.0f + cosf(logoAnimTimer / 2.f) * 30.0f;
 					logoPos.x = 400.0f + sinf(logoAnimTimer / 3.3f) * 70.0f;
 					sfSprite_setRotation(logo, cosf(logoAnimTimer * 4.6f) * 3.0f);
 					sfSprite_setPosition(logo, logoPos);
+
+					sfRenderWindow_drawText(window, txtCredits, NULL);
 				}
+				else {}
 
 				sfRenderWindow_display(window);
 			}
