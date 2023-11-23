@@ -1,6 +1,17 @@
 #pragma once
 #include "SFML/Graphics.h"
 
+const sfIntRect p_chest;
+const sfIntRect p_chest_2;
+const sfIntRect p_chest_3;
+const sfIntRect p_chest_4;
+const sfIntRect p_chest_5;
+const sfIntRect p_chest_6;
+const sfIntRect p_chest_7;
+const sfIntRect p_chest_8;
+
+const sfIntRect* arr_chest[8];
+
 /// Returns mapping coordinates for various tile textures based on numerical IDs.
 /// \param _id - Tile texture ID
 sfIntRect textureFromId(int _id);
