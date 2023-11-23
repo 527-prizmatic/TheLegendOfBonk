@@ -2,9 +2,12 @@
 
 #define TS 48
 
+/* == NULL VALUES == */
 const sfIntRect t_none				= { 0, 0, 0, 0 };
 const sfIntRect p_none				= { 0, 0, 0, 0 };
 
+
+/* == TERRAIN == */
 const sfIntRect t_path_tl			= { TS * 0, TS * 12, 48, 48 };
 const sfIntRect t_path_t			= { TS * 1, TS * 12, 48, 48 };
 const sfIntRect t_path_tr			= { TS * 2, TS * 12, 48, 48 };
@@ -40,6 +43,7 @@ const sfIntRect t_cobble_corner_br	= { TS * 4, TS * 11, 48, 48 };
 const sfIntRect t_stairs			= { TS * 4, TS * 5, 48, 48 };
 
 
+/* == PROPS == */
 const sfIntRect p_ledge_tl			= { TS * 0, TS * 3, 48, 48 };
 const sfIntRect p_ledge_t			= { TS * 1, TS * 3, 48, 48 };
 const sfIntRect p_ledge_tr			= { TS * 2, TS * 3, 48, 48 };
@@ -59,9 +63,9 @@ const sfIntRect p_flower_r			= { TS * 6, TS * 3, 48, 48 };
 const sfIntRect p_rock_s			= { TS * 5, TS * 4, 48, 48 };
 const sfIntRect p_rock_m			= { TS * 6, TS * 4, 48, 48 };
 
-const sfIntRect p_lamppost_top		= { TS * 7, TS * 3, 48, 48 };
-const sfIntRect p_lamppost_top_night= { TS * 2, TS * 11, 48, 48 };
-const sfIntRect p_lamppost_bottom	= { TS * 7, TS * 4, 48, 48 };
+const sfIntRect p_lamp_post_top_d	= { TS * 7, TS * 3, 48, 48 };
+const sfIntRect p_lamp_post_top_n	= { TS * 2, TS * 11, 48, 48 };
+const sfIntRect p_lamp_post_bottom	= { TS * 7, TS * 4, 48, 48 };
 
 const sfIntRect p_fence_l			= { TS * 5, TS * 5, 48, 48 };
 const sfIntRect p_fence_h			= { TS * 6, TS * 5, 48, 48 };
@@ -83,6 +87,10 @@ const sfIntRect p_tree_ml	        = { TS * 4, TS * 1, 48, 48 };
 const sfIntRect p_tree_mr	        = { TS * 5, TS * 1, 48, 48 };
 const sfIntRect p_tree_tl	        = { TS * 4, TS * 0, 48, 48 };
 const sfIntRect p_tree_tr	        = { TS * 5, TS * 0, 48, 48 };
+
+
+/* == ANIM POINTERS == */
+const sfIntRect* p_lamp_post_top	= &p_lamp_post_top_d;
 
 sfIntRect textureFromId(int _id) {
 	switch (_id) {
@@ -140,8 +148,8 @@ sfIntRect textureFromId(int _id) {
 	case 79: return p_rock_s;
 	case 80: return p_rock_m;
 
-	case 81: return p_lamppost_top;
-	case 82: return p_lamppost_bottom;
+	case 81: return *p_lamp_post_top;
+	case 82: return p_lamp_post_bottom;
 
 	case 83: return p_fence_l;
 	case 84: return p_fence_h;
@@ -163,8 +171,6 @@ sfIntRect textureFromId(int _id) {
 	case 98: return p_tree_mr;
 	case 99: return p_tree_tl;
 	case 100: return p_tree_tr;
-	
-	case 101: return p_lamppost_top_night;
 
 	default: return t_none;
 	}
@@ -203,5 +209,12 @@ sfBool isForeground(char _id) {
 		case 94: return sfTrue;
 		case 101: return sfTrue;
 		default: return sfFalse;
+	}
+}
+
+void selectTexture_lampPost(char _mode) {
+	switch (_mode) {
+		case 0: p_lamp_post_top = &p_lamp_post_top_d; break;
+		case 1: p_lamp_post_top = &p_lamp_post_top_n; break;
 	}
 }

@@ -67,6 +67,6 @@ void displayDialogBox(sfRenderWindow* _w, sfText* _txt, sfRectangleShape* _dialo
 sfBool isClicked(sfRenderWindow* _w, sfSprite* _button) {
 	sfFloatRect hitbox = sfSprite_getGlobalBounds(_button);
 	sfVector2i mousePos = sfMouse_getPositionRenderWindow(_w); 
-	if (testLClick(_w) && sfFloatRect_contains(&hitbox, mousePos.x, mousePos.y)) return sfTrue;
+	if (testLClick(_w) && sfFloatRect_contains(&hitbox, (float) mousePos.x, (float) mousePos.y)) return sfTrue;
 	else return sfFalse;
 }
