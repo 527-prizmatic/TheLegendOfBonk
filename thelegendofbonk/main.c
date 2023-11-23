@@ -156,7 +156,7 @@ int main() {
 	/* == DAY/NIGHT CYCLE == */
 	sfRectangleShape* nightOverlay = initRectangle(vector2f(0.0f, 0.0f), vector2f(800.0f, 600.0f));
 	float timeNight = 0.f;
-	float nightFilterAlpha = 96.f;
+	float nightFilterAlpha = 64.f;
 	const float dayCycleLengthSecs = 240.f;
 
 	/* == CORE INIT == */
@@ -258,7 +258,6 @@ int main() {
 				updatePlayer(tilemap, propmap, window, 1);
 				updateView(window, viewGame, playerPos);
 				
-
 				// Sets up a dialog box for when the player interacts with a sign
 				checkInteract = canInteract();
 				if (checkInteract > 19 && checkInteract != 100 && checkInteract != 200) {
@@ -271,14 +270,7 @@ int main() {
 					if (testKeyPress(KEY_INTERACT, window)) flagInteraction = 1;
 				}
 				// Check for interaction with chests when pressing the bound key
-				else if (testKeyPress(KEY_INTERACT, window) && checkInteract != -1 && inventory[0] != 2)
-				{
-					inventory[checkInteract] = 1;
-
-
-
-
-				}
+				else if (testKeyPress(KEY_INTERACT, window) && checkInteract != -1 && inventory[0] != 2) inventory[checkInteract] = 1;
 
 				if (flagCheese) {
 					updateDialogBox(cheeseTxt2, sizeof(cheeseTxt2), sfTxt_npc, dialogBoxNpc, (sfVector2f) { 10.0f, 450.0f }, (sfVector2f) { 380.0f, 140.0f }, 0);
@@ -340,10 +332,10 @@ int main() {
 			}
 
 			// Computing day/night cycle & changing lamp post textures accordingly
-			nightFilterAlpha = 96.0f - sinf((timeNight / dayCycleLengthSecs) * PI * 2.f) * 1000.f;
-			nightFilterAlpha = max(0.f, min(192.0f, nightFilterAlpha));
+			nightFilterAlpha = 64.0f - sinf((timeNight / dayCycleLengthSecs) * PI * 2.f) * 350.f;
+			nightFilterAlpha = max(0.f, min(128.0f, nightFilterAlpha));
 			sfRectangleShape_setFillColor(nightOverlay, sfColor_fromRGBA(8, 8, 32, (int)nightFilterAlpha));
-			if (nightFilterAlpha > 96.0f) selectTexture_lampPost(1); // Lamp posts turn on at night
+			if (nightFilterAlpha > 64.0f) selectTexture_lampPost(1); // Lamp posts turn on at night
 			else selectTexture_lampPost(0); // Lamp posts turn off at day
 			
 			// Check for world interactions

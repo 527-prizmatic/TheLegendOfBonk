@@ -175,7 +175,6 @@ sfBool isInWater(char _map[H_MAP_T][W_MAP_T]) {
     hitbox.top += hitbox.height * .5f;
     hitbox.width *= .6f;
     hitbox.height *= .4f;
-    printf("%d", 1);
     int x = (int) trunc((hitbox.top + hitbox.height / 2) / TILE_PX);
     int y = (int) trunc((hitbox.left + hitbox.width / 2) / TILE_PX);
 
