@@ -1,5 +1,5 @@
 #include <math.h>
-
+#include "SFML/Audio.h"
 #include "player.h"
 #include "SFML/Graphics.h"
 #include "map.h"
@@ -20,6 +20,10 @@ sfVector2f playerPos = { 20.0f, 20.0f };
 const float playerSpeed = 125.0f * (1 + (DEBUG * 4));
 sfRectangleShape* playerHitbox;
 
+/* == WALK SOUND*/
+sfSoundBuffer* sndWalkBuffer; 
+sfSound* sndWalk;
+
 void initPlayer() {
     player = sfSprite_create();
     spriteSheet = sfTexture_createFromFile("..\\assets\\textures\\spriteSheet.png", NULL);
@@ -28,6 +32,12 @@ void initPlayer() {
     sfSprite_setScale(player, vector2f(2.0f, 2.0f));
     sfSprite_setPosition(player, playerPos);
 
+
+    sndWalk = sfSound_create();
+	sndWalkBuffer = sfSoundBuffer_createFromFile("..\\assets\\sounds\\walk.wav");
+	
+	sfSound_setBuffer(sndWalk, sndWalkBuffer);
+	
     animTime = 0.0f;
     frameX = 0;
     frameY = 0; 
@@ -97,6 +107,7 @@ void updatePlayer(char _map[H_MAP_T][W_MAP_T], sfRenderWindow* _w, char _canMove
         frameX = 0;
         irect.left = 0;
         irect.top = frameY * irect.height;
+        
     }
     sfSprite_setTextureRect(player, irect);
 
@@ -178,6 +189,9 @@ void movePlayer(moveDir _dir, sfBool _isDiag, char _map[H_MAP_T][W_MAP_T], sfRen
     if (isInWater(_map)) move *= 0.25f;
     if (testKeyPress(sfKeyLShift, _w)) move *= 2;
     isMoving = sfTrue;
+
+    sfSound_play(sndWalk); 
+
     switch (_dir) {
         case UP: frameY = DOWN; playerPos.y -= move; break;
         case RIGHT:frameY = LEFT; playerPos.x += move; break; 
