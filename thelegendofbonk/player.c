@@ -17,7 +17,7 @@ int frameY;
 sfBool isMoving; 
 
 sfVector2f playerPos = { 20.0f, 20.0f };
-const float playerSpeed = 100.0f * (1 + (DEBUG * 4));
+const float playerSpeed = 125.0f * (1 + (DEBUG * 4));
 sfRectangleShape* playerHitbox;
 
 /* == WALK SOUND*/
