@@ -124,6 +124,7 @@ int main() {
 	sfSprite* npcCheese = initSprite(TEXTURE_PATH"pnj.png", vector2f(2.0f, 2.0f), vector2f(1655.0f, 2085.0f));
 	sfSprite* cage = initSprite(TEXTURE_PATH"cage.png", vector2f(0.3f, 0.3f), vector2f(3970.0f, 20.0f));
 	sfSprite* cybertruck = initSprite(TEXTURE_PATH"cybertruck.png", vector2f(0.2f, 0.2f), vector2f(4500.0f, 40.0f));
+	sfSprite* elongatedMuskrat = initSprite(TEXTURE_PATH"muskSmoke.png", vector2f(0.0f, 0.0f), vector2f(4580.0f, 50.0f));
 
 	/* == TIMERS & ANIMATION HANDLERS == */
 	float bonkAnimTimer = 0.0f;
@@ -502,6 +503,8 @@ int main() {
 			sfVector2f cagePos = sfSprite_getPosition(cage);
 			sfVector2f bonkPos = sfSprite_getPosition(bonk);
 			sfVector2f ctPos = sfSprite_getPosition(cybertruck);
+			sfVector2f emPos = sfSprite_getPosition(elongatedMuskrat);
+			float emScale = sfSprite_getScale(elongatedMuskrat).x;
 			if (tickEnding == 0) {
 				playerPos.x = cagePos.x - 40;
 				playerPos.y = bonkPos.y;
@@ -543,7 +546,10 @@ int main() {
 				if (tickEnding > 5.75f && tickEnding <= 6.f) bonkPos.y += cos(trigTicker) * 2;
 				if (tickEnding > 6.5f && tickEnding <= 6.75f) playerPos.y -= cos(trigTicker) * 2;
 				if (tickEnding > 6.75f && tickEnding <= 7.f) playerPos.y += cos(trigTicker) * 2;
-				if (tickEnding > 7.f && tickEnding <= 7.462f) ctPos.x -= 5.5f;
+				if (tickEnding > 7.f && tickEnding <= 7.462f) {
+					ctPos.x -= 5.5f;
+					emPos.x -= 5.5f;
+				}
 				if (tickEnding > 7.43f && tickEnding <= 8.5f) {
 					playerPos.x -= 4.f;
 					playerPos.y -= 0.4f;
@@ -553,8 +559,9 @@ int main() {
 					sfSprite_setRotation(bonk, sfSprite_getRotation(bonk) - 2);
 				}
 				if (tickEnding > 7.462f && tickEnding < 7.472f) sfSound_stop(sndVroom);
-				if (tickEnding > 6.83f && tickEnding <= 6.84f) if (sfSound_getStatus(sndIsHim) != sfPlaying) sfSound_play(sndIsHim);
+				if (tickEnding > 7.03f && tickEnding <= 7.04f) if (sfSound_getStatus(sndIsHim) != sfPlaying) sfSound_play(sndIsHim);
 				if (tickEnding > 7.43f && tickEnding <= 7.44f) if (sfSound_getStatus(sndBoom) != sfPlaying) sfSound_play(sndBoom);
+				if (tickEnding > 9.25f && tickEnding <= 9.26f) emScale = 0.1f;
 				if (tickEnding > 12.f && tickEnding <= 12.01f) if (sfMusic_getStatus(musicCybertruck) != sfPlaying) sfMusic_play(musicCybertruck);
 
 				// Updates
@@ -562,6 +569,8 @@ int main() {
 				sfSprite_setPosition(bonk, bonkPos);
 				sfSprite_setPosition(cage, cagePos);
 				sfSprite_setPosition(cybertruck, ctPos);
+				sfSprite_setPosition(elongatedMuskrat, emPos);
+				sfSprite_setScale(elongatedMuskrat, vector2f(emScale, emScale));
 
 				if (tickEnding <= 12.f) {
 					// Rendering
@@ -572,6 +581,7 @@ int main() {
 					sfRenderWindow_drawSprite(window, bonk, NULL); // Rendering Bonk
 					if (tickEnding <= 2.f) sfRenderWindow_drawSprite(window, cage, NULL); // Rendering cage
 					if (tickEnding > 6.f) sfRenderWindow_drawSprite(window, cybertruck, NULL); // Rendering the cybertruck
+					if (tickEnding > 6.f) sfRenderWindow_drawSprite(window, elongatedMuskrat, NULL); // Rendering Elon
 					renderMap(propmap, window, sfView_getCenter(viewGame), 1, 1); // Rendering map - props layer - foreground
 				}
 				else if (tickEnding > 12.f && tickEnding <= 13.f) {}
