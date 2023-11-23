@@ -64,6 +64,8 @@ int canInteract() {
 	int sqrPosPnjX = 0;
 	int sqrPosPnjY = 0;
 
+	int sqrPosCageX = (playerPos.x - 3970.0f) * (playerPos.x - 3970.0f);
+	int sqrPosCageY = (playerPos.y - 70.0f) * (playerPos.y - 70.0f);
 
     int sqrRadius = (playerRadius + interactRadius) * (playerRadius + interactRadius);
 
@@ -77,6 +79,8 @@ int canInteract() {
 		sqrPosPnjY = (playerPos.y - pnjArray[j].pnjPosition.y) * (playerPos.y - pnjArray[j].pnjPosition.y);
 		if (sqrPosPnjX + sqrPosPnjY < sqrRadius) return pnjArray[j].id + 20;
 	}
+
+	if (sqrPosCageX + sqrPosCageY < sqrRadius) return 100;
 
 	return -1;
 }
