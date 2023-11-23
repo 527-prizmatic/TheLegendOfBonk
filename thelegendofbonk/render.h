@@ -20,6 +20,7 @@ sfRenderWindow* initRender();
 sfView* initGameView();
 sfView* initEditorView();
 sfView* initMinimapView();
+sfView* initCreditsView();
 
 /// Updates the given viewport's location to keep it centered on the player character as much as possible.
 /// \param _w - A render window
@@ -39,5 +40,7 @@ void renderMinimap(sfRenderWindow* _w, sfView* _v, char _map[H_MAP_T][W_MAP_T], 
 void renderEditorUI(sfRenderWindow* _w, sfView* _v, int _mode, sfFont* _font);
 
 void renderPlayerOnMinimap(sfRenderWindow* _w);
+
+void renderCredit(sfRenderWindow* _w, sfView* _v, sfFont* _font, char _name[], char _role[], char _posX, char _posY);
 
 void swapLamp(char _map[H_MAP_T][W_MAP_T], char _flagNight);

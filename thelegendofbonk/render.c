@@ -46,6 +46,15 @@ sfView* initMinimapView() {
 	return _v;
 }
 
+sfView* initCreditsView() {
+	sfView* _v = sfView_create();
+	sfFloatRect rectView = { 400.f, 300.f, 800.f, 600.f };
+	sfView_setSize(_v, (sfVector2f) { 800, 600 });
+	sfView_reset(_v, rectView);
+	sfView_setCenter(_v, (sfVector2f) { 400, 300 });
+	return _v;
+}
+
 void updateView(sfRenderWindow* _w, sfView* _v, sfVector2f _pos) {
 	_pos.x += 32;
 	_pos.y += 40;
@@ -126,6 +135,7 @@ void renderEditorUI(sfRenderWindow* _w, sfView* _v, int _mode, sfFont* _font) {
 
 	sfRenderWindow_drawText(_w, textEditorInfo, NULL);
 
+
 	// Renders all available tiles
 	for (int i = 0; i < 12; i++) {
 		for (int j = 0; j < 5; j++) {
@@ -142,6 +152,17 @@ void renderPlayerOnMinimap(sfRenderWindow* _w) {
 	sfRectangleShape* marker = initRectangle(playerPos, vector2f(64, 64));
 	sfRectangleShape_setFillColor(marker, sfRed);
 	sfRenderWindow_drawRectangleShape(_w, marker, NULL);
+}
+
+void renderCredit(sfRenderWindow* _w, sfView* _v, sfFont* _font, char _name[], char _role[], char _posX, char _posY)
+{
+	sfText* textName = initText(_font, 30, vector2f(_posX, _posY));
+	sfText_setString(textName, _name);
+	sfRenderWindow_drawText(_w, textName, NULL);
+
+	sfText* textRole = initText(_font, 20, vector2f(_posX, _posY + 30));
+	sfText_setString(textRole, _role);
+	sfRenderWindow_drawText(_w, textRole, NULL);
 }
 
 void swapLamp(char _map[H_MAP_T][W_MAP_T], char _flagNight)
