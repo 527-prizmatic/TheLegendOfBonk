@@ -156,7 +156,7 @@ int main() {
 	/* == DAY/NIGHT CYCLE == */
 	sfRectangleShape* nightOverlay = initRectangle(vector2f(0.0f, 0.0f), vector2f(800.0f, 600.0f));
 	float timeNight = 0.f;
-	float nightFilterAlpha = 96.f;
+	float nightFilterAlpha = 64.f;
 	const float dayCycleLengthSecs = 240.f;
 
 	/* == CORE INIT == */
@@ -332,10 +332,10 @@ int main() {
 			}
 
 			// Computing day/night cycle & changing lamp post textures accordingly
-			nightFilterAlpha = 96.0f - sinf((timeNight / dayCycleLengthSecs) * PI * 2.f) * 350.f;
-			nightFilterAlpha = max(0.f, min(192.0f, nightFilterAlpha));
+			nightFilterAlpha = 64.0f - sinf((timeNight / dayCycleLengthSecs) * PI * 2.f) * 350.f;
+			nightFilterAlpha = max(0.f, min(128.0f, nightFilterAlpha));
 			sfRectangleShape_setFillColor(nightOverlay, sfColor_fromRGBA(8, 8, 32, (int)nightFilterAlpha));
-			if (nightFilterAlpha > 96.0f) selectTexture_lampPost(1); // Lamp posts turn on at night
+			if (nightFilterAlpha > 64.0f) selectTexture_lampPost(1); // Lamp posts turn on at night
 			else selectTexture_lampPost(0); // Lamp posts turn off at day
 			
 			// Check for world interactions
