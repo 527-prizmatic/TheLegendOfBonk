@@ -16,9 +16,8 @@ void initInventory(sfSprite* _inventorySprite, sfSprite* _dogecoinSprite, sfSpri
     // TEXTURE KEY
     sfTexture* keyTeslaTexture = sfTexture_createFromFile(TEXTURE_PATH"keyTesla.png", NULL);
     sfSprite_setTexture(_keyTeslaSprite, keyTeslaTexture, sfTrue);
-    sfSprite_setPosition(_keyTeslaSprite, (sfVector2f) { 510.0f, 540.0f });
-    sfSprite_setScale(_keyTeslaSprite, (sfVector2f) { 0.08f, 0.08f });
-    sfSprite_setRotation(_keyTeslaSprite, 150);
+    sfSprite_setPosition(_keyTeslaSprite, (sfVector2f) { 510.0f, 508.0f });
+    sfSprite_setScale(_keyTeslaSprite, (sfVector2f) { 0.16f, 0.16f });
 }
 
 void displayInventory(sfRenderWindow* _window, int* _inventory, sfSprite* _inventorySprite, sfSprite* _dogecoinSprite, sfSprite* _keyTeslaSprite) {
@@ -26,27 +25,6 @@ void displayInventory(sfRenderWindow* _window, int* _inventory, sfSprite* _inven
 	
     sfRenderWindow_setView(_window, sfRenderWindow_getDefaultView(_window));
     sfRenderWindow_drawSprite(_window, _inventorySprite, NULL);
-
-    // == DEBUG FUNCTION - TO BE DELETED ONCE NOT NEEDED ANYMORE ==
-    if (sfRenderWindow_hasFocus(_window)) {
-        if (sfKeyboard_isKeyPressed(sfKeyU)) _inventory[0] = 1;
-        if (sfKeyboard_isKeyPressed(sfKeyI)) _inventory[1] = 1;
-        if (sfKeyboard_isKeyPressed(sfKeyO)) _inventory[2] = 1;
-        if (sfKeyboard_isKeyPressed(sfKeyP)) _inventory[3] = 1;
-        if (sfKeyboard_isKeyPressed(sfKeyT)) _inventory[0] = 3;
-        if (sfKeyboard_isKeyPressed(sfKeyN)) {
-            for (int i = 0; i < 4; i++)
-            {
-                _inventory[i] = 1;
-            }
-        }
-        if (sfKeyboard_isKeyPressed(sfKeyB)) {
-            for (int i = 0; i < 4; i++)
-            {
-                _inventory[i] = 0;
-            }
-        }
-    }
     
     if (_inventory[0]) {
         if (_inventory[0] == 2) {
