@@ -97,6 +97,7 @@ int main() {
 
 	/* == BGM == */
 	sfMusic* bgm = sfMusic_createFromFile(AUDIO_PATH"01_main_screen_trailer.wav");
+	sfMusic* musicCybertruck = sfMusic_createFromFile(AUDIO_PATH"et_cybertruck.wav");
 	char flagMusic = 0; // Whether the music is currently playing
 	float timerVolumeChange = 0;
 	sfMusic_play(bgm);
@@ -107,10 +108,24 @@ int main() {
 	sfSoundBuffer* bufferUI = sfSoundBuffer_createFromFile(AUDIO_PATH"click.wav");
 	sfSound_setBuffer(sndButtonClick, bufferUI);
 
+	/* == ENDING SFX == */
+	sfSound* sndVroom = sfSound_create();
+	sfSoundBuffer* bufferVroom = sfSoundBuffer_createFromFile(AUDIO_PATH"vroom.wav");
+	sfSound_setBuffer(sndVroom, bufferVroom);
+	sfSound* sndBoom = sfSound_create();
+	sfSoundBuffer* bufferBoom = sfSoundBuffer_createFromFile(AUDIO_PATH"boom.wav");
+	sfSound_setBuffer(sndBoom, bufferBoom);
+	sfSound* sndIsHim = sfSound_create();
+	sfSoundBuffer* bufferIsHim = sfSoundBuffer_createFromFile(AUDIO_PATH"this_is_elon_musk.wav");
+	sfSound_setBuffer(sndIsHim, bufferIsHim);
+
+
+
 	/* == NPCS AND WORLD OBJECTS == */
 	sfSprite* bonk = initSprite(TEXTURE_PATH"bonk.png", vector2f(2.0f, 2.0f), vector2f(4000.0f, 68.0f));
 	sfSprite* npcCheese = initSprite(TEXTURE_PATH"pnj.png", vector2f(2.0f, 2.0f), vector2f(1655.0f, 2085.0f));
 	sfSprite* cage = initSprite(TEXTURE_PATH"cage.png", vector2f(0.3f, 0.3f), vector2f(3970.0f, 20.0f));
+	sfSprite* cybertruck = initSprite(TEXTURE_PATH"cybertruck.png", vector2f(0.2f, 0.2f), vector2f(4500.0f, 40.0f));
 
 	/* == TIMERS & ANIMATION HANDLERS == */
 	float bonkAnimTimer = 0.0f;
@@ -172,7 +187,6 @@ int main() {
 				sfRenderWindow_drawSprite(window, buttonMainPlay, NULL);
 				sfRenderWindow_drawSprite(window, buttonMainEdit, NULL);
 				sfRenderWindow_drawSprite(window, buttonMainQuit, NULL);
-
 				sfRenderWindow_drawSprite(window, buttonMainCredits, NULL);
 				
 				sfRenderWindow_display(window);
@@ -223,9 +237,8 @@ int main() {
 				tick = 0.0f;
 
 				// Regularly updating a few game variables
-				updatePlayer(propmap, window);
+				updatePlayer(propmap, window, 1);
 				updateView(window, viewGame, playerPos);
-
 
 				// Sets up a dialog box for when the player interacts with a sign
 				checkInteract = canInteract();
@@ -237,7 +250,6 @@ int main() {
 				// Check for interaction with chests when pressing the bound key
 				else if (testKeyPress(KEY_INTERACT, window) && checkInteract != -1 && inventory[0] != 2) inventory[checkInteract] = 1;
 				
-
 				// Rendering
 				sfRenderWindow_setView(window, viewGame); // Rendering on map view
 				renderMap(tilemap, window, sfView_getCenter(viewGame), -1, 0); // Rendering map - terrain layer
@@ -252,10 +264,8 @@ int main() {
 				sfRenderWindow_drawRectangleShape(window, nightOverlay, NULL); // Renders nighttime overlay
 				displayInventory(window, inventory, spriteInventory, spriteDogecoin); // Rendering inventory HUD
 				if (hasAllDogecoinPieces(inventory)) sfRenderWindow_drawSprite(window, buttonUICraft, NULL); // Renders craft button (but only if the dogecoin can be crafted)
-				renderMinimap(window, viewMinimap, tilemap, propmap); // Renders minimap
 
 				// Displays "PRESS E" pop-up above inventory bar
-				sfRenderWindow_setView(window, sfRenderWindow_getDefaultView(window)); // Now rendering on HUD
 				if (checkInteract != -1) {
 					if (checkInteract == 100) {
 						if (inventory[0] == 2) sfRenderWindow_drawText(window, sfTxt_interact, sfFalse);
@@ -263,10 +273,9 @@ int main() {
 					else sfRenderWindow_drawText(window, sfTxt_interact, sfFalse);
 				}
 				if (flagInteraction == 1) displayDialogBox(window, sfTxt_npc, dialogBoxNpc, sfFalse); // Displays dialog box if need be
-				
+
+				renderMinimap(window, viewMinimap, tilemap, propmap); // Renders minimap
 				sfRenderWindow_display(window);
-				
-				if (inventory[0] == 2 && testKeyPress(KEY_INTERACT, window) && canInteract() == 100) gameState = ENDING;
 			}
 			
 
@@ -295,6 +304,7 @@ int main() {
 			
 			// Check for world interactions
 			if (canInteract() == -1) flagInteraction = 0;
+			if (inventory[0] == 2 && testKeyPress(KEY_INTERACT, window) && canInteract() == 100) gameState = ENDING;
 			
 			
 			/* == USER INPUT == */
@@ -309,10 +319,15 @@ int main() {
 				playerPos.x = 544;
 				playerPos.y = 512;
 			}
+
+			// Secret debug keybind (ALT+A) which sends the player near the cage
+			if (sfKeyboard_isKeyPressed(sfKeyLAlt) && testKeyPress(sfKeyA, window) && DEBUG) {
+				playerPos.x = 3968;
+				playerPos.y = 150;
+			}
 			
 			// Pulls out the game menu when pressing the bound key
 			if (testKeyPress(KEY_PAUSE, window)) {
-				printf("%.2f %.2f", playerPos.x, playerPos.y);
 				if (!flagPauseMenu) {
 					sfSound_play(sndButtonClick); 
 					save_map(tilemap, propmap, playerPos, inventory, bgm);
@@ -378,7 +393,6 @@ int main() {
 			}
 			else flagEditorLeave = 0;
 		}
-
 
 		/* == PAUSE MENU == */
 		else if (gameState == BREAK) { // When pause menu open
@@ -485,7 +499,94 @@ int main() {
 
 		/* == ENDING SCENE == */ 
 		else if (gameState == ENDING) {
-			printf("BONK");
+			sfVector2f cagePos = sfSprite_getPosition(cage);
+			sfVector2f bonkPos = sfSprite_getPosition(bonk);
+			sfVector2f ctPos = sfSprite_getPosition(cybertruck);
+			if (tickEnding == 0) {
+				playerPos.x = cagePos.x - 40;
+				playerPos.y = bonkPos.y;
+				frameY = LEFT;
+			}
+
+			tickEnding += getDeltaTime();
+			tick += getDeltaTime();
+			logoAnimTimer += getDeltaTime();
+
+			if (tick >= TICK_TIME) {
+				tick = 0.f;
+
+				float trigTicker = (tickEnding - 2) * 4 * PI;
+
+				/* == CUTSCENE SCRIPT == */
+				if (tickEnding <= 2.f) {
+					cagePos.y -= .33f;
+					updateView(window, viewGame, bonkPos);
+				}
+				if (tickEnding > 2.f && tickEnding <= 2.25f) bonkPos.y -= cos(trigTicker) * 2;
+				if (tickEnding > 2.25f && tickEnding <= 2.5f) bonkPos.y += cos(trigTicker) * 2;
+				if (tickEnding > 2.75f && tickEnding <= 3.f) playerPos.y += cos(trigTicker) * 2;
+				if (tickEnding > 3.f && tickEnding <= 3.25f) playerPos.y -= cos(trigTicker) * 2;
+				if (tickEnding > 3.25f && tickEnding <= 3.5f) {
+					playerPos.x += .5f;
+					bonkPos.x += .5f;
+				}
+				if (tickEnding > 3.25f && tickEnding <= 7.462f) {
+					playerPos.x += sin(-trigTicker) * 2;
+					playerPos.y -= cos(trigTicker) * 2;
+					bonkPos.x += sin(trigTicker) * 2;
+					bonkPos.y += cos(trigTicker) * 2;
+				}
+				if (tickEnding > 3.75f && tickEnding <= 3.76f) if (sfSound_getStatus(sndVroom) != sfPlaying) sfSound_play(sndVroom);
+				if (tickEnding > 4.f && tickEnding <= 4.25f) playerPos.y -= cos(trigTicker) * 2;
+				if (tickEnding > 4.25f && tickEnding <= 4.5f) playerPos.y += cos(trigTicker) * 2;
+				if (tickEnding > 5.5f && tickEnding <= 5.75f) bonkPos.y -= cos(trigTicker) * 2;
+				if (tickEnding > 5.75f && tickEnding <= 6.f) bonkPos.y += cos(trigTicker) * 2;
+				if (tickEnding > 6.5f && tickEnding <= 6.75f) playerPos.y -= cos(trigTicker) * 2;
+				if (tickEnding > 6.75f && tickEnding <= 7.f) playerPos.y += cos(trigTicker) * 2;
+				if (tickEnding > 7.f && tickEnding <= 7.462f) ctPos.x -= 5.5f;
+				if (tickEnding > 7.43f && tickEnding <= 8.5f) {
+					playerPos.x -= 4.f;
+					playerPos.y -= 0.4f;
+					bonkPos.x -= 4.f;
+					bonkPos.y -= 0.7f;
+					sfSprite_setRotation(player, sfSprite_getRotation(player) + 2);
+					sfSprite_setRotation(bonk, sfSprite_getRotation(bonk) - 2);
+				}
+				if (tickEnding > 7.462f && tickEnding < 7.472f) sfSound_stop(sndVroom);
+				if (tickEnding > 6.83f && tickEnding <= 6.84f) if (sfSound_getStatus(sndIsHim) != sfPlaying) sfSound_play(sndIsHim);
+				if (tickEnding > 7.43f && tickEnding <= 7.44f) if (sfSound_getStatus(sndBoom) != sfPlaying) sfSound_play(sndBoom);
+				if (tickEnding > 12.f && tickEnding <= 12.01f) if (sfMusic_getStatus(musicCybertruck) != sfPlaying) sfMusic_play(musicCybertruck);
+
+				// Updates
+				updatePlayer(propmap, window, 0);
+				sfSprite_setPosition(bonk, bonkPos);
+				sfSprite_setPosition(cage, cagePos);
+				sfSprite_setPosition(cybertruck, ctPos);
+
+				if (tickEnding <= 13.f) {
+					// Rendering
+					sfRenderWindow_setView(window, viewGame); // Rendering on map view
+					renderMap(tilemap, window, sfView_getCenter(viewGame), -1, 1); // Rendering map - terrain layer
+					renderMap(propmap, window, sfView_getCenter(viewGame), 0, 1); // Rendering map - props layer - background
+					displayPlayer(window); // Rendering Bingchilling
+					sfRenderWindow_drawSprite(window, bonk, NULL); // Rendering Bonk
+					if (tickEnding <= 2.f) sfRenderWindow_drawSprite(window, cage, NULL); // Rendering cage
+					if (tickEnding > 6.f) sfRenderWindow_drawSprite(window, cybertruck, NULL); // Rendering the cybertruck
+					renderMap(propmap, window, sfView_getCenter(viewGame), 1, 1); // Rendering map - props layer - foreground
+				}
+				else {
+					sfRenderWindow_setView(window, sfRenderWindow_getDefaultView(window)); // Rendering on window
+					sfRenderWindow_drawSprite(window, logo, NULL);
+					/* == COMPUTING LOGO ANIMATIONS == */
+					logoAnimTimer += getDeltaTime();
+					logoPos.y = 200.0f + cosf(logoAnimTimer / 2.f) * 30.0f;
+					logoPos.x = 400.0f + sinf(logoAnimTimer / 3.3f) * 70.0f;
+					sfSprite_setRotation(logo, cosf(logoAnimTimer * 4.6f) * 3.0f);
+					sfSprite_setPosition(logo, logoPos);
+				}
+
+				sfRenderWindow_display(window);
+			}
 		}
 
 		/* == CREDITS == */ 
