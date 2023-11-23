@@ -125,6 +125,13 @@ int main() {
     sfSound_setBuffer(sndChest, bufferChest);
 	sfSound_setVolume(sndChest, 25);
 
+	sfSound* sndCage = sfSound_create();
+    sfSoundBuffer* bufferCage = sfSoundBuffer_createFromFile(AUDIO_PATH"cage.wav");
+    sfSound_setBuffer(sndCage, bufferCage);
+    sfSound_setVolume(sndCage, 50);
+
+
+
 	/* == CREDITS TEXTS == */
 	sfText* txtCredits = initText(font, 30, vector2f(200.f, 425.f));
 	char* credits[10] = { "    THE LEGEND OF BONK",
@@ -359,6 +366,27 @@ int main() {
 			if (inventory[0] == 2 && testKeyPress(KEY_INTERACT, window) && canInteract() == 100) gameState = ENDING;
 			
 			
+			// jouer le son 1 fois que si on apuis sur la touche E
+if (testKeyPress(KEY_INTERACT, window) && canInteract() == 200 && inventory[0] == 3 && sfSound_getStatus(sndCage) == sfStopped) sfSound_play(sndCage);
+            
+
+
+
+
+           
+          
+
+
+         
+
+            
+
+								
+
+		
+
+
+
 			/* == USER INPUT == */
 			// Crafting the dogecoin
 			if (isClicked(window, buttonUICraft) && hasAllDogecoinPieces(inventory) && inventory[0] != 2) {
@@ -553,7 +581,9 @@ int main() {
 
 		/* == ENDING SCENE == */ 
 		else if (gameState == ENDING) {
+			
 			sfSound_stop(bgm);
+
 			sfVector2f cagePos = sfSprite_getPosition(cage);
 			sfVector2f bonkPos = sfSprite_getPosition(bonk);
 			sfVector2f ctPos = sfSprite_getPosition(cybertruck);
@@ -571,14 +601,19 @@ int main() {
 
 			if (tick >= TICK_TIME) {
 				tick = 0.f;
-
+				
 				float trigTicker = (tickEnding - 2) * 4 * PI;
 
 				/* == CUTSCENE SCRIPT == */
 				if (tickEnding <= 2.f) {
 					cagePos.y -= .33f;
 					updateView(window, viewGame, bonkPos);
+					
 				}
+				// play cage sound instantly
+                if (tickEnding > 0.f && tickEnding <= 0.01f) if (sfSound_getStatus(sndCage) != sfPlaying) sfSound_play(sndCage);
+				
+				
 				if (tickEnding > 2.f && tickEnding <= 2.25f) bonkPos.y -= cos(trigTicker) * 2;
 				if (tickEnding > 2.25f && tickEnding <= 2.5f) bonkPos.y += cos(trigTicker) * 2;
 				if (tickEnding > 2.75f && tickEnding <= 3.f) playerPos.y += cos(trigTicker) * 2;
