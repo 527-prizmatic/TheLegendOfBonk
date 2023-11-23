@@ -250,7 +250,7 @@ int main() {
 					updateDialogBox(pnjArray[idNpc].txt, sizeof(pnjArray[idNpc].txt), sfTxt_npc, dialogBoxNpc, (sfVector2f) { 10.0f, 450.0f }, (sfVector2f) { 380.0f, 140.0f }, 0);
 					if (testKeyPress(KEY_INTERACT, window)) flagInteraction = 1;
 				}
-				else if (checkInteract == 200 && !flagCheese){
+				else if (checkInteract == 200 && !flagCheese && inventory[0] != 3 ) {
 					updateDialogBox(cheeseTxt, sizeof(cheeseTxt), sfTxt_npc, dialogBoxNpc, (sfVector2f) { 10.0f, 450.0f }, (sfVector2f) { 380.0f, 140.0f }, 0);
 					if (testKeyPress(KEY_INTERACT, window)) flagInteraction = 1;
 				}
@@ -261,6 +261,7 @@ int main() {
 					updateDialogBox(cheeseTxt2, sizeof(cheeseTxt2), sfTxt_npc, dialogBoxNpc, (sfVector2f) { 10.0f, 450.0f }, (sfVector2f) { 380.0f, 140.0f }, 0);
 					if (testKeyPress(KEY_INTERACT, window)) flagInteraction = 1;
 					inventory[0] = 3;
+					flagCheese = 0;
 				}
 				
 				// Rendering
@@ -284,7 +285,7 @@ int main() {
 						if (inventory[0] == 3) sfRenderWindow_drawText(window, sfTxt_interact, sfFalse);
 					}
 					if (checkInteract == 200) {
-						if (!hasAllDogecoinPieces(inventory) || inventory[0] == 2) sfRenderWindow_drawText(window, sfTxt_interact, sfFalse);
+						if ((!hasAllDogecoinPieces(inventory) || inventory[0] == 2) && inventory[0] != 3) sfRenderWindow_drawText(window, sfTxt_interact, sfFalse);
 					}
 					//else if (checkInteract == 200 && inventory[0] == 3) continue; 
 					else sfRenderWindow_drawText(window, sfTxt_interact, sfFalse);
