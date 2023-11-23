@@ -108,7 +108,7 @@ int main() {
 	sfSound_setBuffer(sndButtonClick, bufferUI);
 
 	/* == NPCS AND WORLD OBJECTS == */
-	sfSprite* bonk = initSprite(TEXTURE_PATH"bonk.png", vector2f(2.0f, 2.0f), vector2f(4000.0f, 65.0f));
+	sfSprite* bonk = initSprite(TEXTURE_PATH"bonk.png", vector2f(2.0f, 2.0f), vector2f(4000.0f, 68.0f));
 	sfSprite* npcCheese = initSprite(TEXTURE_PATH"pnj.png", vector2f(2.0f, 2.0f), vector2f(544.0f, 512.0f));
 	sfSprite* cage = initSprite(TEXTURE_PATH"cage.png", vector2f(0.3f, 0.3f), vector2f(3970.0f, 20.0f));
 
