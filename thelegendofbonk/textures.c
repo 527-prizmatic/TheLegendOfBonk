@@ -222,14 +222,6 @@ sfIntRect textureFromId(int _id) {
 	case 113: return p_bench_bl;
 	case 114: return p_bench_br;
 
-	case 115: return p_chest_2;
-	case 116: return p_chest_3;
-	case 117: return p_chest_4;
-	case 118: return p_chest_5;
-	case 119: return p_chest_6;
-	case 120: return p_chest_7;
-	case 121: return p_chest_8;
-
 	default: return t_none;
 	}
 }
