@@ -88,6 +88,22 @@ const sfIntRect p_tree_mr	        = { TS * 5, TS * 1, 48, 48 };
 const sfIntRect p_tree_tl	        = { TS * 4, TS * 0, 48, 48 };
 const sfIntRect p_tree_tr	        = { TS * 5, TS * 0, 48, 48 };
 
+const sfIntRect p_house_t1			= { TS * 0, TS * 0, 48, 48 };
+const sfIntRect p_house_t2			= { TS * 1, TS * 0, 48, 48 };
+const sfIntRect p_house_t3			= { TS * 3, TS * 0, 48, 48 };
+const sfIntRect p_house_m1			= { TS * 0, TS * 1, 48, 48 };
+const sfIntRect p_house_m2			= { TS * 1, TS * 1, 48, 48 };
+const sfIntRect p_house_m3			= { TS * 3, TS * 1, 48, 48 };
+const sfIntRect p_house_b1			= { TS * 0, TS * 2, 48, 48 };
+const sfIntRect p_house_b2			= { TS * 1, TS * 2, 48, 48 };
+const sfIntRect p_house_b3			= { TS * 2, TS * 2, 48, 48 };
+const sfIntRect p_house_b4			= { TS * 3, TS * 2, 48, 48 };
+
+const sfIntRect p_bench_tl			= { TS * 2, TS * 8, 48, 48 };
+const sfIntRect p_bench_tr			= { TS * 3, TS * 8, 48, 48 };
+const sfIntRect p_bench_bl			= { TS * 2, TS * 9, 48, 48 };
+const sfIntRect p_bench_br			= { TS * 3, TS * 9, 48, 48 };
+
 
 /* == ANIM POINTERS == */
 const sfIntRect* p_lamp_post_top	= &p_lamp_post_top_d;
@@ -172,6 +188,22 @@ sfIntRect textureFromId(int _id) {
 	case 99: return p_tree_tl;
 	case 100: return p_tree_tr;
 
+	case 101: return p_house_t1;
+	case 102: return p_house_t2;
+	case 103: return p_house_t3;
+	case 104: return p_house_m1;
+	case 105: return p_house_m2;
+	case 106: return p_house_m3;
+	case 107: return p_house_b1;
+	case 108: return p_house_b2;
+	case 109: return p_house_b3;
+	case 110: return p_house_b4;
+
+	case 111: return p_bench_tl;
+	case 112: return p_bench_tr;
+	case 113: return p_bench_bl;
+	case 114: return p_bench_br;
+
 	default: return t_none;
 	}
 }
@@ -180,6 +212,8 @@ sfIntRect textureFromId(int _id) {
 sfBool isSolidBlock(char _id) {
 	if (_id >= 65 && _id <= 74) return sfTrue;
 	if (_id >= 83 && _id <= 89) return sfTrue;
+	if (_id >= 101 && _id <= 110) return sfTrue;
+	if (_id >= 113 && _id <= 114) return sfTrue;
 	switch (_id) {
 		case 79: return sfTrue;
 		case 80: return sfTrue;
@@ -203,11 +237,12 @@ sfBool isWater(char _id) {
 
 sfBool isForeground(char _id) {
 	if (_id >= 93 && _id <= 100) return sfTrue;
+	if (_id >= 101 && _id <= 106) return sfTrue;
+	if (_id >= 111 && _id <= 112) return sfTrue;
 	switch (_id) {
 		case 81: return sfTrue;
 		case 82: return sfTrue;
 		case 94: return sfTrue;
-		case 101: return sfTrue;
 		default: return sfFalse;
 	}
 }

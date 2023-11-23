@@ -109,7 +109,7 @@ int main() {
 
 	/* == NPCS AND WORLD OBJECTS == */
 	sfSprite* bonk = initSprite(TEXTURE_PATH"bonk.png", vector2f(2.0f, 2.0f), vector2f(4000.0f, 68.0f));
-	sfSprite* npcCheese = initSprite(TEXTURE_PATH"pnj.png", vector2f(2.0f, 2.0f), vector2f(544.0f, 512.0f));
+	sfSprite* npcCheese = initSprite(TEXTURE_PATH"pnj.png", vector2f(2.0f, 2.0f), vector2f(1655.0f, 2085.0f));
 	sfSprite* cage = initSprite(TEXTURE_PATH"cage.png", vector2f(0.3f, 0.3f), vector2f(3970.0f, 20.0f));
 
 	/* == TIMERS & ANIMATION HANDLERS == */
@@ -201,30 +201,16 @@ int main() {
 				flagClick = 1;
 			}
 
+			// When clicking on the CREDITS button 
 			else if (isClicked(window, buttonMainCredits)) {
 				sfSound_play(sndButtonClick);
 				gameState = CREDITS;
 				flagClick = 1;
 			}
+
 			// When clicking on the QUIT button
             else if(isClicked(window, buttonMainQuit)) gameState = QUIT;
-
 		}
-		    /*CREDIT BOUTON */ 
-		    else if (gameState == CREDITS) 
-		    {
-				sfRenderWindow_setView(window, sfRenderWindow_getDefaultView(window)); 
-				if (tick >= TICK_TIME) { 
-					tick = 0.0f;
-					sfSprite_setPosition(buttonPauseReturn, (sfVector2f) { 600.0f, 520.0f });
-					sfSprite_setScale(buttonPauseReturn, (sfVector2f) { 2.5f, 2.5f });
-					sfRenderWindow_drawSprite(window, spriteMenuBackground, NULL); 
-                    sfRenderWindow_drawSprite(window, buttonPauseReturn, NULL);
-					sfRenderWindow_display(window); 
-				}
-				if (testKeyPress(KEY_PAUSE, window)) gameState = MENU; 
-				else if (isClicked(window, buttonPauseReturn)) gameState = MENU; 
-			}
 
 		/* == GAME == */
 		else if (gameState == GAME) {
@@ -256,8 +242,8 @@ int main() {
 				renderMap(tilemap, window, sfView_getCenter(viewGame), -1, 0); // Rendering map - terrain layer
 				renderMap(propmap, window, sfView_getCenter(viewGame), 0, 0); // Rendering map - props layer - background
 				displayPlayer(window); // Rendering Bingchilling
-				sfRenderWindow_drawSprite(window, npcCheese, NULL); // Rendering cheese NPC
 				renderMap(propmap, window, sfView_getCenter(viewGame), 1, 0); // Rendering map - props layer - foreground
+				sfRenderWindow_drawSprite(window, npcCheese, NULL); // Rendering cheese NPC
 				sfRenderWindow_drawSprite(window, bonk, NULL); // Rendering Bonk
 				sfRenderWindow_drawSprite(window, cage, NULL); // Rendering cage
 
@@ -301,8 +287,7 @@ int main() {
 			if (nightFilterAlpha > 96.0f) selectTexture_lampPost(1); // Lamp posts turn on at night
 			else selectTexture_lampPost(0); // Lamp posts turn off at day
 			
-			
-			/* == WORLD INTERACTIONS == */
+			// Check for world interactions
 			if (canInteract() == -1) flagInteraction = 0;
 			
 			
@@ -321,6 +306,7 @@ int main() {
 			
 			// Pulls out the game menu when pressing the bound key
 			if (testKeyPress(KEY_PAUSE, window)) {
+				printf("%.2f %.2f", playerPos.x, playerPos.y);
 				if (!flagPauseMenu) {
 					sfSound_play(sndButtonClick); 
 					save_map(tilemap, propmap, playerPos, inventory, bgm);
@@ -490,9 +476,28 @@ int main() {
 			}
 			else flagPauseMenu = 0;
 		}
+
+		/* == ENDING SCENE == */ 
 		else if (gameState == ENDING) {
 			printf("BONK");
 		}
+
+		/* == CREDITS == */ 
+		else if (gameState == CREDITS) 
+		{
+			sfRenderWindow_setView(window, sfRenderWindow_getDefaultView(window)); 
+			if (tick >= TICK_TIME) { 
+				tick = 0.0f;
+				sfSprite_setPosition(buttonPauseReturn, (sfVector2f) { 600.0f, 520.0f });
+				sfSprite_setScale(buttonPauseReturn, (sfVector2f) { 2.5f, 2.5f });
+				sfRenderWindow_drawSprite(window, spriteMenuBackground, NULL); 
+				sfRenderWindow_drawSprite(window, buttonPauseReturn, NULL);
+				sfRenderWindow_display(window); 
+			}
+			if (testKeyPress(KEY_PAUSE, window)) gameState = MENU; 
+			else if (isClicked(window, buttonPauseReturn)) gameState = MENU; 
+		}
+
 		/* == MUCH SAD QUIMT GAME == */
 		else if (gameState == QUIT) break;
 	}
