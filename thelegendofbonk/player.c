@@ -32,9 +32,11 @@ void initPlayer() {
     sfSprite_setScale(player, vector2f(2.0f, 2.0f));
     sfSprite_setPosition(player, playerPos);
 
+    // Walk sound
     sndWalk = sfSound_create();
 	sndWalkBuffer = sfSoundBuffer_createFromFile(AUDIO_PATH"walk.wav");
 	sfSound_setBuffer(sndWalk, sndWalkBuffer);
+
 	
     animTime = 0.0f;
     frameX = 0;

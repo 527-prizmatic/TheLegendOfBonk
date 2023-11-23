@@ -120,6 +120,10 @@ int main() {
 	sfSound* sndIsHim = sfSound_create();
 	sfSoundBuffer* bufferIsHim = sfSoundBuffer_createFromFile(AUDIO_PATH"this_is_elon_musk.wav");
 	sfSound_setBuffer(sndIsHim, bufferIsHim);
+	sfSound* sndChest = sfSound_create();
+    sfSoundBuffer* bufferChest = sfSoundBuffer_createFromFile(AUDIO_PATH"pickup.wav");
+    sfSound_setBuffer(sndChest, bufferChest);
+	sfSound_setVolume(sndChest, 25);
 
 	/* == CREDITS TEXTS == */
 	sfText* txtCredits = initText(font, 30, vector2f(200.f, 425.f));
@@ -253,11 +257,11 @@ int main() {
 
 			if (tick >= TICK_TIME) {
 				tick = 0.0f;
-
+                
 				// Regularly updating a few game variables
 				updatePlayer(propmap, window, 1);
 				updateView(window, viewGame, playerPos);
-				
+
 
 				// Sets up a dialog box for when the player interacts with a sign
 				checkInteract = canInteract();
@@ -271,13 +275,11 @@ int main() {
 					if (testKeyPress(KEY_INTERACT, window)) flagInteraction = 1;
 				}
 				// Check for interaction with chests when pressing the bound key
-				else if (testKeyPress(KEY_INTERACT, window) && checkInteract != -1 && inventory[0] != 2)
-				{
+				else if (testKeyPress(KEY_INTERACT, window) && checkInteract != -1 && inventory[0] != 2) 
+				{ 
 					inventory[checkInteract] = 1;
-
-
-
-
+					//play 1 time the sound
+                    sfSound_play(sndChest);
 				}
 
 				if (flagCheese) {
@@ -285,6 +287,7 @@ int main() {
 					if (testKeyPress(KEY_INTERACT, window)) flagInteraction = 1;
 					inventory[0] = 3;
 					flagCheese = 0;
+					sfSound_play(sndChest);
 				}
 				
 				// Rendering
@@ -402,6 +405,7 @@ int main() {
 				renderMap(tilemap, window, sfView_getCenter(viewEditor), -1, 0);
 				renderMap(propmap, window, sfView_getCenter(viewEditor), -1, 0);
 				if (flagEditorUI) renderEditorUI(window, sfRenderWindow_getDefaultView(window), flagEditorMode, font);
+
 				sfRenderWindow_display(window);
 			}
 			
