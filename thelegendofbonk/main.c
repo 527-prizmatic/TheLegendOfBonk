@@ -52,7 +52,8 @@ int main() {
 	int inventory[4] = { 0, 0, 0, 0 };
 	sfSprite* spriteInventory = sfSprite_create();
 	sfSprite* spriteDogecoin = sfSprite_create();
-	initInventory(spriteInventory, spriteDogecoin);
+	sfSprite* spriteKeyTesla = sfSprite_create();
+	initInventory(spriteInventory, spriteDogecoin, spriteKeyTesla);
 
 	/* == MAIN DIALOG BOX == */
 	sfText* sfTxt_npc = sfText_create();
@@ -261,7 +262,7 @@ int main() {
 
 				sfRenderWindow_setView(window, sfRenderWindow_getDefaultView(window)); // Now rendering on HUD
 				sfRenderWindow_drawRectangleShape(window, nightOverlay, NULL); // Renders nighttime overlay
-				displayInventory(window, inventory, spriteInventory, spriteDogecoin); // Rendering inventory HUD
+				displayInventory(window, inventory, spriteInventory, spriteDogecoin, spriteKeyTesla); // Rendering inventory HUD
 				if (hasAllDogecoinPieces(inventory)) sfRenderWindow_drawSprite(window, buttonUICraft, NULL); // Renders craft button (but only if the dogecoin can be crafted)
 				renderMinimap(window, viewMinimap, tilemap, propmap); // Renders minimap
 
