@@ -32,10 +32,8 @@ void initPlayer() {
     sfSprite_setScale(player, vector2f(2.0f, 2.0f));
     sfSprite_setPosition(player, playerPos);
 
-
     sndWalk = sfSound_create();
-	sndWalkBuffer = sfSoundBuffer_createFromFile("..\\assets\\sounds\\walk.wav");
-	
+	sndWalkBuffer = sfSoundBuffer_createFromFile(AUDIO_PATH"walk.wav");
 	sfSound_setBuffer(sndWalk, sndWalkBuffer);
 	
     animTime = 0.0f;
@@ -109,6 +107,8 @@ void updatePlayer(char _map[H_MAP_T][W_MAP_T], sfRenderWindow* _w, char _canMove
         irect.top = frameY * irect.height;
         
     }
+
+    if (isMoving == sfFalse) sfSound_stop(sndWalk);
     sfSprite_setTextureRect(player, irect);
 
     // Move player to given point
@@ -190,7 +190,9 @@ void movePlayer(moveDir _dir, sfBool _isDiag, char _map[H_MAP_T][W_MAP_T], sfRen
     if (testKeyPress(sfKeyLShift, _w)) move *= 2;
     isMoving = sfTrue;
 
-    sfSound_play(sndWalk); 
+    if (sfSound_getStatus(sndWalk) == sfStopped) {
+		sfSound_play(sndWalk);
+	}
 
     switch (_dir) {
         case UP: frameY = DOWN; playerPos.y -= move; break;
