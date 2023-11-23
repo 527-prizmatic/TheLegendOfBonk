@@ -49,7 +49,7 @@ void initPlayer() {
     }
 }
 
-void updatePlayer(char _map[H_MAP_T][W_MAP_T], sfRenderWindow* _w, char _canMove) {
+void updatePlayer(char _map[H_MAP_T][W_MAP_T], char _prop[H_MAP_T][W_MAP_T], sfRenderWindow* _w, char _canMove) {
     // Ticking animation
     animTime += TICK_TIME;
     if (testKeyPress(sfKeyLShift, _w)) animTime += TICK_TIME / 2.f;
@@ -58,27 +58,27 @@ void updatePlayer(char _map[H_MAP_T][W_MAP_T], sfRenderWindow* _w, char _canMove
         // Diagonal movement
         if (sfRenderWindow_hasFocus(_w)) {
             if (sfKeyboard_isKeyPressed(KEY_UP) && sfKeyboard_isKeyPressed(KEY_LEFT)) {
-                if (!checkForCollisions(_map, UP)) movePlayer(UP, sfTrue, _map, _w);
-                if (!checkForCollisions(_map, LEFT)) movePlayer(LEFT, sfTrue, _map, _w);
+                if (!checkForCollisions(_prop, UP)) movePlayer(UP, sfTrue, _map, _w);
+                if (!checkForCollisions(_prop, LEFT)) movePlayer(LEFT, sfTrue, _map, _w);
             }
             else if (sfKeyboard_isKeyPressed(KEY_DOWN) && sfKeyboard_isKeyPressed(KEY_LEFT)) {
-                if (!checkForCollisions(_map, DOWN)) movePlayer(DOWN, sfTrue, _map, _w);
-                if (!checkForCollisions(_map, LEFT)) movePlayer(LEFT, sfTrue, _map, _w);
+                if (!checkForCollisions(_prop, DOWN)) movePlayer(DOWN, sfTrue, _map, _w);
+                if (!checkForCollisions(_prop, LEFT)) movePlayer(LEFT, sfTrue, _map, _w);
             }
             else if (sfKeyboard_isKeyPressed(KEY_DOWN) && sfKeyboard_isKeyPressed(KEY_RIGHT)) {
-                if (!checkForCollisions(_map, DOWN)) movePlayer(DOWN, sfTrue, _map, _w);
-                if (!checkForCollisions(_map, RIGHT)) movePlayer(RIGHT, sfTrue, _map, _w);
+                if (!checkForCollisions(_prop, DOWN)) movePlayer(DOWN, sfTrue, _map, _w);
+                if (!checkForCollisions(_prop, RIGHT)) movePlayer(RIGHT, sfTrue, _map, _w);
             }
             else if (sfKeyboard_isKeyPressed(KEY_UP) && sfKeyboard_isKeyPressed(KEY_RIGHT)) {
-                if (!checkForCollisions(_map, UP)) movePlayer(UP, sfTrue, _map, _w);
-                if (!checkForCollisions(_map, RIGHT)) movePlayer(RIGHT, sfTrue, _map, _w);
+                if (!checkForCollisions(_prop, UP)) movePlayer(UP, sfTrue, _map, _w);
+                if (!checkForCollisions(_prop, RIGHT)) movePlayer(RIGHT, sfTrue, _map, _w);
             }
 
             // Orthogonal movement
-            else if (sfKeyboard_isKeyPressed(KEY_UP)) { direction = UP; if (!checkForCollisions(_map, direction)) movePlayer(direction, sfFalse, _map, _w); }
-            else if (sfKeyboard_isKeyPressed(KEY_DOWN)) { direction = DOWN; if (!checkForCollisions(_map, direction)) movePlayer(direction, sfFalse, _map, _w); }
-            else if (sfKeyboard_isKeyPressed(KEY_LEFT)) { direction = LEFT; if (!checkForCollisions(_map, direction)) movePlayer(direction, sfFalse, _map, _w); }
-            else if (sfKeyboard_isKeyPressed(KEY_RIGHT)) { direction = RIGHT; if (!checkForCollisions(_map, direction)) movePlayer(direction, sfFalse, _map, _w); }
+            else if (sfKeyboard_isKeyPressed(KEY_UP)) { direction = UP; if (!checkForCollisions(_prop, direction)) movePlayer(direction, sfFalse, _map, _w); }
+            else if (sfKeyboard_isKeyPressed(KEY_DOWN)) { direction = DOWN; if (!checkForCollisions(_prop, direction)) movePlayer(direction, sfFalse, _map, _w); }
+            else if (sfKeyboard_isKeyPressed(KEY_LEFT)) { direction = LEFT; if (!checkForCollisions(_prop, direction)) movePlayer(direction, sfFalse, _map, _w); }
+            else if (sfKeyboard_isKeyPressed(KEY_RIGHT)) { direction = RIGHT; if (!checkForCollisions(_prop, direction)) movePlayer(direction, sfFalse, _map, _w); }
             else isMoving = sfFalse;
         }
         else isMoving = sfFalse;
@@ -175,11 +175,13 @@ sfBool isInWater(char _map[H_MAP_T][W_MAP_T]) {
     hitbox.top += hitbox.height * .5f;
     hitbox.width *= .6f;
     hitbox.height *= .4f;
-
+    printf("%d", 1);
     int x = (int) trunc((hitbox.top + hitbox.height / 2) / TILE_PX);
     int y = (int) trunc((hitbox.left + hitbox.width / 2) / TILE_PX);
 
-    if (isWater(_map[x][y])) return sfTrue;
+    char id = _map[x][y];
+    if (isWater(id))
+        return sfTrue;
     else return sfFalse;
 }
 
