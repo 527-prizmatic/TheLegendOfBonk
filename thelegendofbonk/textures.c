@@ -42,6 +42,16 @@ const sfIntRect t_cobble_corner_br	= { TS * 4, TS * 11, 48, 48 };
 
 const sfIntRect t_stairs			= { TS * 4, TS * 5, 48, 48 };
 
+const sfIntRect t_water_tl			= { TS * 6, TS * 12, 48, 48 };
+const sfIntRect t_water_t			= { TS * 7, TS * 12, 48, 48 };
+const sfIntRect t_water_tr			= { TS * 8, TS * 12, 48, 48 };
+const sfIntRect t_water_l			= { TS * 6, TS * 13, 48, 48 };
+const sfIntRect t_water				= { TS * 7, TS * 13, 48, 48 };
+const sfIntRect t_water_r			= { TS * 8, TS * 13, 48, 48 };
+const sfIntRect t_water_bl			= { TS * 6, TS * 14, 48, 48 };
+const sfIntRect t_water_b			= { TS * 7, TS * 14, 48, 48 };
+const sfIntRect t_water_br			= { TS * 8, TS * 14, 48, 48 };
+
 
 /* == PROPS == */
 const sfIntRect p_ledge_tl			= { TS * 0, TS * 3, 48, 48 };
@@ -150,6 +160,16 @@ sfIntRect textureFromId(int _id) {
 
 	case 28: return t_stairs;
 
+	case 29: return t_water_tl;
+	case 30: return t_water_t;
+	case 31: return t_water_tr;
+	case 32: return t_water_l;
+	case 33: return t_water;
+	case 34: return t_water_r;
+	case 35: return t_water_bl;
+	case 36: return t_water_b;
+	case 37: return t_water_br;
+
 	case 64: return p_none;
 
 	case 65: return p_ledge_tl;
@@ -245,8 +265,8 @@ sfBool isSolidBlock(char _id) {
 }
 
 sfBool isWater(char _id) {
+	if (_id >= 29 && _id <= 37) return sfTrue;
 	switch (_id) {
-		// case 1: return sfTrue;
 	default: return sfFalse;
 	}
 }
