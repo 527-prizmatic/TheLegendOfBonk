@@ -65,7 +65,7 @@ int main() {
 	sfSprite* buttonMainPlay = initSprite(TEXTURE_PATH"play.png", vector2f(3.5f, 3.5f), vector2f(175.0f, 400.0f));
 	sfSprite* buttonMainEdit = initSprite(TEXTURE_PATH"edit.png", vector2f(3.5f, 3.5f), vector2f(454.0f, 400.0f));
 	sfSprite* buttonMainQuit = initSprite(TEXTURE_PATH"quit.png", vector2f(3.5f, 3.5f), vector2f(314.0f, 485.0f));
-	sfSprite* buttonMainQuit2 = initSprite(TEXTURE_PATH"quit2.png", vector2f(3.5f, 3.5f), vector2f(50.0f, 50.0f)); 
+	sfSprite* buttonMainCredits = initSprite(TEXTURE_PATH"credits.png", vector2f(2.5f, 2.5f), vector2f(30.0f, 30.0f)); 
 	sfSprite* spriteMenuBackground = initSprite(TEXTURE_PATH"background.png", vector2f(1.0f, 1.0f), vector2f(0.0f, 0.0f));
 	sfSprite* buttonPauseReturn = initSprite(TEXTURE_PATH"return.png", vector2f(3.5f, 3.5f), vector2f(350.0f, 180.0f));
 	sfSprite* buttonPauseOptions = initSprite(TEXTURE_PATH"option.png", vector2f(3.5f, 3.5f), vector2f(350.0f, 250.0f));
@@ -80,7 +80,7 @@ int main() {
 		buttonMainPlay,
 		buttonMainEdit,
 		buttonMainQuit,
-		buttonMainQuit2, 
+		buttonMainCredits, 
 		buttonPauseReturn,
 		buttonPauseOptions,
 		buttonPauseQuit,
@@ -138,7 +138,6 @@ int main() {
 
 
 	///***  = = =  GAME LOOP  = = =  ***///
-
 	while (sfRenderWindow_isOpen(window)) {
 
 		// Some core functions
@@ -173,7 +172,7 @@ int main() {
 				sfRenderWindow_drawSprite(window, buttonMainEdit, NULL);
 				sfRenderWindow_drawSprite(window, buttonMainQuit, NULL);
 
-				sfRenderWindow_drawSprite(window, buttonMainQuit2, NULL);
+				sfRenderWindow_drawSprite(window, buttonMainCredits, NULL);
 				
 				sfRenderWindow_display(window);
 			}
@@ -202,7 +201,7 @@ int main() {
 				flagClick = 1;
 			}
 
-			else if (isClicked(window, buttonMainQuit2)) {
+			else if (isClicked(window, buttonMainCredits)) {
 				sfSound_play(sndButtonClick);
 				gameState = CREDITS;
 				flagClick = 1;
@@ -210,22 +209,21 @@ int main() {
 			// When clicking on the QUIT button
             else if(isClicked(window, buttonMainQuit)) gameState = QUIT;
 
-		/*CREDIT BOUTON */ 
-		
-
-
 		}
+		    /*CREDIT BOUTON */ 
 		    else if (gameState == CREDITS) 
 		    {
 				sfRenderWindow_setView(window, sfRenderWindow_getDefaultView(window)); 
 				if (tick >= TICK_TIME) { 
 					tick = 0.0f;
+					sfSprite_setPosition(buttonPauseReturn, (sfVector2f) { 600.0f, 520.0f });
+					sfSprite_setScale(buttonPauseReturn, (sfVector2f) { 2.5f, 2.5f });
 					sfRenderWindow_drawSprite(window, spriteMenuBackground, NULL); 
+                    sfRenderWindow_drawSprite(window, buttonPauseReturn, NULL);
 					sfRenderWindow_display(window); 
 				}
-				if (testKeyPress(KEY_PAUSE, window)) { 
-					gameState = MENU; 
-				} 
+				if (testKeyPress(KEY_PAUSE, window)) gameState = MENU; 
+				else if (isClicked(window, buttonPauseReturn)) gameState = MENU; 
 			}
 
 		/* == GAME == */
