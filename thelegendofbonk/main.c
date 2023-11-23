@@ -44,7 +44,7 @@ int main() {
 	sfText* textVolume = initText(font, 30, vector2f(250.0f, 250.0f));
 
 	/* == INTERACTIONS HEADS-UP ==  */
-	sfText* sfTxt_interact = initText(font, 30, vector2f(400.f, 400.f));
+	sfText* sfTxt_interact = initText(font, 30, vector2f(600.f, 460.f));
 	formatTextOutline(sfTxt_interact, sfBlack);
 	sfText_setString(sfTxt_interact, "Press E !\0");
 
@@ -172,7 +172,7 @@ int main() {
 	initPlayer();
 	sfEvent event;
 	float tick = 0.0f;
-	float tickEnding = 012.0f;
+	float tickEnding = 0.0f;
 
 
 	///***  = = =  GAME LOOP  = = =  ***///
@@ -260,7 +260,7 @@ int main() {
 				tick = 0.0f;
                 
 				// Regularly updating a few game variables
-				updatePlayer(propmap, window, 1);
+				updatePlayer(tilemap, propmap, window, 1);
 				updateView(window, viewGame, playerPos);
 
 
@@ -277,7 +277,7 @@ int main() {
 				}
 				
 				// Check for interaction with chests when pressing the bound key
-				else if (testKeyPress(KEY_INTERACT, window) && checkInteract != -1 && inventory[0] != 2) {
+				else if (testKeyPress(KEY_INTERACT, window) && checkInteract != -1 && inventory[0] != 2 && inventory[0] != 3) {
 					inventory[checkInteract] = 1;
 					chestArray[checkInteract].flagOpen = 1;
                     sfSound_play(sndChest);
@@ -314,6 +314,7 @@ int main() {
 					if (checkInteract == 200) {
 						if ((!hasAllDogecoinPieces(inventory) || inventory[0] == 2) && inventory[0] != 3) sfRenderWindow_drawText(window, sfTxt_interact, sfFalse);
 					}
+					if (checkInteract < 19 && (inventory[0] == 2 || inventory[0] == 3)) checkInteract = -1;
 					//else if (checkInteract == 200 && inventory[0] == 3) continue; 
 					else sfRenderWindow_drawText(window, sfTxt_interact, sfFalse);
 				}
@@ -627,15 +628,9 @@ int main() {
 				if (tickEnding > 34.f && tickEnding <= 37.f) sfText_setString(txtCredits, credits[7]);
 				if (tickEnding > 37.f && tickEnding <= 46.f) sfText_setString(txtCredits, credits[8]);
 				if (tickEnding > 46.f && tickEnding <= 48.f) sfText_setString(txtCredits, credits[9]);
-				if (tickEnding > 50.f) {
-					sfMusic_stop(musicCybertruck);
-					sfMusic_play(bgm);
-					sfMusic_setLoop(bgm, sfTrue);
-					gameState = MENU;
-				}
 
 				// Updates
-				updatePlayer(propmap, window, 0);
+				updatePlayer(tilemap, propmap, window, 0);
 				sfSprite_setPosition(bonk, bonkPos);
 				sfSprite_setPosition(cage, cagePos);
 				sfSprite_setPosition(cybertruck, ctPos);
@@ -668,9 +663,15 @@ int main() {
 
 					sfRenderWindow_drawText(window, txtCredits, NULL);
 				}
-				else {}
 
 				sfRenderWindow_display(window);
+
+				if (tickEnding > 50.f) {
+					sfMusic_stop(musicCybertruck);
+					sfMusic_play(bgm);
+					sfMusic_setLoop(bgm, sfTrue);
+					gameState = MENU;
+				}
 			}
 		}
 
