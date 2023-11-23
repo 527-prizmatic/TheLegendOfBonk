@@ -67,6 +67,9 @@ int canInteract() {
 	int sqrPosCageX = (playerPos.x - 3970.0f) * (playerPos.x - 3970.0f);
 	int sqrPosCageY = (playerPos.y - 70.0f) * (playerPos.y - 70.0f);
 
+	int sqrPosCheeseX = (playerPos.x - 1655.0f) * (playerPos.x - 1655.0f);
+	int sqrPosCheeseY = (playerPos.y - 2085.0f) * (playerPos.y - 2085.0f);
+
     int sqrRadius = (playerRadius + interactRadius) * (playerRadius + interactRadius);
 
 	for (int i = 0; i < 5; i++) {
@@ -81,6 +84,7 @@ int canInteract() {
 	}
 
 	if (sqrPosCageX + sqrPosCageY < sqrRadius) return 100;
+	if (sqrPosCheeseX + sqrPosCheeseY < sqrRadius) return 200;
 
 	return -1;
 }

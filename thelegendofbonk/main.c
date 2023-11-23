@@ -110,6 +110,9 @@ int main() {
 	/* == NPCS AND WORLD OBJECTS == */
 	sfSprite* bonk = initSprite(TEXTURE_PATH"bonk.png", vector2f(2.0f, 2.0f), vector2f(4000.0f, 68.0f));
 	sfSprite* npcCheese = initSprite(TEXTURE_PATH"pnj.png", vector2f(2.0f, 2.0f), vector2f(1655.0f, 2085.0f));
+	char cheeseTxt[78] = "Cheese !\nI need dogecoin\nto buy a new Tesla!\nGive me one and I'll reward you.";
+	char cheeseTxt2[83] = "Cheese again !!\nGive me that dogecoin !!\nTake this it's my old tesla key\nBye bye !";
+	char flagCheese = 0;
 	sfSprite* cage = initSprite(TEXTURE_PATH"cage.png", vector2f(0.3f, 0.3f), vector2f(3970.0f, 20.0f));
 
 	/* == TIMERS & ANIMATION HANDLERS == */
@@ -229,15 +232,23 @@ int main() {
 
 				// Sets up a dialog box for when the player interacts with a sign
 				checkInteract = canInteract();
-				if (checkInteract > 19 && checkInteract != 100) {
+				if (checkInteract > 19 && checkInteract != 100 && checkInteract != 200) {
 					int idNpc = checkInteract - 20;
 					updateDialogBox(pnjArray[idNpc].txt, sizeof(pnjArray[idNpc].txt), sfTxt_npc, dialogBoxNpc, (sfVector2f) { 10.0f, 450.0f }, (sfVector2f) { 380.0f, 140.0f }, 0);
+					if (testKeyPress(KEY_INTERACT, window)) flagInteraction = 1;
+				}
+				else if (checkInteract == 200 && !flagCheese){
+					updateDialogBox(cheeseTxt, sizeof(cheeseTxt), sfTxt_npc, dialogBoxNpc, (sfVector2f) { 10.0f, 450.0f }, (sfVector2f) { 380.0f, 140.0f }, 0);
 					if (testKeyPress(KEY_INTERACT, window)) flagInteraction = 1;
 				}
 				// Check for interaction with chests when pressing the bound key
 				else if (testKeyPress(KEY_INTERACT, window) && checkInteract != -1 && inventory[0] != 2) inventory[checkInteract] = 1;
 				
-
+				if (flagCheese) {
+					updateDialogBox(cheeseTxt2, sizeof(cheeseTxt2), sfTxt_npc, dialogBoxNpc, (sfVector2f) { 10.0f, 450.0f }, (sfVector2f) { 380.0f, 140.0f }, 0);
+					if (testKeyPress(KEY_INTERACT, window)) flagInteraction = 1;
+					inventory[0] = 3;
+				}
 				// Rendering
 				sfRenderWindow_setView(window, viewGame); // Rendering on map view
 				renderMap(tilemap, window, sfView_getCenter(viewGame), -1, 0); // Rendering map - terrain layer
@@ -258,15 +269,19 @@ int main() {
 				sfRenderWindow_setView(window, sfRenderWindow_getDefaultView(window)); // Now rendering on HUD
 				if (checkInteract != -1) {
 					if (checkInteract == 100) {
-						if (inventory[0] == 2) sfRenderWindow_drawText(window, sfTxt_interact, sfFalse);
+						if (inventory[0] == 3) sfRenderWindow_drawText(window, sfTxt_interact, sfFalse);
 					}
+					if (checkInteract == 200) {
+						if (!hasAllDogecoinPieces(inventory) || inventory[0] == 2) sfRenderWindow_drawText(window, sfTxt_interact, sfFalse);
+					}
+					//else if (checkInteract == 200 && inventory[0] == 3) continue; 
 					else sfRenderWindow_drawText(window, sfTxt_interact, sfFalse);
 				}
 				if (flagInteraction == 1) displayDialogBox(window, sfTxt_npc, dialogBoxNpc, sfFalse); // Displays dialog box if need be
 				
 				sfRenderWindow_display(window);
-				
-				if (inventory[0] == 2 && testKeyPress(KEY_INTERACT, window) && canInteract() == 100) gameState = ENDING;
+				if (inventory[0] == 2 && testKeyPress(KEY_INTERACT, window) && canInteract() == 200) flagCheese = 1;
+				if (inventory[0] == 3 && testKeyPress(KEY_INTERACT, window) && canInteract() == 100) gameState = ENDING;
 			}
 			
 

@@ -49,6 +49,13 @@ void displayInventory(sfRenderWindow* _window, int* _inventory, sfSprite* _inven
             sfSprite_setScale(_keySprite, (sfVector2f) { 1.7f, 1.7f });
             sfRenderWindow_drawSprite(_window, _keySprite, NULL);
         }
+        else if (_inventory[0] == 3) {
+            rect.left = rect.width * 2;
+            sfSprite_setTextureRect(_keySprite, rect);
+            sfSprite_setPosition(_keySprite, (sfVector2f) { 443.0f, 515.0f });
+            sfSprite_setScale(_keySprite, (sfVector2f) { 1.7f, 1.7f });
+            sfRenderWindow_drawSprite(_window, _keySprite, NULL);
+        }
         else {
             rect.left = 0;
             sfSprite_setTextureRect(_keySprite, rect);
