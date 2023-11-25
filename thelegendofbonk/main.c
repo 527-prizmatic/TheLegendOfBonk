@@ -582,8 +582,6 @@ int main() {
 			if (tick >= TICK_TIME) {
 				tick = 0.f;
 
-				printf("e");
-
 				trigTicker = (tickEnding - 2) * 4 * PI;
 
 				/* == CUTSCENE SCRIPT == */
