@@ -638,7 +638,7 @@ int main() {
 				sfSprite_setScale(elongatedMuskrat, vector2f(emScale, emScale));
 				sfText_setColor(txtCredits, sfWhite);
 
-				if (tickEnding <= 12.f) {
+				if (tickEnding <= 12.f){
 					// Rendering
 					sfRenderWindow_setView(window, viewGame); // Rendering on map view
 					renderMap(tilemap, window, sfView_getCenter(viewGame), -1, 1); // Rendering map - terrain layer
