@@ -8,7 +8,7 @@
 #define TEXTURE_PATH "..\\assets\\textures\\"
 #define AUDIO_PATH "..\\assets\\audio\\"
 
-#define TICKSPEED 120.f
+#define TICKSPEED 60.f
 #define TICK_TIME 1.f / TICKSPEED
 #define PI (float)3.1415926535
 
