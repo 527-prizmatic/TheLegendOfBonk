@@ -12,7 +12,7 @@
 #define TICK_TIME 1 / (float)TICKSPEED
 #define PI (float)3.1415926535
 
-#define DEBUG 01
+#define DEBUG 00
 
 #define KEY_UP sfKeyZ
 #define KEY_DOWN sfKeyS
