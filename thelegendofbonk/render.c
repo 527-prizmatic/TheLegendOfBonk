@@ -83,6 +83,12 @@ void renderMap(char _map[H_MAP_T][W_MAP_T], sfRenderWindow* _w, sfVector2f _pos,
 		render_left = 0;
 		render_right = W_MAP_T;
 	}
+	else if (_minimap == 2) {
+		render_top = 0;
+		render_bottom = 15;
+		render_left = 50;
+		render_right = W_MAP_T;
+	}
 	else if (gameState == GAME) {
 		render_top = (int) max(0, trunc((_pos.y - 400) / TILE_PX));
 		render_bottom = (int) min(H_MAP_T - 1, trunc((_pos.y + 400) / TILE_PX));
