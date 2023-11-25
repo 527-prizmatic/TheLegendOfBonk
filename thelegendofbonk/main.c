@@ -111,6 +111,7 @@ int main() {
 	sfSound_setBuffer(sndButtonClick, bufferUI);
 
 	/* == ENDING SFX == */
+	sfClock* clockEnding = sfClock_create();
 	sfSound* sndVroom = sfSound_create();
 	sfSoundBuffer* bufferVroom = sfSoundBuffer_createFromFile(AUDIO_PATH"vroom.wav");
 	sfSound_setBuffer(sndVroom, bufferVroom);
@@ -177,10 +178,9 @@ int main() {
 
 	///***  = = =  GAME LOOP  = = =  ***///
 	while (sfRenderWindow_isOpen(window)) {
-
 		// Some core functions
-		while (sfRenderWindow_pollEvent(window, &event)) if (event.type == sfEvtClosed) sfRenderWindow_close(window); // Check if window is closed via the WIndows UI
 		restartClock();
+		while (sfRenderWindow_pollEvent(window, &event)) if (event.type == sfEvtClosed) sfRenderWindow_close(window); // Check if window is closed via the WIndows UI
 		sfRenderWindow_clear(window, sfBlack);
 		tick += getDeltaTime(); // Ticks game rendering engine
 		if (!testLClick(NULL) && flagClick) flagClick = 0; // Technical flag used in misc functions to check if the user is left-clicking somewhere
@@ -324,7 +324,10 @@ int main() {
 				sfRenderWindow_display(window);
 				
 				if (inventory[0] == 2 && testKeyPress(KEY_INTERACT, window) && canInteract() == 200) flagCheese = 1;
-				if (inventory[0] == 3 && testKeyPress(KEY_INTERACT, window) && canInteract() == 100) gameState = ENDING;
+				if (inventory[0] == 3 && testKeyPress(KEY_INTERACT, window) && canInteract() == 100) {
+					gameState = ENDING;
+					sfClock_restart(clockEnding);
+				}
 			}
 
 
@@ -565,7 +568,7 @@ int main() {
 				frameY = LEFT;
 			}
 
-			tickEnding += getDeltaTime();
+			tickEnding = sfTime_asSeconds(sfClock_getElapsedTime(clockEnding));
 			tick += getDeltaTime();
 			logoAnimTimer += getDeltaTime();
 
@@ -600,9 +603,9 @@ int main() {
 				if (tickEnding > 5.75f && tickEnding <= 6.f) bonkPos.y += cos(trigTicker) * 2;
 				if (tickEnding > 6.5f && tickEnding <= 6.75f) playerPos.y -= cos(trigTicker) * 2;
 				if (tickEnding > 6.75f && tickEnding <= 7.f) playerPos.y += cos(trigTicker) * 2;
-				if (tickEnding > 7.f && tickEnding <= 7.462f) {
-					ctPos.x -= 5.5f;
-					emPos.x -= 5.5f;
+				if (tickEnding > 7.f && ctPos.x > 3900.f) {
+					ctPos.x -= 7.f;
+					emPos.x -= 7.f;
 				}
 				if (tickEnding > 7.43f && tickEnding <= 8.5f) {
 					playerPos.x -= 4.f;
