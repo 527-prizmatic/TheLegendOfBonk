@@ -3,6 +3,8 @@
 #include "interact.h"
 #include "textures.h"
 
+#pragma warning (disable: 4244)
+
 void interactTilePos(char _map[H_MAP_T][W_MAP_T]) {
 	system("cls");
 	chestCpt = 0;
@@ -58,22 +60,22 @@ void interactTilePos(char _map[H_MAP_T][W_MAP_T]) {
 }
 
 int canInteract() {
-    int playerRadius = 60;
-    int interactRadius = 20;
+    float playerRadius = 60.f;
+	float interactRadius = 20.f;
 
-    int sqrPosChestX = 0;
-    int sqrPosChestY = 0;
+	float sqrPosChestX = 0.f;
+	float sqrPosChestY = 0.f;
 
-	int sqrPosPnjX = 0;
-	int sqrPosPnjY = 0;
+	float sqrPosPnjX = 0.f;
+	float sqrPosPnjY = 0.f;
 
-	int sqrPosCageX = (playerPos.x - 3970.0f) * (playerPos.x - 3970.0f);
-	int sqrPosCageY = (playerPos.y - 70.0f) * (playerPos.y - 70.0f);
+	float sqrPosCageX = (playerPos.x - 3970.0f) * (playerPos.x - 3970.0f);
+	float sqrPosCageY = (playerPos.y - 70.0f) * (playerPos.y - 70.0f);
 
-	int sqrPosCheeseX = (playerPos.x - 1655.0f) * (playerPos.x - 1655.0f);
-	int sqrPosCheeseY = (playerPos.y - 2085.0f) * (playerPos.y - 2085.0f);
+	float sqrPosCheeseX = (playerPos.x - 1655.0f) * (playerPos.x - 1655.0f);
+	float sqrPosCheeseY = (playerPos.y - 2085.0f) * (playerPos.y - 2085.0f);
 
-    int sqrRadius = (playerRadius + interactRadius) * (playerRadius + interactRadius);
+	float sqrRadius = (playerRadius + interactRadius) * (playerRadius + interactRadius);
 
 	for (int i = 0; i < 5; i++) {
 		sqrPosChestX = (playerPos.x - chestArray[i].chestPosition.x) * (playerPos.x - chestArray[i].chestPosition.x);

@@ -111,6 +111,13 @@ int main() {
 	sfSound_setBuffer(sndButtonClick, bufferUI);
 
 	/* == ENDING SFX == */
+	sfVector2f cagePos;
+	sfVector2f bonkPos;
+	sfVector2f ctPos;
+	sfVector2f emPos;
+	float emScale;
+	float trigTicker;
+	sfClock* clockEnding = sfClock_create();
 	sfSound* sndVroom = sfSound_create();
 	sfSoundBuffer* bufferVroom = sfSoundBuffer_createFromFile(AUDIO_PATH"vroom.wav");
 	sfSound_setBuffer(sndVroom, bufferVroom);
@@ -134,14 +141,15 @@ int main() {
 
 	/* == CREDITS TEXTS == */
 	sfText* txtCredits = initText(font, 30, vector2f(200.f, 425.f));
-	char* credits[10] = { "    THE LEGEND OF BONK",
+	char* credits[11] = { "    THE LEGEND OF BONK",
 		"               WITH\n  BINGCHILLING as DOGE",
 		"        LEVEL DESIGN\n        VALETTE EVAN\n TOUSSAINT J.SEBASTIEN",
 		"         PROGRAMMING\n        GELOT MATHIEU\n         VALETTE EVAN\n  TOUSSAINT J.SEBASTIEN",
-		"        GRAPHIC DESIGN\n        GELOT MATHIEU\n          VALETTE EVAN",
+		"        GRAPHIC DESIGN\n         GELOT MATHIEU\n          VALETTE EVAN",
 		"         SOUND DESIGN\n         VALETTE EVAN\n  TOUSSAINT J.SEBASTIEN",
 		"            ELON MUSK\n            ELON MUSK",
 		"                BONK\n       BALLTZE \"CHEEMS\"",
+		"       CREDITS MUSIC\nEXTRA TERRA - CYBERTRUCK",
 		"       TO BE CONTINUED...",
 		"       TO BE CONTINUED...\n             ...MAYBE"
 	};
@@ -184,10 +192,9 @@ int main() {
 
 	///***  = = =  GAME LOOP  = = =  ***///
 	while (sfRenderWindow_isOpen(window)) {
-
 		// Some core functions
-		while (sfRenderWindow_pollEvent(window, &event)) if (event.type == sfEvtClosed) sfRenderWindow_close(window); // Check if window is closed via the WIndows UI
 		restartClock();
+		while (sfRenderWindow_pollEvent(window, &event)) if (event.type == sfEvtClosed) sfRenderWindow_close(window); // Check if window is closed via the Windows UI
 		sfRenderWindow_clear(window, sfBlack);
 		tick += getDeltaTime(); // Ticks game rendering engine
 		if (!testLClick(NULL) && flagClick) flagClick = 0; // Technical flag used in misc functions to check if the user is left-clicking somewhere
@@ -270,7 +277,7 @@ int main() {
 				updatePlayer(tilemap, propmap, window, 1);
 				updateView(window, viewGame, playerPos);
 
-
+				
 				// Sets up a dialog box for when the player interacts with a sign
 				checkInteract = canInteract();
 				if (checkInteract > 19 && checkInteract != 100 && checkInteract != 200) {
@@ -289,7 +296,7 @@ int main() {
 					if (chestArray[checkInteract].flagOpen == 0) sfSound_play(sndChest);
 					chestArray[checkInteract].flagOpen = 1;
 				}
-
+				
 				if (flagCheese) {
 					updateDialogBox(cheeseTxt2, sizeof(cheeseTxt2), sfTxt_npc, dialogBoxNpc, (sfVector2f) { 10.0f, 450.0f }, (sfVector2f) { 380.0f, 140.0f }, 0);
 					if (testKeyPress(KEY_INTERACT, window)) flagInteraction = 1;
@@ -312,7 +319,7 @@ int main() {
 				sfRenderWindow_drawRectangleShape(window, nightOverlay, NULL); // Renders nighttime overlay
 				displayInventory(window, inventory, spriteInventory, spriteDogecoin, spriteKeyTesla); // Rendering inventory HUD
 				if (hasAllDogecoinPieces(inventory)) sfRenderWindow_drawSprite(window, buttonUICraft, NULL); // Renders craft button (but only if the dogecoin can be crafted)
-
+				
 				// Displays "PRESS E" pop-up above inventory bar
 				if (checkInteract != -1) {
 					if (checkInteract == 100) {
@@ -326,12 +333,15 @@ int main() {
 					else sfRenderWindow_drawText(window, sfTxt_interact, sfFalse);
 				}
 				if (flagInteraction == 1) displayDialogBox(window, sfTxt_npc, dialogBoxNpc, sfFalse); // Displays dialog box if need be
-
-				renderMinimap(window, viewMinimap, tilemap, propmap); // Renders minimap
+				
+//				renderMinimap(window, viewMinimap, tilemap, propmap); // Renders minimap
 				sfRenderWindow_display(window);
 				
-				if (inventory[0] == 2 && testKeyPress(KEY_INTERACT, window) && canInteract() == 200) flagCheese = 1;
-				if (inventory[0] == 3 && testKeyPress(KEY_INTERACT, window) && canInteract() == 100) gameState = ENDING;
+				if (inventory[0] == 2 && testKeyPress(KEY_INTERACT, window) && checkInteract == 200) flagCheese = 1;
+				if (inventory[0] == 3 && testKeyPress(KEY_INTERACT, window) && checkInteract == 100) {
+					gameState = ENDING;
+					sfClock_restart(clockEnding);
+				}
 			}
 
 
@@ -360,11 +370,11 @@ int main() {
 			sfRectangleShape_setFillColor(nightOverlay, sfColor_fromRGBA(8, 8, 32, (int)nightFilterAlpha));
 			if (nightFilterAlpha > 96.0f) selectTexture_lampPost(1); // Lamp posts turn on at night
 			else selectTexture_lampPost(0); // Lamp posts turn off at day
-			
+
 			// Check for world interactions
-			if (canInteract() == -1) flagInteraction = 0;
-			if (inventory[0] == 2 && testKeyPress(KEY_INTERACT, window) && canInteract() == 100) gameState = ENDING;
-			
+			if (checkInteract == -1) flagInteraction = 0;
+			if (inventory[0] == 2 && testKeyPress(KEY_INTERACT, window) && checkInteract == 100) gameState = ENDING;
+		
 			
 			// jouer le son 1 fois que si on apuis sur la touche E
 if (testKeyPress(KEY_INTERACT, window) && canInteract() == 200 && inventory[0] == 3 && sfSound_getStatus(sndCage) == sfStopped) sfSound_play(sndCage);
@@ -584,31 +594,32 @@ if (testKeyPress(KEY_INTERACT, window) && canInteract() == 200 && inventory[0] =
 			
 			sfSound_stop(bgm);
 
-			sfVector2f cagePos = sfSprite_getPosition(cage);
-			sfVector2f bonkPos = sfSprite_getPosition(bonk);
-			sfVector2f ctPos = sfSprite_getPosition(cybertruck);
-			sfVector2f emPos = sfSprite_getPosition(elongatedMuskrat);
-			float emScale = sfSprite_getScale(elongatedMuskrat).x;
+			cagePos = sfSprite_getPosition(cage);
+			bonkPos = sfSprite_getPosition(bonk);
+			ctPos = sfSprite_getPosition(cybertruck);
+			emPos = sfSprite_getPosition(elongatedMuskrat);
+			emScale = sfSprite_getScale(elongatedMuskrat).x;
+
 			if (tickEnding == 0) {
 				playerPos.x = cagePos.x - 40;
 				playerPos.y = bonkPos.y;
 				frameY = LEFT;
 			}
 
-			tickEnding += getDeltaTime();
+			tickEnding = sfTime_asSeconds(sfClock_getElapsedTime(clockEnding));
 			tick += getDeltaTime();
 			logoAnimTimer += getDeltaTime();
 
 			if (tick >= TICK_TIME) {
 				tick = 0.f;
+				trigTicker = (tickEnding - 2) * 4 * PI;
 				
-				float trigTicker = (tickEnding - 2) * 4 * PI;
-
 				/* == CUTSCENE SCRIPT == */
 				if (tickEnding <= 2.f) {
 					cagePos.y -= .33f;
+
 					updateView(window, viewGame, bonkPos);
-					
+
 				}
 				// play cage sound instantly
                 if (tickEnding > 0.f && tickEnding <= 0.01f) if (sfSound_getStatus(sndCage) != sfPlaying) sfSound_play(sndCage);
@@ -628,6 +639,7 @@ if (testKeyPress(KEY_INTERACT, window) && canInteract() == 200 && inventory[0] =
 					bonkPos.x += sin(trigTicker) * 2;
 					bonkPos.y += cos(trigTicker) * 2;
 				}
+
 				if (tickEnding > 3.75f && tickEnding <= 3.76f) if (sfSound_getStatus(sndVroom) != sfPlaying) sfSound_play(sndVroom);
 				if (tickEnding > 4.f && tickEnding <= 4.25f) playerPos.y -= cos(trigTicker) * 2;
 				if (tickEnding > 4.25f && tickEnding <= 4.5f) playerPos.y += cos(trigTicker) * 2;
@@ -635,10 +647,11 @@ if (testKeyPress(KEY_INTERACT, window) && canInteract() == 200 && inventory[0] =
 				if (tickEnding > 5.75f && tickEnding <= 6.f) bonkPos.y += cos(trigTicker) * 2;
 				if (tickEnding > 6.5f && tickEnding <= 6.75f) playerPos.y -= cos(trigTicker) * 2;
 				if (tickEnding > 6.75f && tickEnding <= 7.f) playerPos.y += cos(trigTicker) * 2;
-				if (tickEnding > 7.f && tickEnding <= 7.462f) {
-					ctPos.x -= 5.5f;
-					emPos.x -= 5.5f;
+				if (tickEnding > 7.05f && ctPos.x > 3900.f) {
+					ctPos.x -= 7.f;
+					emPos.x -= 7.f;
 				}
+				
 				if (tickEnding > 7.43f && tickEnding <= 8.5f) {
 					playerPos.x -= 4.f;
 					playerPos.y -= 0.4f;
@@ -647,9 +660,9 @@ if (testKeyPress(KEY_INTERACT, window) && canInteract() == 200 && inventory[0] =
 					sfSprite_setRotation(player, sfSprite_getRotation(player) + 2);
 					sfSprite_setRotation(bonk, sfSprite_getRotation(bonk) - 2);
 				}
-				if (tickEnding > 7.462f && tickEnding < 7.472f) sfSound_stop(sndVroom);
 				if (tickEnding > 7.03f && tickEnding <= 7.04f) if (sfSound_getStatus(sndIsHim) != sfPlaying) sfSound_play(sndIsHim);
 				if (tickEnding > 7.43f && tickEnding <= 7.44f) if (sfSound_getStatus(sndBoom) != sfPlaying) sfSound_play(sndBoom);
+				if (tickEnding > 7.462f && tickEnding < 7.472f) sfSound_stop(sndVroom);
 				if (tickEnding > 9.25f && tickEnding <= 9.26f) emScale = 0.1f;
 				if (tickEnding > 12.f && tickEnding <= 12.01f) if (sfMusic_getStatus(musicCybertruck) != sfPlaying) sfMusic_play(musicCybertruck);
 
@@ -661,11 +674,13 @@ if (testKeyPress(KEY_INTERACT, window) && canInteract() == 200 && inventory[0] =
 				if (tickEnding > 28.f && tickEnding <= 31.f) sfText_setString(txtCredits, credits[5]);
 				if (tickEnding > 31.f && tickEnding <= 34.f) sfText_setString(txtCredits, credits[6]);
 				if (tickEnding > 34.f && tickEnding <= 37.f) sfText_setString(txtCredits, credits[7]);
-				if (tickEnding > 37.f && tickEnding <= 46.f) sfText_setString(txtCredits, credits[8]);
-				if (tickEnding > 46.f && tickEnding <= 48.f) sfText_setString(txtCredits, credits[9]);
+				if (tickEnding > 37.f && tickEnding <= 40.f) sfText_setString(txtCredits, credits[8]);
+				if (tickEnding > 40.f && tickEnding <= 46.f) sfText_setString(txtCredits, credits[9]);
+				if (tickEnding > 46.f && tickEnding <= 48.f) sfText_setString(txtCredits, credits[10]);
 
 				// Updates
-				updatePlayer(tilemap, propmap, window, 0);
+				// updateView(window, viewGame,  vector2f(4500.f, 300.f));
+				sfSprite_setPosition(player, playerPos);
 				sfSprite_setPosition(bonk, bonkPos);
 				sfSprite_setPosition(cage, cagePos);
 				sfSprite_setPosition(cybertruck, ctPos);
@@ -676,14 +691,14 @@ if (testKeyPress(KEY_INTERACT, window) && canInteract() == 200 && inventory[0] =
 				if (tickEnding <= 12.f) {
 					// Rendering
 					sfRenderWindow_setView(window, viewGame); // Rendering on map view
-					renderMap(tilemap, window, sfView_getCenter(viewGame), -1, 1); // Rendering map - terrain layer
-					renderMap(propmap, window, sfView_getCenter(viewGame), 0, 1); // Rendering map - props layer - background
+					renderMap(tilemap, window, vector2f(4500.f, 0.f), -1, 2); // Rendering map - terrain layer
+					renderMap(propmap, window, vector2f(4500.f, 0.f), 0, 2); // Rendering map - props layer - background
 					displayPlayer(window); // Rendering Bingchilling
 					sfRenderWindow_drawSprite(window, bonk, NULL); // Rendering Bonk
 					if (tickEnding <= 2.f) sfRenderWindow_drawSprite(window, cage, NULL); // Rendering cage
 					if (tickEnding > 6.f) sfRenderWindow_drawSprite(window, cybertruck, NULL); // Rendering the cybertruck
 					if (tickEnding > 6.f) sfRenderWindow_drawSprite(window, elongatedMuskrat, NULL); // Rendering Elon
-					renderMap(propmap, window, sfView_getCenter(viewGame), 1, 1); // Rendering map - props layer - foreground
+					renderMap(propmap, window, vector2f(4500.f, 0.f), 1, 2); // Rendering map - props layer - foreground
 					sfRenderWindow_drawRectangleShape(window, nightOverlay, NULL); // Renders nighttime overlay
 				}
 				else if (tickEnding > 13.f && tickEnding <= 47.25f) {
