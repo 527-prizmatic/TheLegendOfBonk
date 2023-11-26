@@ -150,7 +150,7 @@ int main() {
 	/* == CREDITS TEXTS == */
 	sfText* txtCredits = initText(font, 30, vector2f(200.f, 425.f));
 	char* credits[11] = { "    THE LEGEND OF BONK",
-		"               WITH\n  BINGCHILLING as DOGE",
+		"               WITH\n  DOGE as BINGCHILLING",
 		"        LEVEL DESIGN\n        VALETTE EVAN\n TOUSSAINT J.SEBASTIEN",
 		"         PROGRAMMING\n        GELOT MATHIEU\n         VALETTE EVAN\n  TOUSSAINT J.SEBASTIEN",
 		"        GRAPHIC DESIGN\n         GELOT MATHIEU\n          VALETTE EVAN",
@@ -165,8 +165,8 @@ int main() {
 	/* == NPCS AND WORLD OBJECTS == */
 	sfSprite* bonk = initSprite(TEXTURE_PATH"bonk.png", vector2f(2.0f, 2.0f), vector2f(4000.0f, 68.0f));
 	sfSprite* npcCheese = initSprite(TEXTURE_PATH"pnj.png", vector2f(2.0f, 2.0f), vector2f(1655.0f, 2085.0f));
-	char cheeseTxt[78] = "Cheese !\nI need dogecoin\nto buy a new Tesla!\nGive me one and I'll reward you.";
-	char cheeseTxt2[83] = "Cheese again !!\nGive me that dogecoin !!\nTake this it's my old tesla key\nBye bye !";
+	char cheeseTxt[143] = "Hey you over there!\nYou look like you got dogecoin.\nSpare one? I gotta buy myself\nthe newest Tesla.\nI can find you a cool reward\nin exchange.";
+	char cheeseTxt2[84] = "YOOOO!!\nFinally I can get that new car!!\nYou can have my old car keys\nin exchange!!";
 	char flagCheese = 0;
 	sfSprite* cage = initSprite(TEXTURE_PATH"cage.png", vector2f(0.3f, 0.3f), vector2f(3970.0f, 20.0f));
 	sfSprite* cybertruck = initSprite(TEXTURE_PATH"cybertruck.png", vector2f(0.2f, 0.2f), vector2f(4500.0f, 40.0f));
