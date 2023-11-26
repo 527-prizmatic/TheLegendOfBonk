@@ -63,8 +63,9 @@ int main() {
 	int checkInteract = 0;
 
 	/* == MISC UI BUTTONS == */
-	sfSprite* buttonMainPlay = initSprite(TEXTURE_PATH"play.png", vector2f(3.5f, 3.5f), vector2f(175.0f, 400.0f));
-	sfSprite* buttonMainEdit = initSprite(TEXTURE_PATH"edit.png", vector2f(3.5f, 3.5f), vector2f(454.0f, 400.0f));
+	sfSprite* buttonMainPlay = initSprite(TEXTURE_PATH"play.png", vector2f(3.5f, 3.5f), vector2f(314.0f, 400.0f));
+	sfSprite* buttonMainNew = initSprite(TEXTURE_PATH"new.png", vector2f(3.5f, 3.5f), vector2f(135.0f, 400.0f));
+	sfSprite* buttonMainEdit = initSprite(TEXTURE_PATH"edit.png", vector2f(3.5f, 3.5f), vector2f(494.0f, 400.0f));
 	sfSprite* buttonMainQuit = initSprite(TEXTURE_PATH"quit.png", vector2f(3.5f, 3.5f), vector2f(314.0f, 485.0f));
 	sfSprite* buttonMainCredits = initSprite(TEXTURE_PATH"credits.png", vector2f(2.5f, 2.5f), vector2f(30.0f, 30.0f)); 
 	sfSprite* spriteMenuBackground = initSprite(TEXTURE_PATH"background.png", vector2f(1.0f, 1.0f), vector2f(0.0f, 0.0f));
@@ -79,6 +80,7 @@ int main() {
 	/* == FOR EFFECTS ON BUTTONS == */
 	sfSprite* UIButtons[] = {
 		buttonMainPlay,
+		buttonMainNew,
 		buttonMainEdit,
 		buttonMainQuit,
 		buttonMainCredits, 
@@ -221,6 +223,7 @@ int main() {
 				sfRenderWindow_drawSprite(window, spriteMenuBackground, NULL);
 				sfRenderWindow_drawSprite(window, logo, NULL);
 				sfRenderWindow_drawSprite(window, buttonMainPlay, NULL);
+				sfRenderWindow_drawSprite(window, buttonMainNew, NULL);
 				sfRenderWindow_drawSprite(window, buttonMainEdit, NULL);
 				sfRenderWindow_drawSprite(window, buttonMainQuit, NULL);
 				sfRenderWindow_drawSprite(window, buttonMainCredits, NULL);
