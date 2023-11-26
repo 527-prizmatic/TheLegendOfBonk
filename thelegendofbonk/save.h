@@ -23,3 +23,11 @@ void save_map(char _map[H_MAP_T][W_MAP_T], char _props[H_MAP_T][W_MAP_T], sfVect
 *  \param _inv - The player character's inventory
 *  \param _inv - A pointer to a BGM object */
 void load_map(char _map[H_MAP_T][W_MAP_T], char _props[H_MAP_T][W_MAP_T], sfVector2f* _player_pos, int _inv[4], sfMusic* _mus);
+
+/* Loads data from a "default" save file, overriding the previously saved game.
+*  \param _map - A tilemap
+*  \param _props - A propmap
+*  \param _player_pos - A pointer to the player character's in-world coordinates
+*  \param _inv - The player character's inventory
+*  \param _inv - A pointer to a BGM object */
+void load_new_map(char _map[H_MAP_T][W_MAP_T], char _props[H_MAP_T][W_MAP_T], sfVector2f* _player_pos, int _inv[4], sfMusic* _mus);

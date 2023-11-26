@@ -63,8 +63,9 @@ int main() {
 	int checkInteract = 0;
 
 	/* == MISC UI BUTTONS == */
-	sfSprite* buttonMainPlay = initSprite(TEXTURE_PATH"play.png", vector2f(3.5f, 3.5f), vector2f(175.0f, 400.0f));
-	sfSprite* buttonMainEdit = initSprite(TEXTURE_PATH"edit.png", vector2f(3.5f, 3.5f), vector2f(454.0f, 400.0f));
+	sfSprite* buttonMainPlay = initSprite(TEXTURE_PATH"play.png", vector2f(3.5f, 3.5f), vector2f(314.0f, 400.0f));
+	sfSprite* buttonMainNew = initSprite(TEXTURE_PATH"new.png", vector2f(3.5f, 3.5f), vector2f(135.0f, 400.0f));
+	sfSprite* buttonMainEdit = initSprite(TEXTURE_PATH"edit.png", vector2f(3.5f, 3.5f), vector2f(494.0f, 400.0f));
 	sfSprite* buttonMainQuit = initSprite(TEXTURE_PATH"quit.png", vector2f(3.5f, 3.5f), vector2f(314.0f, 485.0f));
 	sfSprite* buttonMainCredits = initSprite(TEXTURE_PATH"credits.png", vector2f(2.5f, 2.5f), vector2f(30.0f, 30.0f)); 
 	sfSprite* spriteMenuBackground = initSprite(TEXTURE_PATH"background.png", vector2f(1.0f, 1.0f), vector2f(0.0f, 0.0f));
@@ -74,11 +75,13 @@ int main() {
 	sfSprite* buttonOptionsVolPlus = initSprite(TEXTURE_PATH"vol_plus.png", vector2f(3.5f, 3.5f), vector2f(250.0f, 190.0f));
 	sfSprite* buttonOptionsVolMinus = initSprite(TEXTURE_PATH"vol_minus.png", vector2f(3.5f, 3.5f), vector2f(450.0f, 190.0f));
 	sfSprite* buttonUICraft = initSprite(TEXTURE_PATH"craft.png", vector2f(2.0f, 2.0f), vector2f(420.0, 465.0f));
+	
 	sfColor hoverColor = sfColor_fromRGBA(128, 128, 128, 128); // Color when hovering on buttons
-
+    sfSprite* creditsBackground = initSprite(TEXTURE_PATH"creditsMain.png", vector2f(1.0f, 1.0f), vector2f(0.0f, 0.0f));
 	/* == FOR EFFECTS ON BUTTONS == */
 	sfSprite* UIButtons[] = {
 		buttonMainPlay,
+		buttonMainNew,
 		buttonMainEdit,
 		buttonMainQuit,
 		buttonMainCredits, 
@@ -110,6 +113,11 @@ int main() {
 	sfSoundBuffer* bufferUI = sfSoundBuffer_createFromFile(AUDIO_PATH"click.wav");
 	sfSound_setBuffer(sndButtonClick, bufferUI);
 
+	sfSound* sndFinal = sfSound_create();
+    sfSoundBuffer* bufferFinal = sfSoundBuffer_createFromFile(AUDIO_PATH"final.wav");
+    sfSound_setBuffer(sndFinal, bufferFinal);
+
+
 	/* == ENDING SFX == */
 	sfVector2f cagePos;
 	sfVector2f bonkPos;
@@ -132,10 +140,17 @@ int main() {
     sfSound_setBuffer(sndChest, bufferChest);
 	sfSound_setVolume(sndChest, 25);
 
+	sfSound* sndCage = sfSound_create();
+    sfSoundBuffer* bufferCage = sfSoundBuffer_createFromFile(AUDIO_PATH"cage.wav");
+    sfSound_setBuffer(sndCage, bufferCage);
+    sfSound_setVolume(sndCage, 50);
+
+
+
 	/* == CREDITS TEXTS == */
 	sfText* txtCredits = initText(font, 30, vector2f(200.f, 425.f));
 	char* credits[11] = { "    THE LEGEND OF BONK",
-		"               WITH\n  BINGCHILLING as DOGE",
+		"               WITH\n  DOGE as BINGCHILLING",
 		"        LEVEL DESIGN\n        VALETTE EVAN\n TOUSSAINT J.SEBASTIEN",
 		"         PROGRAMMING\n        GELOT MATHIEU\n         VALETTE EVAN\n  TOUSSAINT J.SEBASTIEN",
 		"        GRAPHIC DESIGN\n         GELOT MATHIEU\n          VALETTE EVAN",
@@ -150,8 +165,8 @@ int main() {
 	/* == NPCS AND WORLD OBJECTS == */
 	sfSprite* bonk = initSprite(TEXTURE_PATH"bonk.png", vector2f(2.0f, 2.0f), vector2f(4000.0f, 68.0f));
 	sfSprite* npcCheese = initSprite(TEXTURE_PATH"pnj.png", vector2f(2.0f, 2.0f), vector2f(1655.0f, 2085.0f));
-	char cheeseTxt[78] = "Cheese !\nI need dogecoin\nto buy a new Tesla!\nGive me one and I'll reward you.";
-	char cheeseTxt2[83] = "Cheese again !!\nGive me that dogecoin !!\nTake this it's my old tesla key\nBye bye !";
+	char cheeseTxt[143] = "Hey you over there!\nYou look like you got dogecoin.\nSpare one? I gotta buy myself\nthe newest Tesla.\nI can find you a cool reward\nin exchange.";
+	char cheeseTxt2[84] = "YOOOO!!\nFinally I can get that new car!!\nYou can have my old car keys\nin exchange!!";
 	char flagCheese = 0;
 	sfSprite* cage = initSprite(TEXTURE_PATH"cage.png", vector2f(0.3f, 0.3f), vector2f(3970.0f, 20.0f));
 	sfSprite* cybertruck = initSprite(TEXTURE_PATH"cybertruck.png", vector2f(0.2f, 0.2f), vector2f(4500.0f, 40.0f));
@@ -214,6 +229,7 @@ int main() {
 				sfRenderWindow_drawSprite(window, spriteMenuBackground, NULL);
 				sfRenderWindow_drawSprite(window, logo, NULL);
 				sfRenderWindow_drawSprite(window, buttonMainPlay, NULL);
+				sfRenderWindow_drawSprite(window, buttonMainNew, NULL);
 				sfRenderWindow_drawSprite(window, buttonMainEdit, NULL);
 				sfRenderWindow_drawSprite(window, buttonMainQuit, NULL);
 				sfRenderWindow_drawSprite(window, buttonMainCredits, NULL);
@@ -231,6 +247,15 @@ int main() {
 			
 			
 			/* == USER INPUT == */
+			// When clicking on the NEW button
+			if (isClicked(window, buttonMainNew)) {
+				sfSound_play(sndButtonClick);
+				flagInteraction = 0;
+				load_new_map(tilemap, propmap, &playerPos, inventory, bgm);
+				gameState = GAME;
+				interactTilePos(propmap);
+			}
+
 			// When clicking on the GAME button
 			if (isClicked(window, buttonMainPlay)) {
 				sfSound_play(sndButtonClick);
@@ -272,11 +297,18 @@ int main() {
 
 				
 				// Sets up a dialog box for when the player interacts with a sign
+
+
 				checkInteract = canInteract();
 				if (checkInteract > 19 && checkInteract != 100 && checkInteract != 200) {
 					int idNpc = checkInteract - 20;
+					
 					updateDialogBox(pnjArray[idNpc].txt, sizeof(pnjArray[idNpc].txt), sfTxt_npc, dialogBoxNpc, (sfVector2f) { 10.0f, 450.0f }, (sfVector2f) { 380.0f, 140.0f }, 0);
-					if (testKeyPress(KEY_INTERACT, window)) flagInteraction = 1;
+					if (testKeyPress(KEY_INTERACT, window))
+					{
+					  sfSound_play(sndButtonClick); 
+					  flagInteraction = 1;
+					}
 				}
 				else if (checkInteract == 200 && !flagCheese && inventory[0] != 3 ) {
 					updateDialogBox(cheeseTxt, sizeof(cheeseTxt), sfTxt_npc, dialogBoxNpc, (sfVector2f) { 10.0f, 450.0f }, (sfVector2f) { 380.0f, 140.0f }, 0);
@@ -369,9 +401,12 @@ int main() {
 			if (inventory[0] == 2 && testKeyPress(KEY_INTERACT, window) && checkInteract == 100) gameState = ENDING;
 		
 			
+			// jouer le son 1 fois que si on apuis sur la touche E
+			if (testKeyPress(KEY_INTERACT, window) && canInteract() == 200 && inventory[0] == 3 && sfSound_getStatus(sndCage) == sfStopped) sfSound_play(sndCage);
 			/* == USER INPUT == */
 			// Crafting the dogecoin
 			if (isClicked(window, buttonUICraft) && hasAllDogecoinPieces(inventory) && inventory[0] != 2) {
+				sfSound_play(sndButtonClick); 
 				for (int i = 0; i < 4; i++) inventory[i] = 0;
 				inventory[0] = 2;
 			}
@@ -475,7 +510,7 @@ int main() {
 					sfRenderWindow_drawSprite(window, buttonPauseOptions, NULL);
 					sfRenderWindow_drawSprite(window, buttonPauseQuit, NULL);
 					
-					sfRenderWindow_display(window);
+					sfRenderWindow_display(window); 
 				}
 
 
@@ -563,12 +598,15 @@ int main() {
 
 		/* == ENDING SCENE == */ 
 		else if (gameState == ENDING) {
+			
 			sfSound_stop(bgm);
+
 			cagePos = sfSprite_getPosition(cage);
 			bonkPos = sfSprite_getPosition(bonk);
 			ctPos = sfSprite_getPosition(cybertruck);
 			emPos = sfSprite_getPosition(elongatedMuskrat);
 			emScale = sfSprite_getScale(elongatedMuskrat).x;
+
 			if (tickEnding == 0) {
 				playerPos.x = cagePos.x - 40;
 				playerPos.y = bonkPos.y;
@@ -581,15 +619,19 @@ int main() {
 
 			if (tick >= TICK_TIME) {
 				tick = 0.f;
-
-				printf("e");
-
 				trigTicker = (tickEnding - 2) * 4 * PI;
-
+				
 				/* == CUTSCENE SCRIPT == */
 				if (tickEnding <= 2.f) {
 					cagePos.y -= .33f;
+
+					updateView(window, viewGame, bonkPos);
+
 				}
+				// play cage sound instantly
+                if (tickEnding > 0.f && tickEnding <= 0.01f) if (sfSound_getStatus(sndCage) != sfPlaying) sfSound_play(sndFinal);
+				
+				
 				if (tickEnding > 2.f && tickEnding <= 2.25f) bonkPos.y -= cos(trigTicker) * 2;
 				if (tickEnding > 2.25f && tickEnding <= 2.5f) bonkPos.y += cos(trigTicker) * 2;
 				if (tickEnding > 2.75f && tickEnding <= 3.f) playerPos.y += cos(trigTicker) * 2;
@@ -699,7 +741,8 @@ int main() {
 				tick = 0.0f;
 				sfSprite_setPosition(buttonPauseReturn, (sfVector2f) { 600.0f, 520.0f });
 				sfSprite_setScale(buttonPauseReturn, (sfVector2f) { 2.5f, 2.5f });
-				sfRenderWindow_drawSprite(window, spriteMenuBackground, NULL); 
+				sfRenderWindow_drawSprite(window, spriteMenuBackground, NULL);
+				sfRenderWindow_drawSprite(window, creditsBackground, NULL);
 				sfRenderWindow_drawSprite(window, buttonPauseReturn, NULL);
 				sfRenderWindow_display(window); 
 			}
