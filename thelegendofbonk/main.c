@@ -241,6 +241,15 @@ int main() {
 			
 			
 			/* == USER INPUT == */
+			// When clicking on the NEW button
+			if (isClicked(window, buttonMainNew)) {
+				sfSound_play(sndButtonClick);
+				flagInteraction = 0;
+				load_new_map(tilemap, propmap, &playerPos, inventory, bgm);
+				gameState = GAME;
+				interactTilePos(propmap);
+			}
+
 			// When clicking on the GAME button
 			if (isClicked(window, buttonMainPlay)) {
 				sfSound_play(sndButtonClick);
@@ -380,25 +389,8 @@ int main() {
 		
 			
 			// jouer le son 1 fois que si on apuis sur la touche E
-if (testKeyPress(KEY_INTERACT, window) && canInteract() == 200 && inventory[0] == 3 && sfSound_getStatus(sndCage) == sfStopped) sfSound_play(sndCage);
+			if (testKeyPress(KEY_INTERACT, window) && canInteract() == 200 && inventory[0] == 3 && sfSound_getStatus(sndCage) == sfStopped) sfSound_play(sndCage);
             
-
-
-
-
-           
-          
-
-
-         
-
-            
-
-								
-
-		
-
-
 
 			/* == USER INPUT == */
 			// Crafting the dogecoin
