@@ -63,8 +63,9 @@ int main() {
 	int checkInteract = 0;
 
 	/* == MISC UI BUTTONS == */
-	sfSprite* buttonMainPlay = initSprite(TEXTURE_PATH"play.png", vector2f(3.5f, 3.5f), vector2f(175.0f, 400.0f));
-	sfSprite* buttonMainEdit = initSprite(TEXTURE_PATH"edit.png", vector2f(3.5f, 3.5f), vector2f(454.0f, 400.0f));
+	sfSprite* buttonMainPlay = initSprite(TEXTURE_PATH"play.png", vector2f(3.5f, 3.5f), vector2f(314.0f, 400.0f));
+	sfSprite* buttonMainNew = initSprite(TEXTURE_PATH"new.png", vector2f(3.5f, 3.5f), vector2f(135.0f, 400.0f));
+	sfSprite* buttonMainEdit = initSprite(TEXTURE_PATH"edit.png", vector2f(3.5f, 3.5f), vector2f(494.0f, 400.0f));
 	sfSprite* buttonMainQuit = initSprite(TEXTURE_PATH"quit.png", vector2f(3.5f, 3.5f), vector2f(314.0f, 485.0f));
 	sfSprite* buttonMainCredits = initSprite(TEXTURE_PATH"credits.png", vector2f(2.5f, 2.5f), vector2f(30.0f, 30.0f)); 
 	sfSprite* spriteMenuBackground = initSprite(TEXTURE_PATH"background.png", vector2f(1.0f, 1.0f), vector2f(0.0f, 0.0f));
@@ -79,6 +80,7 @@ int main() {
 	/* == FOR EFFECTS ON BUTTONS == */
 	sfSprite* UIButtons[] = {
 		buttonMainPlay,
+		buttonMainNew,
 		buttonMainEdit,
 		buttonMainQuit,
 		buttonMainCredits, 
@@ -131,6 +133,13 @@ int main() {
     sfSoundBuffer* bufferChest = sfSoundBuffer_createFromFile(AUDIO_PATH"pickup.wav");
     sfSound_setBuffer(sndChest, bufferChest);
 	sfSound_setVolume(sndChest, 25);
+
+	sfSound* sndCage = sfSound_create();
+    sfSoundBuffer* bufferCage = sfSoundBuffer_createFromFile(AUDIO_PATH"cage.wav");
+    sfSound_setBuffer(sndCage, bufferCage);
+    sfSound_setVolume(sndCage, 50);
+
+
 
 	/* == CREDITS TEXTS == */
 	sfText* txtCredits = initText(font, 30, vector2f(200.f, 425.f));
@@ -214,6 +223,7 @@ int main() {
 				sfRenderWindow_drawSprite(window, spriteMenuBackground, NULL);
 				sfRenderWindow_drawSprite(window, logo, NULL);
 				sfRenderWindow_drawSprite(window, buttonMainPlay, NULL);
+				sfRenderWindow_drawSprite(window, buttonMainNew, NULL);
 				sfRenderWindow_drawSprite(window, buttonMainEdit, NULL);
 				sfRenderWindow_drawSprite(window, buttonMainQuit, NULL);
 				sfRenderWindow_drawSprite(window, buttonMainCredits, NULL);
@@ -369,6 +379,27 @@ int main() {
 			if (inventory[0] == 2 && testKeyPress(KEY_INTERACT, window) && checkInteract == 100) gameState = ENDING;
 		
 			
+			// jouer le son 1 fois que si on apuis sur la touche E
+if (testKeyPress(KEY_INTERACT, window) && canInteract() == 200 && inventory[0] == 3 && sfSound_getStatus(sndCage) == sfStopped) sfSound_play(sndCage);
+            
+
+
+
+
+           
+          
+
+
+         
+
+            
+
+								
+
+		
+
+
+
 			/* == USER INPUT == */
 			// Crafting the dogecoin
 			if (isClicked(window, buttonUICraft) && hasAllDogecoinPieces(inventory) && inventory[0] != 2) {
@@ -475,7 +506,7 @@ int main() {
 					sfRenderWindow_drawSprite(window, buttonPauseOptions, NULL);
 					sfRenderWindow_drawSprite(window, buttonPauseQuit, NULL);
 					
-					sfRenderWindow_display(window);
+					sfRenderWindow_display(window); 
 				}
 
 
@@ -563,12 +594,15 @@ int main() {
 
 		/* == ENDING SCENE == */ 
 		else if (gameState == ENDING) {
+			
 			sfSound_stop(bgm);
+
 			cagePos = sfSprite_getPosition(cage);
 			bonkPos = sfSprite_getPosition(bonk);
 			ctPos = sfSprite_getPosition(cybertruck);
 			emPos = sfSprite_getPosition(elongatedMuskrat);
 			emScale = sfSprite_getScale(elongatedMuskrat).x;
+
 			if (tickEnding == 0) {
 				playerPos.x = cagePos.x - 40;
 				playerPos.y = bonkPos.y;
@@ -581,13 +615,19 @@ int main() {
 
 			if (tick >= TICK_TIME) {
 				tick = 0.f;
-
 				trigTicker = (tickEnding - 2) * 4 * PI;
-
+				
 				/* == CUTSCENE SCRIPT == */
 				if (tickEnding <= 2.f) {
 					cagePos.y -= .33f;
+
+					updateView(window, viewGame, bonkPos);
+
 				}
+				// play cage sound instantly
+                if (tickEnding > 0.f && tickEnding <= 0.01f) if (sfSound_getStatus(sndCage) != sfPlaying) sfSound_play(sndCage);
+				
+				
 				if (tickEnding > 2.f && tickEnding <= 2.25f) bonkPos.y -= cos(trigTicker) * 2;
 				if (tickEnding > 2.25f && tickEnding <= 2.5f) bonkPos.y += cos(trigTicker) * 2;
 				if (tickEnding > 2.75f && tickEnding <= 3.f) playerPos.y += cos(trigTicker) * 2;
