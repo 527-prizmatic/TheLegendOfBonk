@@ -28,7 +28,7 @@ void displayInventory(sfRenderWindow* _window, int* _inventory, sfSprite* _inven
     
     if (sfKeyboard_isKeyPressed(sfKeyB)) {
         for (int i = 0; i < 4; i++) {
-            _inventory[i] = 0;
+            _inventory[i] = 1;
         }
     }
     if (_inventory[0]) {

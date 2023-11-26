@@ -723,6 +723,7 @@ int main() {
 				}
 
 				sfRenderWindow_display(window);
+				endingPlayerPos();
 
 				if (tickEnding > 50.f) {
 					sfMusic_stop(musicCybertruck);
