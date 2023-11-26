@@ -75,8 +75,9 @@ int main() {
 	sfSprite* buttonOptionsVolPlus = initSprite(TEXTURE_PATH"vol_plus.png", vector2f(3.5f, 3.5f), vector2f(250.0f, 190.0f));
 	sfSprite* buttonOptionsVolMinus = initSprite(TEXTURE_PATH"vol_minus.png", vector2f(3.5f, 3.5f), vector2f(450.0f, 190.0f));
 	sfSprite* buttonUICraft = initSprite(TEXTURE_PATH"craft.png", vector2f(2.0f, 2.0f), vector2f(420.0, 465.0f));
+	
 	sfColor hoverColor = sfColor_fromRGBA(128, 128, 128, 128); // Color when hovering on buttons
-
+    sfSprite* creditsBackground = initSprite(TEXTURE_PATH"creditsMain.png", vector2f(1.0f, 1.0f), vector2f(0.0f, 0.0f));
 	/* == FOR EFFECTS ON BUTTONS == */
 	sfSprite* UIButtons[] = {
 		buttonMainPlay,
@@ -111,6 +112,11 @@ int main() {
 	sfSound* sndButtonClick = sfSound_create();
 	sfSoundBuffer* bufferUI = sfSoundBuffer_createFromFile(AUDIO_PATH"click.wav");
 	sfSound_setBuffer(sndButtonClick, bufferUI);
+
+	sfSound* sndFinal = sfSound_create();
+    sfSoundBuffer* bufferFinal = sfSoundBuffer_createFromFile(AUDIO_PATH"final.wav");
+    sfSound_setBuffer(sndFinal, bufferFinal);
+
 
 	/* == ENDING SFX == */
 	sfVector2f cagePos;
@@ -282,11 +288,18 @@ int main() {
 
 				
 				// Sets up a dialog box for when the player interacts with a sign
+
+
 				checkInteract = canInteract();
 				if (checkInteract > 19 && checkInteract != 100 && checkInteract != 200) {
 					int idNpc = checkInteract - 20;
+					
 					updateDialogBox(pnjArray[idNpc].txt, sizeof(pnjArray[idNpc].txt), sfTxt_npc, dialogBoxNpc, (sfVector2f) { 10.0f, 450.0f }, (sfVector2f) { 380.0f, 140.0f }, 0);
-					if (testKeyPress(KEY_INTERACT, window)) flagInteraction = 1;
+					if (testKeyPress(KEY_INTERACT, window))
+					{
+					  sfSound_play(sndButtonClick); 
+					  flagInteraction = 1;
+					}
 				}
 				else if (checkInteract == 200 && !flagCheese && inventory[0] != 3 ) {
 					updateDialogBox(cheeseTxt, sizeof(cheeseTxt), sfTxt_npc, dialogBoxNpc, (sfVector2f) { 10.0f, 450.0f }, (sfVector2f) { 380.0f, 140.0f }, 0);
@@ -380,29 +393,12 @@ int main() {
 		
 			
 			// jouer le son 1 fois que si on apuis sur la touche E
-if (testKeyPress(KEY_INTERACT, window) && canInteract() == 200 && inventory[0] == 3 && sfSound_getStatus(sndCage) == sfStopped) sfSound_play(sndCage);
+            if (testKeyPress(KEY_INTERACT, window) && canInteract() == 200 && inventory[0] == 3 && sfSound_getStatus(sndCage) == sfStopped) sfSound_play(sndCage);
             
-
-
-
-
-           
-          
-
-
-         
-
-            
-
-								
-
-		
-
-
-
 			/* == USER INPUT == */
 			// Crafting the dogecoin
 			if (isClicked(window, buttonUICraft) && hasAllDogecoinPieces(inventory) && inventory[0] != 2) {
+				sfSound_play(sndButtonClick); 
 				for (int i = 0; i < 4; i++) inventory[i] = 0;
 				inventory[0] = 2;
 			}
@@ -625,7 +621,7 @@ if (testKeyPress(KEY_INTERACT, window) && canInteract() == 200 && inventory[0] =
 
 				}
 				// play cage sound instantly
-                if (tickEnding > 0.f && tickEnding <= 0.01f) if (sfSound_getStatus(sndCage) != sfPlaying) sfSound_play(sndCage);
+                if (tickEnding > 0.f && tickEnding <= 0.01f) if (sfSound_getStatus(sndCage) != sfPlaying) sfSound_play(sndFinal);
 				
 				
 				if (tickEnding > 2.f && tickEnding <= 2.25f) bonkPos.y -= cos(trigTicker) * 2;
@@ -737,7 +733,8 @@ if (testKeyPress(KEY_INTERACT, window) && canInteract() == 200 && inventory[0] =
 				tick = 0.0f;
 				sfSprite_setPosition(buttonPauseReturn, (sfVector2f) { 600.0f, 520.0f });
 				sfSprite_setScale(buttonPauseReturn, (sfVector2f) { 2.5f, 2.5f });
-				sfRenderWindow_drawSprite(window, spriteMenuBackground, NULL); 
+				sfRenderWindow_drawSprite(window, spriteMenuBackground, NULL);
+				sfRenderWindow_drawSprite(window, creditsBackground, NULL);
 				sfRenderWindow_drawSprite(window, buttonPauseReturn, NULL);
 				sfRenderWindow_display(window); 
 			}
