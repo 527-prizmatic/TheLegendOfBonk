@@ -197,6 +197,8 @@ int main() {
 	float tick = 0.0f;
 	float tickEnding = 0.0f;
 
+	char flagSpawn = 0;
+
 
 	///***  = = =  GAME LOOP  = = =  ***///
 	while (sfRenderWindow_isOpen(window)) {
@@ -252,8 +254,11 @@ int main() {
 				sfSound_play(sndButtonClick);
 				flagInteraction = 0;
 				load_new_map(tilemap, propmap, &playerPos, inventory, bgm);
-				gameState = GAME;
+				flagSpawn = 0;
 				interactTilePos(propmap);
+				if (!flagSpawn) setPlayerPosition(spawnPos);
+				flagSpawn = 1;
+				gameState = GAME;
 			}
 
 			// When clicking on the GAME button
@@ -262,6 +267,8 @@ int main() {
 				flagInteraction = 0;
 				gameState = GAME;
 				interactTilePos(propmap);
+				if (!flagSpawn) setPlayerPosition(spawnPos);
+				flagSpawn = 1;
 			}
 
 			// When clicking on the EDIT button

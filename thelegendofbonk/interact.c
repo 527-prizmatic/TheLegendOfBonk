@@ -53,6 +53,9 @@ void interactTilePos(char _map[H_MAP_T][W_MAP_T]) {
 					chestArray[chestCpt].flagOpen = 0;
 					chestCpt++;
 					break;
+				case 115:
+					spawnPos.y = TILE_PX * i;
+					spawnPos.x = TILE_PX * j;
 				default: break;
 			}
 		}
