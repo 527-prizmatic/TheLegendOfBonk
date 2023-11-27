@@ -20,7 +20,7 @@ sfVector2f playerPos = { 20.0f, 20.0f };
 const float playerSpeed = 100.0f * (1 + (DEBUG * 4));
 sfRectangleShape* playerHitbox;
 
-/* == WALK SOUND*/
+/* == WALK SOUND == */
 sfSoundBuffer* sndWalkBuffer; 
 sfSound* sndWalk;
 
@@ -37,7 +37,6 @@ void initPlayer() {
 	sndWalkBuffer = sfSoundBuffer_createFromFile(AUDIO_PATH"walk.wav");
 	sfSound_setBuffer(sndWalk, sndWalkBuffer);
 
-	
     animTime = 0.0f;
     frameX = 0;
     frameY = 0; 
@@ -129,40 +128,40 @@ sfBool checkForCollisions(char _map[H_MAP_T][W_MAP_T], moveDir _dir) {
     }
 
     if (_dir == UP) {
-        int blockAbove = (int) trunc((hitbox.top - playerSpeed * 2.1 * TICK_TIME) / TILE_PX);
-        int cornerTL = (int) trunc(hitbox.left / TILE_PX);
-        int cornerTR = (int) trunc((hitbox.left + hitbox.width) / TILE_PX); 
+        int blockAbove = (int) truncf((hitbox.top - playerSpeed * 2.1 * TICK_TIME) / TILE_PX);
+        int cornerTL = (int) truncf(hitbox.left / TILE_PX);
+        int cornerTR = (int) truncf((hitbox.left + hitbox.width) / TILE_PX); 
         if (isSolidBlock(_map[blockAbove][cornerTL]) || isSolidBlock(_map[blockAbove][cornerTR])) {
             isMoving = sfFalse;
             return sfTrue;
         }
     }
     else if (_dir == DOWN) {
-        int blockBelow = (int) trunc((hitbox.top + hitbox.height + playerSpeed * 2.1 * TICK_TIME) / TILE_PX);
-        int cornerBL = (int) trunc(hitbox.left / TILE_PX);
-        int cornerBR = (int) trunc((hitbox.left + hitbox.width) / TILE_PX);
+        int blockBelow = (int) truncf((hitbox.top + hitbox.height + playerSpeed * 2.1 * TICK_TIME) / TILE_PX);
+        int cornerBL = (int) truncf(hitbox.left / TILE_PX);
+        int cornerBR = (int) truncf((hitbox.left + hitbox.width) / TILE_PX);
         if (isSolidBlock(_map[blockBelow][cornerBL]) || isSolidBlock(_map[blockBelow][cornerBR])) {
             isMoving = sfFalse;
             return sfTrue;
         }
     }
     else if (_dir == LEFT) {
-        int blockLeft = (int) trunc((hitbox.left - playerSpeed * 2.1 * TICK_TIME) / TILE_PX);
+        int blockLeft = (int) truncf((hitbox.left - playerSpeed * 2.1 * TICK_TIME) / TILE_PX);
 
-        if (blockLeft % W_MAP_T == 0) return sfFalse;
-        int cornerTL = (int) trunc(hitbox.top / TILE_PX);
-        int cornerBL = (int) trunc((hitbox.top + hitbox.height) / TILE_PX);
+        if ((blockLeft + 1) % W_MAP_T == 0) return sfFalse;
+        int cornerTL = (int) truncf(hitbox.top / TILE_PX);
+        int cornerBL = (int) truncf((hitbox.top + hitbox.height) / TILE_PX);
         if (isSolidBlock(_map[cornerTL][blockLeft]) || isSolidBlock(_map[cornerBL][blockLeft])) {
             isMoving = sfFalse;
             return sfTrue;
         }
     }
     else if (_dir == RIGHT) {
-        int blockRight = (int) trunc((hitbox.left + hitbox.width + playerSpeed * 2.1 * TICK_TIME) / TILE_PX);
+        int blockRight = (int) truncf((hitbox.left + hitbox.width + playerSpeed * 2.1 * TICK_TIME) / TILE_PX);
 
-        if (blockRight % W_MAP_T == 0) return sfFalse;
-        int cornerTR = (int) trunc(hitbox.top / TILE_PX);
-        int cornerBR = (int) trunc((hitbox.top + hitbox.height) / TILE_PX);
+        if ((blockRight + 1) % W_MAP_T == 0) return sfFalse;
+        int cornerTR = (int) truncf(hitbox.top / TILE_PX);
+        int cornerBR = (int) truncf((hitbox.top + hitbox.height) / TILE_PX);
         if (isSolidBlock(_map[cornerTR][blockRight]) || isSolidBlock(_map[cornerBR][blockRight])) {
             isMoving = sfFalse;
             return sfTrue;
@@ -178,8 +177,8 @@ sfBool isInWater(char _map[H_MAP_T][W_MAP_T]) {
     hitbox.width *= .6f;
     hitbox.height *= .4f;
 
-    int x = (int) trunc((hitbox.top + hitbox.height / 2) / TILE_PX);
-    int y = (int) trunc((hitbox.left + hitbox.width / 2) / TILE_PX);
+    int x = (int) truncf((hitbox.top + hitbox.height / 2) / TILE_PX);
+    int y = (int) truncf((hitbox.left + hitbox.width / 2) / TILE_PX);
 
     if (isWater(_map[x][y])) return sfTrue;
     else return sfFalse;

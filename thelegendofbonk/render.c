@@ -90,16 +90,16 @@ void renderMap(char _map[H_MAP_T][W_MAP_T], sfRenderWindow* _w, sfVector2f _pos,
 		render_right = W_MAP_T;
 	}
 	else if (gameState == GAME) {
-		render_top = (int) max(0, trunc((_pos.y - 400) / TILE_PX));
-		render_bottom = (int) min(H_MAP_T - 1, trunc((_pos.y + 400) / TILE_PX));
-		render_left = (int) max(0, trunc((_pos.x - 500) / TILE_PX));
-		render_right = (int) min(W_MAP_T - 1, trunc((_pos.x + 500) / TILE_PX));
+		render_top = (int) max(0, truncf((_pos.y - 400) / TILE_PX));
+		render_bottom = (int) min(H_MAP_T - 1, truncf((_pos.y + 400) / TILE_PX));
+		render_left = (int) max(0, truncf((_pos.x - 500) / TILE_PX));
+		render_right = (int) min(W_MAP_T - 1, truncf((_pos.x + 500) / TILE_PX));
 	}
 	else if (gameState == EDITOR) {
-		render_top = (int) max(0, trunc((_pos.y - 550) / TILE_PX));
-		render_bottom = (int) min(H_MAP_T - 1, trunc((_pos.y + 550) / TILE_PX));
-		render_left = (int) max(0, trunc((_pos.x - 700) / TILE_PX));
-		render_right = (int) min(W_MAP_T - 1, trunc((_pos.x + 700) / TILE_PX));
+		render_top = (int) max(0, truncf((_pos.y - 550) / TILE_PX));
+		render_bottom = (int) min(H_MAP_T - 1, truncf((_pos.y + 550) / TILE_PX));
+		render_left = (int) max(0, truncf((_pos.x - 700) / TILE_PX));
+		render_right = (int) min(W_MAP_T - 1, truncf((_pos.x + 700) / TILE_PX));
 	}
 
 	for (int i = render_left; i <= render_right; i++) {
@@ -108,7 +108,7 @@ void renderMap(char _map[H_MAP_T][W_MAP_T], sfRenderWindow* _w, sfVector2f _pos,
 			sfSprite_setPosition(tile, vector2f((float)i * TILE_PX, (float)j * TILE_PX ));
 			if (_map[j][i] != 91) sfSprite_setTextureRect(tile, textureFromId(_map[j][i]));
 			else {
-				sfVector2f tilePos = vector2f(i * TILE_PX, j * TILE_PX);
+				sfVector2f tilePos = vector2f((float)i * TILE_PX, (float)j * TILE_PX);
 				int chestId = 0;
 				for (int i = 0; i < 4; i++) {
 					if (chestArray[i].chestPosition.x == tilePos.x && chestArray[i].chestPosition.y == tilePos.y) break;
@@ -151,7 +151,6 @@ void renderEditorUI(sfRenderWindow* _w, sfView* _v, int _mode, sfFont* _font) {
 
 	sfRenderWindow_drawText(_w, textEditorInfo, NULL);
 
-
 	// Renders all available tiles
 	for (int i = 0; i < 12; i++) {
 		for (int j = 0; j < 5; j++) {
@@ -170,23 +169,12 @@ void renderPlayerOnMinimap(sfRenderWindow* _w) {
 	sfRenderWindow_drawRectangleShape(_w, marker, NULL);
 }
 
-void renderCredit(sfRenderWindow* _w, sfView* _v, sfFont* _font, char _name[], char _role[], char _posX, char _posY)
-{
+void renderCredit(sfRenderWindow* _w, sfView* _v, sfFont* _font, char _name[], char _role[], char _posX, char _posY) {
 	sfText* textName = initText(_font, 30, vector2f(_posX, _posY));
 	sfText_setString(textName, _name);
 	sfRenderWindow_drawText(_w, textName, NULL);
 
-	sfText* textRole = initText(_font, 20, vector2f(_posX, _posY + 30));
+	sfText* textRole = initText(_font, 20, vector2f(_posX, _posY + 30.f));
 	sfText_setString(textRole, _role);
 	sfRenderWindow_drawText(_w, textRole, NULL);
-}
-
-void swapLamp(char _map[H_MAP_T][W_MAP_T], char _flagNight)
-{
-	for (int i = 0; i < H_MAP_T; i++) {
-		for (int j = 0; j < W_MAP_T; j++) {
-			if (_map[i][j] == 81 && _flagNight) _map[i][j] = 101;
-			else if (_map[i][j] == 101 && !_flagNight) _map[i][j] = 81;
-		}
-	}
 }

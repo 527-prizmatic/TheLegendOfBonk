@@ -19,6 +19,10 @@
 #include "music.h"
 #include "interact.h"
 
+#pragma warning (disable: 4090)
+#pragma warning (disable: 4133)
+#pragma warning (disable: 4244)
+
 int main() {
 			///***  = = =  PREINIT  = = =  ***///
 
@@ -199,8 +203,6 @@ int main() {
 	float tick = 0.0f;
 	float tickEnding = 0.0f;
 
-	char flagSpawn = 0;
-
 
 	///***  = = =  GAME LOOP  = = =  ***///
 	while (sfRenderWindow_isOpen(window)) {
@@ -241,7 +243,6 @@ int main() {
 				sfRenderWindow_display(window);
 			}
 			
-			
 			/* == COMPUTING LOGO ANIMATIONS == */
 			logoAnimTimer += getDeltaTime();
 			logoPos.y = 200.0f + cosf(logoAnimTimer / 2.f) * 30.0f;
@@ -249,18 +250,14 @@ int main() {
 			sfSprite_setRotation(logo, cosf(logoAnimTimer * 4.6f) * 3.0f);
 			sfSprite_setPosition(logo, logoPos);
 			
-			
 			/* == USER INPUT == */
 			// When clicking on the NEW button
 			if (isClicked(window, buttonMainNew)) {
 				sfSound_play(sndButtonClick);
 				flagInteraction = 0;
 				load_new_map(tilemap, propmap, &playerPos, inventory, bgm);
-				flagSpawn = 0;
-				interactTilePos(propmap);
-				if (!flagSpawn) setPlayerPosition(spawnPos);
-				flagSpawn = 1;
 				gameState = GAME;
+				interactTilePos(tilemap, propmap, bgm);
 			}
 
 			// When clicking on the GAME button
@@ -268,9 +265,7 @@ int main() {
 				sfSound_play(sndButtonClick);
 				flagInteraction = 0;
 				gameState = GAME;
-				interactTilePos(propmap);
-				if (!flagSpawn) setPlayerPosition(spawnPos);
-				flagSpawn = 1;
+				interactTilePos(tilemap, propmap, bgm);
 			}
 
 			// When clicking on the EDIT button
@@ -304,17 +299,13 @@ int main() {
 				updatePlayer(tilemap, propmap, window, 1);
 				updateView(window, viewGame, playerPos);
 
-				
 				// Sets up a dialog box for when the player interacts with a sign
-
-
 				checkInteract = canInteract();
 				if (checkInteract > 19 && checkInteract != 100 && checkInteract != 200) {
 					int idNpc = checkInteract - 20;
 					
-					updateDialogBox(pnjArray[idNpc].txt, sizeof(pnjArray[idNpc].txt), sfTxt_npc, dialogBoxNpc, (sfVector2f) { 10.0f, 450.0f }, (sfVector2f) { 380.0f, 140.0f }, 0);
-					if (testKeyPress(KEY_INTERACT, window))
-					{
+					updateDialogBox(npcArray[idNpc].txt, sizeof(npcArray[idNpc].txt), sfTxt_npc, dialogBoxNpc, (sfVector2f) { 10.0f, 450.0f }, (sfVector2f) { 380.0f, 140.0f }, 0);
+					if (testKeyPress(KEY_INTERACT, window)) {
 					  sfSound_play(sndButtonClick); 
 					  flagInteraction = 1;
 					}
@@ -378,7 +369,6 @@ int main() {
 				}
 			}
 
-
 			/* == ANIMATIONS == */
 			bonkAnimTimer += getDeltaTime();
 			if (bonkAnimTimer >= 0.1f) {
@@ -408,10 +398,7 @@ int main() {
 			// Check for world interactions
 			if (checkInteract == -1) flagInteraction = 0;
 			if (inventory[0] == 2 && testKeyPress(KEY_INTERACT, window) && checkInteract == 100) gameState = ENDING;
-		
-			
-			// jouer le son 1 fois que si on apuis sur la touche E
-			if (testKeyPress(KEY_INTERACT, window) && canInteract() == 200 && inventory[0] == 3 && sfSound_getStatus(sndCage) == sfStopped) sfSound_play(sndCage);
+
 			/* == USER INPUT == */
 			// Crafting the dogecoin
 			if (isClicked(window, buttonUICraft) && hasAllDogecoinPieces(inventory) && inventory[0] != 2) {
@@ -419,6 +406,9 @@ int main() {
 				for (int i = 0; i < 4; i++) inventory[i] = 0;
 				inventory[0] = 2;
 			}
+
+			// Plays a boom sound when opening the cage
+			if (testKeyPress(KEY_INTERACT, window) && canInteract() == 200 && inventory[0] == 3 && sfSound_getStatus(sndCage) == sfStopped) sfSound_play(sndCage);
 
 			// Secret debug keybind (ALT+R) which returns the player at the spawn point
 			if (sfKeyboard_isKeyPressed(sfKeyLAlt) && testKeyPress(sfKeyR, window) && DEBUG) {
@@ -453,7 +443,7 @@ int main() {
 
 				// Places tiles on click
 				if (testLClick(window) && !flagClick) {
-					if (tileSelection == 91) interactTilePos(propmap);
+					if (tileSelection == 91) interactTilePos(tilemap, propmap, bgm);
 					changeTile(window, viewEditor, tilemap, propmap, tileSelection);
 					flagClick = 0;
 				}
@@ -607,8 +597,7 @@ int main() {
 
 		/* == ENDING SCENE == */ 
 		else if (gameState == ENDING) {
-			
-			sfSound_stop(bgm);
+			sfMusic_stop(bgm);
 
 			cagePos = sfSprite_getPosition(cage);
 			bonkPos = sfSprite_getPosition(bonk);
@@ -756,8 +745,7 @@ int main() {
 		}
 
 		/* == CREDITS == */ 
-		else if (gameState == CREDITS) 
-		{
+		else if (gameState == CREDITS) {
 			sfRenderWindow_setView(window, sfRenderWindow_getDefaultView(window)); 
 			if (tick >= TICK_TIME) { 
 				tick = 0.0f;

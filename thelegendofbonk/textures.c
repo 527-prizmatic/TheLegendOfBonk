@@ -131,7 +131,8 @@ const sfIntRect p_bench_tl			= { TS * 2, TS * 8, 48, 48 };
 const sfIntRect p_bench_tr			= { TS * 3, TS * 8, 48, 48 };
 const sfIntRect p_bench_bl			= { TS * 2, TS * 9, 48, 48 };
 const sfIntRect p_bench_br			= { TS * 3, TS * 9, 48, 48 };
-const sfIntRect p_spawn_point       = { TS * 4, TS * 7, 48, 48 };
+
+const sfIntRect p_basket			= { TS * 4, TS * 7, 48, 48 };
 
 
 /* == ANIM POINTERS == */
@@ -244,7 +245,7 @@ sfIntRect textureFromId(int _id) {
 	case 113: return p_bench_bl;
 	case 114: return p_bench_br;
 
-	case 115: return p_spawn_point;
+	case 115: return p_basket;
 
 	default: return t_none;
 	}
@@ -266,7 +267,6 @@ sfBool isSolidBlock(char _id) {
         case 93: return sfTrue;
         case 95: return sfTrue;
         case 96: return sfTrue;
-		case 115: return sfTrue;
 		default: return sfFalse;
 	}
 }
