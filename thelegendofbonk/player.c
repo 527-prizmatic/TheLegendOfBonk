@@ -212,3 +212,13 @@ void displayPlayer(sfRenderWindow* _window) {
 	}
 }
  
+void setPlayerPosition(sfVector2f _pos) {
+    sfSprite_setPosition(player, _pos);
+}
+
+void endingPlayerPos() {
+    playerPos.x = 3980.0f;
+    playerPos.y = 50.0f;
+    sfSprite_setRotation(player, 0.0f);
+}
+

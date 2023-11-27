@@ -40,6 +40,13 @@ sfBool isInWater(char _map[H_MAP_T][W_MAP_T]);
 /// \param _w - A render window object (to check for focus)
 void movePlayer(moveDir _dir, sfBool _isDiag, char _map[H_MAP_T][W_MAP_T], sfRenderWindow* _w);
 
+/// Set player position
+/// \param _pos - A sfVector2f
+void setPlayerPosition(sfVector2f _pos);
+
+/// Set player position and rotation after the ending scene
+void endingPlayerPos();
+
 /// Renders player character's sprite in the game window.
 /// \param _window - The window to display the sprite on
 void displayPlayer(sfRenderWindow* _window);
