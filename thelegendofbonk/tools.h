@@ -13,7 +13,7 @@
 
 #define PI (float)3.1415926535
 
-#define DEBUG 00
+#define DEBUG 01
 
 #define KEY_UP sfKeyZ
 #define KEY_DOWN sfKeyS

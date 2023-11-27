@@ -140,6 +140,8 @@ int main() {
     sfSound_setBuffer(sndChest, bufferChest);
 	sfSound_setVolume(sndChest, 25);
 
+	float timerEndEsc = 0.f;
+
 	sfSound* sndCage = sfSound_create();
     sfSoundBuffer* bufferCage = sfSoundBuffer_createFromFile(AUDIO_PATH"cage.wav");
     sfSound_setBuffer(sndCage, bufferCage);
@@ -623,6 +625,18 @@ int main() {
 			tickEnding = sfTime_asSeconds(sfClock_getElapsedTime(clockEnding));
 			tick += getDeltaTime();
 			logoAnimTimer += getDeltaTime();
+			
+			if (testKeyPress(sfKeyEscape, window)) {
+				timerEndEsc += getDeltaTime();
+				if (timerEndEsc >= 3.f) {
+					endingPlayerPos();
+					if (sfMusic_getStatus(musicCybertruck) == sfPlaying) sfMusic_stop(musicCybertruck);
+					sfMusic_play(bgm);
+					sfMusic_setLoop(bgm, sfTrue);
+					gameState = MENU;
+				}
+			}
+			else timerEndEsc = 0.f;
 
 			if (tick >= TICK_TIME) {
 				tick = 0.f;
@@ -631,9 +645,7 @@ int main() {
 				/* == CUTSCENE SCRIPT == */
 				if (tickEnding <= 2.f) {
 					cagePos.y -= .33f;
-
 					updateView(window, viewGame, bonkPos);
-
 				}
 				// play cage sound instantly
                 if (tickEnding > 0.f && tickEnding <= 0.01f) if (sfSound_getStatus(sndCage) != sfPlaying) sfSound_play(sndFinal);
