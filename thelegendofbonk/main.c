@@ -257,7 +257,7 @@ int main() {
 				flagInteraction = 0;
 				load_new_map(tilemap, propmap, &playerPos, inventory, bgm);
 				gameState = GAME;
-				interactTilePos(propmap);
+				interactTilePos(tilemap, propmap, bgm);
 			}
 
 			// When clicking on the GAME button
@@ -265,7 +265,7 @@ int main() {
 				sfSound_play(sndButtonClick);
 				flagInteraction = 0;
 				gameState = GAME;
-				interactTilePos(propmap);
+				interactTilePos(tilemap, propmap, bgm);
 			}
 
 			// When clicking on the EDIT button
@@ -443,7 +443,7 @@ int main() {
 
 				// Places tiles on click
 				if (testLClick(window) && !flagClick) {
-					if (tileSelection == 91) interactTilePos(propmap);
+					if (tileSelection == 91) interactTilePos(tilemap, propmap, bgm);
 					changeTile(window, viewEditor, tilemap, propmap, tileSelection);
 					flagClick = 0;
 				}

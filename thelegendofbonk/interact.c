@@ -1,11 +1,13 @@
 ﻿#include <stdlib.h>
 
+#include "SFML/Audio.h"
 #include "interact.h"
 #include "textures.h"
+#include "save.h"
 
 #pragma warning (disable: 4244)
 
-void interactTilePos(char _map[H_MAP_T][W_MAP_T]) {
+void interactTilePos(char _map[H_MAP_T][W_MAP_T], char _props[H_MAP_T][W_MAP_T], sfMusic* _m) {
 	system("cls");
 	chestCpt = 0;
 	lampCpt = 0;
@@ -14,7 +16,8 @@ void interactTilePos(char _map[H_MAP_T][W_MAP_T]) {
 
 	for (int i = 0; i < H_MAP_T; i++) {
 		for (int j = 0; j < W_MAP_T; j++) {
-			switch (_map[i][j]) {
+			int invTemp[4];
+			switch (_props[i][j]) {
 				// Sign
 				case 90:
 					npcArray[counterNpc].id = counterNpc;
@@ -46,6 +49,12 @@ void interactTilePos(char _map[H_MAP_T][W_MAP_T]) {
 					chestArray[chestCpt].chestPosition.x = TILE_PX * j;
 					chestArray[chestCpt].flagOpen = 0;
 					chestCpt++;
+					break;
+				case 115:
+					load_map(_map, _props, &playerPos, invTemp, _m);
+					playerPos.y = i * TILE_PX;
+					playerPos.x = j * TILE_PX;
+					save_map(_map, _props, playerPos, invTemp, _m);
 					break;
 				default: break;
 			}

@@ -267,7 +267,6 @@ sfBool isSolidBlock(char _id) {
         case 93: return sfTrue;
         case 95: return sfTrue;
         case 96: return sfTrue;
-		case 115: return sfTrue;
 		default: return sfFalse;
 	}
 }
