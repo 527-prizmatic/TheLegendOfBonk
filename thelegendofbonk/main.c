@@ -673,7 +673,10 @@ int main() {
 				if (tickEnding > 9.25f && tickEnding <= 9.26f) emScale = 0.1f;
 				if (tickEnding > 12.f && tickEnding <= 12.01f) if (sfMusic_getStatus(musicCybertruck) != sfPlaying) sfMusic_play(musicCybertruck);
 
-				if (tickEnding > 13.f && tickEnding <= 16.f) sfText_setString(txtCredits, credits[0]);
+				if (tickEnding > 13.f && tickEnding <= 16.f) {
+					endingPlayerPos();
+					sfText_setString(txtCredits, credits[0]);
+				}
 				if (tickEnding > 16.f && tickEnding <= 19.f) sfText_setString(txtCredits, credits[1]);
 				if (tickEnding > 19.f && tickEnding <= 22.f) sfText_setString(txtCredits, credits[2]);
 				if (tickEnding > 22.f && tickEnding <= 25.f) sfText_setString(txtCredits, credits[3]);
@@ -723,7 +726,6 @@ int main() {
 				}
 
 				sfRenderWindow_display(window);
-				endingPlayerPos();
 
 				if (tickEnding > 50.f) {
 					sfMusic_stop(musicCybertruck);

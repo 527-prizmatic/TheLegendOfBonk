@@ -204,12 +204,6 @@ void movePlayer(moveDir _dir, sfBool _isDiag, char _map[H_MAP_T][W_MAP_T], sfRen
     }
 }
 
-void endingPlayerPos()
-{
-    sfSprite_setPosition(player, vector2f(3970.0f, 50.0f));
-    sfSprite_setRotation(player, 0.0f);
-}
-
 void displayPlayer(sfRenderWindow* _window) {
 	if (player != NULL) {
         sfSprite_setPosition(player, playerPos);
@@ -218,3 +212,13 @@ void displayPlayer(sfRenderWindow* _window) {
 	}
 }
  
+void setPlayerPosition(sfVector2f _pos) {
+    sfSprite_setPosition(player, _pos);
+}
+
+void endingPlayerPos() {
+    playerPos.x = 3980.0f;
+    playerPos.y = 50.0f;
+    sfSprite_setRotation(player, 0.0f);
+}
+
