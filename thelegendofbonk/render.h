@@ -35,12 +35,15 @@ void updateView(sfRenderWindow* _w, sfView* _v, sfVector2f _pos);
 /// \param _fg - Whether the propmap should render the foreground
 void renderMap(char _map[H_MAP_T][W_MAP_T], sfRenderWindow* _w, sfVector2f _pos, char _fg, char _minimap);
 
-void renderMinimap(sfRenderWindow* _w, sfView* _v, char _map[H_MAP_T][W_MAP_T], char _props[H_MAP_T][W_MAP_T]);
-
+/// Renders the map editor's tile selection UI.
 void renderEditorUI(sfRenderWindow* _w, sfView* _v, int _mode, sfFont* _font);
 
+/// A function including a large set of technical operations to set up and display a minimap on the top-left corner of the screen.
+/// NOTE - HIGHLY UNSTABLE, DEVOURS CPU POWER, WE'RE LOOKING INTO THAT ISSUE
+void renderMinimap(sfRenderWindow* _w, sfView* _v, char _map[H_MAP_T][W_MAP_T], char _props[H_MAP_T][W_MAP_T]);
+
+/// Displays a small rectangle on the minimap to mark the player'slocation.
 void renderPlayerOnMinimap(sfRenderWindow* _w);
 
+/// Displays the credits in the main menu
 void renderCredit(sfRenderWindow* _w, sfView* _v, sfFont* _font, char _name[], char _role[], char _posX, char _posY);
-
-void swapLamp(char _map[H_MAP_T][W_MAP_T], char _flagNight);

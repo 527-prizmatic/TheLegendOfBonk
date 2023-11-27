@@ -16,14 +16,8 @@ void interactTilePos(char _map[H_MAP_T][W_MAP_T]) {
 		for (int j = 0; j < W_MAP_T; j++) {
 			switch (_map[i][j]) {
 				// Sign
-				case 81:
-					lampArray[lampCpt].id = lampCpt;
-					lampArray[lampCpt].lampPosition.y = TILE_PX * i;
-					lampArray[lampCpt].lampPosition.x = TILE_PX * j;
-					lampCpt++;
-					break;
 				case 90:
-					pnjArray[counterNpc].id = counterNpc;
+					npcArray[counterNpc].id = counterNpc;
 					if (counterNpc == 1) sprintf_s(_txt, 256, "Z-Q-S-D to move\nLeft Shift to sprint\nE to interact with the world\n...but you already knew that,\nof course.\nDon't lie to me, you couldn't\nbe reading this otherwise.");
 					else {
 						int r = rand() % 8;
@@ -39,9 +33,9 @@ void interactTilePos(char _map[H_MAP_T][W_MAP_T]) {
 						}
 					}
 					
-					sprintf(pnjArray[counterNpc].txt, "%s", _txt);
-					pnjArray[counterNpc].pnjPosition.y = TILE_PX * i;
-					pnjArray[counterNpc].pnjPosition.x = TILE_PX * j;
+					sprintf(npcArray[counterNpc].txt, "%s", _txt);
+					npcArray[counterNpc].pnjPosition.y = TILE_PX * i;
+					npcArray[counterNpc].pnjPosition.x = TILE_PX * j;
 					counterNpc++;
 					break;
 				// Chest
@@ -66,8 +60,8 @@ int canInteract() {
 	float sqrPosChestX = 0.f;
 	float sqrPosChestY = 0.f;
 
-	float sqrPosPnjX = 0.f;
-	float sqrPosPnjY = 0.f;
+	float sqrPosNpcX = 0.f;
+	float sqrPosNpcY = 0.f;
 
 	float sqrPosCageX = (playerPos.x - 3970.0f) * (playerPos.x - 3970.0f);
 	float sqrPosCageY = (playerPos.y - 70.0f) * (playerPos.y - 70.0f);
@@ -83,9 +77,9 @@ int canInteract() {
 		if (sqrPosChestX + sqrPosChestY < sqrRadius) return chestArray[i].id;
 	}
 	for (int j = 0; j < 10; j++) {
-		sqrPosPnjX = (playerPos.x - pnjArray[j].pnjPosition.x) * (playerPos.x - pnjArray[j].pnjPosition.x);
-		sqrPosPnjY = (playerPos.y - pnjArray[j].pnjPosition.y) * (playerPos.y - pnjArray[j].pnjPosition.y);
-		if (sqrPosPnjX + sqrPosPnjY < sqrRadius) return pnjArray[j].id + 20;
+		sqrPosNpcX = (playerPos.x - npcArray[j].pnjPosition.x) * (playerPos.x - npcArray[j].pnjPosition.x);
+		sqrPosNpcY = (playerPos.y - npcArray[j].pnjPosition.y) * (playerPos.y - npcArray[j].pnjPosition.y);
+		if (sqrPosNpcX + sqrPosNpcY < sqrRadius) return npcArray[j].id + 20;
 	}
 
 	if (sqrPosCageX + sqrPosCageY < sqrRadius) return 100;

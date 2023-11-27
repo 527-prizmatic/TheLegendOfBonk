@@ -26,11 +26,6 @@ void displayInventory(sfRenderWindow* _window, int* _inventory, sfSprite* _inven
     sfRenderWindow_setView(_window, sfRenderWindow_getDefaultView(_window));
     sfRenderWindow_drawSprite(_window, _inventorySprite, NULL);
     
-    if (sfKeyboard_isKeyPressed(sfKeyB)) {
-        for (int i = 0; i < 4; i++) {
-            _inventory[i] = 1;
-        }
-    }
     if (_inventory[0]) {
         if (_inventory[0] == 2) {
             rect.left = rect.width * 4;

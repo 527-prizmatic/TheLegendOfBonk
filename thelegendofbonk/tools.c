@@ -1,5 +1,7 @@
 #include "tools.h"
 
+#pragma warning (disable: 4018)
+
 sfTime sf_time;
 sfClock* sf_clock;
 sfBool isRunning = sfTrue;
@@ -52,7 +54,7 @@ sfText* initText(sfFont* _font, int _size, sfVector2f _pos) {
 	sfText_setFont(txt, _font);
 	sfText_setCharacterSize(txt, _size);
 	sfText_setPosition(txt, _pos);
-	
+
 	return txt;
 }
 

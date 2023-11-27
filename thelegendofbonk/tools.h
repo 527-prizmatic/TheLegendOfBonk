@@ -13,8 +13,9 @@
 
 #define PI (float)3.1415926535
 
-#define DEBUG 01
+#define DEBUG 0
 
+/// Keybinds
 #define KEY_UP sfKeyZ
 #define KEY_DOWN sfKeyS
 #define KEY_LEFT sfKeyQ

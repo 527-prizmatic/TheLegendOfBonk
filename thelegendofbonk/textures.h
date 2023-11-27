@@ -25,7 +25,6 @@ sfBool isWater(char _id);
 /// Checks whether the given tile ID should render in the foreground.
 sfBool isForeground(char _id);
 
-
 /* == TEXTURE SWAPPERS == */
 
 /// Swaps textures for lamp posts based on the ID passed as argument.
