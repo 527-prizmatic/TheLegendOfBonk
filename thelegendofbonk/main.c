@@ -24,6 +24,9 @@
 #pragma warning (disable: 4244)
 
 int main() {
+
+	
+
 			///***  = = =  PREINIT  = = =  ***///
 
 	/* == RENDERING ENGINE CORE */
@@ -33,7 +36,11 @@ int main() {
 	sfView* viewMinimap = initMinimapView(); // Editor mode view
 	sfView* viewCredits = initCreditsView(); // Credits mode view
 
-	/* == MAIN MENU ==  */
+    //Change icone .exe 
+    sfImage* icon = sfImage_createFromFile(TEXTURE_PATH"icon.png");
+    sfRenderWindow_setIcon(window, 64, 64, sfImage_getPixelsPtr(icon));
+	
+    /* == MAIN MENU ==  */
 	sfFont* font = sfFont_createFromFile(TEXTURE_PATH"FontGame.ttf");
 	sfVector2f logoPos = vector2f(400.0f, 200.0f);
 	sfSprite* logo = initSprite(TEXTURE_PATH"logo.png", vector2f(0.7f, 0.7f), logoPos);
