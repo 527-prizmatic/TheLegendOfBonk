@@ -1,7 +1,10 @@
 #include "tools.h"
 
+#pragma warning (disable: 4018)
+
 sfTime sf_time;
 sfClock* sf_clock;
+sfBool isRunning = sfTrue;
 
 void initTools() {
 	sf_clock = sfClock_create();
@@ -15,6 +18,7 @@ void restartClock() {
 
 float getDeltaTime() {
 	return sfTime_asSeconds(sf_time);
+	
 }
 
 sfVector2f vector2f(float _x, float _y) {
@@ -27,6 +31,14 @@ sfBool isMouseWithinWindow(sfRenderWindow* _w) {
 	else return sfFalse;
 }
 
+sfRectangleShape* initRectangle(sfVector2f _pos, sfVector2f _size) {
+	sfRectangleShape* rect = sfRectangleShape_create();
+	sfRectangleShape_setPosition(rect, _pos);
+	sfRectangleShape_setSize(rect, _size);
+
+	return rect;
+}
+
 sfSprite* initSprite(char* _texture_path, sfVector2f _scale, sfVector2f _pos) {
 	sfSprite* spr = sfSprite_create();
 	sfTexture* texture = sfTexture_createFromFile(_texture_path, NULL);
@@ -37,7 +49,7 @@ sfSprite* initSprite(char* _texture_path, sfVector2f _scale, sfVector2f _pos) {
 	return spr;
 }
 
-sfSprite* initText(sfFont* _font, int _size, sfVector2f _pos) {
+sfText* initText(sfFont* _font, int _size, sfVector2f _pos) {
 	sfText* txt = sfText_create();
 	sfText_setFont(txt, _font);
 	sfText_setCharacterSize(txt, _size);
@@ -45,3 +57,21 @@ sfSprite* initText(sfFont* _font, int _size, sfVector2f _pos) {
 
 	return txt;
 }
+
+void formatTextOutline(sfText* _txt, sfColor _color) {
+	sfText_setOutlineThickness(_txt, 2.0f);
+	sfText_setOutlineColor(_txt, _color);
+}
+
+sfBool testKeyPress(sfKeyCode _key, sfRenderWindow* _w) {
+	if (_w != NULL && !sfRenderWindow_hasFocus(_w)) return sfFalse;
+	if (!sfKeyboard_isKeyPressed(_key)) return sfFalse;
+	return sfTrue;
+}
+
+sfBool testLClick(sfRenderWindow* _w) {
+	if (_w != NULL && !sfRenderWindow_hasFocus(_w)) return sfFalse;
+	if (!sfMouse_isButtonPressed(sfMouseLeft)) return sfFalse;
+	return sfTrue;
+}
+
