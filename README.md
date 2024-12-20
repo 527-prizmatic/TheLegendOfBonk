@@ -5,6 +5,8 @@ Developed in two weeks with a team of three, as part of the first formation year
 As the very first game project undertaken with the school, the source code is quite messy and still lacking a lot of principles of structure and readability.
 Due to being mostly a proof of our ability to produce something that runs, not much thought was put into narration nor balancing.
 
+As requested by the assignment, the game also comprises a functional (although rather counter-intuitive to use) level editor.
+
 ## Tools & Techs :wrench:
 - **Languages** - C, GLSL
 - **IDEs** - Microsoft Visual Studio 2022
