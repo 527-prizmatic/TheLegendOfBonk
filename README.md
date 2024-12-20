@@ -1,4 +1,4 @@
-# TheLegendOfBonk 🐕
+# The Legend of Bonk 🐕
 A small 2D top-down RPG in the iconic *The Legend of Zelda* style, featuring a shiba inu on a quest to rescue his friend from the hands of the evil Elon Musk.
 Developed in two weeks with a team of three, as part of the first formation year in French video game school Game Academy.
 
