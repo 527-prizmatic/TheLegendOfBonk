@@ -9,6 +9,6 @@ Some assets are most definitely not free of charge, either. No copyright infring
 As requested by the assignment, the game also comprises a functional (although rather counter-intuitive to use) level editor.
 
 ## Tools & Techs :wrench:
-- **Languages** - C, GLSL
+- **Languages** - C
 - **IDEs** - Microsoft Visual Studio 2022
 - **Additional Libraries** - CSFML 2.5.1
